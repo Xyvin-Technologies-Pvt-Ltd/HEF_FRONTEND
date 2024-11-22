@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { StyledButton } from "../../ui/StyledButton.jsx";
 import StyledSearchbar from "../../ui/StyledSearchbar.jsx";
 import StyledTable from "../../ui/StyledTable.jsx";
-import { adminColumns, userData } from "../../assets/json/TableData";
+import { adminColumns } from "../../assets/json/TableData";
 import { useListStore } from "../../store/listStore.js";
 import { ReactComponent as AddIcon } from "../../assets/icons/AddIcon.svg";
 
@@ -26,7 +26,11 @@ export default function AdminManagement() {
   };
   const handleSelectionChange = (newSelectedIds) => {
     setSelectedRows(newSelectedIds);
-    console.log("Selected items:", newSelectedIds);
+  };
+  const handleEdit = (id) => {
+    navigate(`/settings/add-admin`, {
+      state: { adminId: id, isUpdate: true },
+    });
   };
   useEffect(() => {
     let filter = {};
@@ -83,6 +87,7 @@ export default function AdminManagement() {
           >
             <StyledTable
               columns={adminColumns}
+              onModify={handleEdit}
               pageNo={pageNo}
               setPageNo={setPageNo}
               rowPerSize={row}

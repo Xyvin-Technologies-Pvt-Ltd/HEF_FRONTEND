@@ -42,7 +42,7 @@ export const paymentColumns = [
 export const reportColumns = [
   { title: "Report By", field: "reportBy", padding: "none" },
   { title: "Report Type", field: "reportType" },
-  { title: "Content", field: "content" }
+  { title: "Content", field: "content" },
 ];
 export const member = [
   { title: "Name", field: "fullName", padding: "none" },
@@ -86,11 +86,8 @@ export const approvalColumns = [
 ];
 export const adminColumns = [
   { title: "Name", field: "name", padding: "none" },
-
-  { title: "Member ID", field: "email" },
-  { title: "College Name", field: "contact" },
-  { title: "Batch number", field: "designation" },
-  { title: "Batch number", field: "experience" },
+  { title: "Phone Number", field: "phone" },
+  { title: "Email", field: "email" },
   { title: "Status", field: "status" },
 ];
 export const roleColumns = [
@@ -107,7 +104,6 @@ export const eventList = [
   { title: "Organiser name", field: "organiserName" },
   { title: "Status", field: "status" },
   { title: "Type", field: "type" },
- 
 ];
 export const newsColumns = [
   { title: "Category", field: "category", padding: "none" },

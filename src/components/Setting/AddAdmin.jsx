@@ -6,7 +6,7 @@ import StyledSelectField from "../../ui/StyledSelectField";
 import { StyledButton } from "../../ui/StyledButton";
 import { useDropDownStore } from "../../store/dropDownStore";
 import { useAdminStore } from "../../store/adminStore";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const AddAdmin = () => {
@@ -18,10 +18,11 @@ const AddAdmin = () => {
     formState: { errors },
   } = useForm();
   const navigate = useNavigate();
-  const { college, fetchListofCollege, fetchListofRole, role } =
-    useDropDownStore();
+  const { fetchListofRole, role } = useDropDownStore();
   const [loading, setLoading] = useState(false);
-  const { addAdmins } = useAdminStore();
+  const { addAdmins, fetchSingleAdmin, single } = useAdminStore();
+  const location = useLocation();
+  const { adminId, isUpdate } = location.state || {};
 
   const onSubmit = async (data) => {
     try {
@@ -29,7 +30,6 @@ const AddAdmin = () => {
       const formData = {
         name: data?.name,
         email: data?.email,
-        college: data?.college.value,
         role: data?.role.value,
         phone: data?.phone,
         password: "admin@akcaf",
@@ -44,16 +44,13 @@ const AddAdmin = () => {
     }
   };
   useEffect(() => {
-    fetchListofCollege();
     fetchListofRole();
-  }, [fetchListofCollege, fetchListofRole]);
-  const collegeList =
-    college && Array.isArray(college)
-      ? college?.map((item) => ({
-          value: item._id,
-          label: item.collegeName,
-        }))
-      : [];
+  }, [fetchListofRole]);
+  useEffect(() => {
+    if (isUpdate && adminId) {
+      fetchSingleAdmin(adminId);
+    }
+  }, [adminId, isUpdate]);
   const roleList =
     role && Array.isArray(role)
       ? role?.map((item) => ({
@@ -61,10 +58,20 @@ const AddAdmin = () => {
           label: item.roleName,
         }))
       : [];
+  useEffect(() => {
+    if (single && isUpdate) {
+      setValue("name", single.name);
+      const selectedRole = roleList.find((role) => role.value === single.role?._id);
+      setValue("role", selectedRole);
+      setValue("email", single.email);
+      setValue("phone", single.phone);
+    }
+  }, [single, isUpdate, setValue]);
+
   const handleClear = (event) => {
     event.preventDefault();
     reset();
-    navigate(-1)
+    navigate(-1);
   };
   return (
     <Box
@@ -93,35 +100,6 @@ const AddAdmin = () => {
                   <StyledInput placeholder="Enter  name" {...field} />
                   {errors.name && (
                     <span style={{ color: "red" }}>{errors.name.message}</span>
-                  )}
-                </>
-              )}
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <Typography
-              sx={{ marginBottom: 1 }}
-              variant="h6"
-              color="textSecondary"
-            >
-              College
-            </Typography>
-            <Controller
-              name="college"
-              control={control}
-              defaultValue=""
-              rules={{ required: "College Name is required" }}
-              render={({ field }) => (
-                <>
-                  <StyledSelectField
-                    placeholder="Choose the College"
-                    {...field}
-                    options={collegeList}
-                  />
-                  {errors.college && (
-                    <span style={{ color: "red" }}>
-                      {errors.college.message}
-                    </span>
                   )}
                 </>
               )}
@@ -200,8 +178,7 @@ const AddAdmin = () => {
               )}
             />
           </Grid>
-          <Grid item xs={6}></Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} justifyContent={"flex-end"}>
             <Stack direction={"row"} spacing={2} justifyContent={"flex-end"}>
               <StyledButton
                 name="Cancel"

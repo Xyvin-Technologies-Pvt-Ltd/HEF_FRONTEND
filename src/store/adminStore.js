@@ -1,9 +1,15 @@
 import { create } from "zustand";
-import { addAdmin, getAdmin, getAdminById } from "../api/adminapi";
+import {
+  addAdmin,
+  getAdmin,
+  getAdminById,
+  getSingleAdmin,
+} from "../api/adminapi";
 
 const useAdminStore = create((set) => ({
   admins: [],
   singleAdmin: [],
+  single: [],
   addAdmins: async (data) => {
     await addAdmin(data);
   },
@@ -16,9 +22,10 @@ const useAdminStore = create((set) => ({
     const response = await getAdminById();
     set({ singleAdmin: response.data || [] });
   },
-  //   updateRole:async(id,data)=>{
-  //     await editRole(id,data)
-  //   }
+  fetchSingleAdmin: async (id) => {
+    const response = await getSingleAdmin(id);
+    set({ single: response.data || [] });
+  },
 }));
 
 export { useAdminStore };
