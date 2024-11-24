@@ -1,8 +1,8 @@
 import React from "react";
 import { Box, Grid, Stack, Typography } from "@mui/material";
-import AddGroup from "../../components/Group/AddGroup";
+import LevelAdd from "../../components/Level/LevelAdd";
 
-const AddGroupPage = () => {
+const AddLevelPage = () => {
   return (
     <>
       <Stack
@@ -15,17 +15,17 @@ const AddGroupPage = () => {
       >
         <Stack>
           <Typography variant="h4" color="textSecondary">
-            Group List / Add Group
+            Level
           </Typography>
         </Stack>
       </Stack>
       <Grid container padding={"15px"}>
         <Grid item xs={12} md={8}>
-          <AddGroup />
+          <LevelAdd/>
         </Grid>
       </Grid>
     </>
   );
 };
 
-export default AddGroupPage;
+export default AddLevelPage;

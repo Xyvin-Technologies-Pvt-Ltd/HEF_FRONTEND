@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import {
   addAdmin,
+  deleteAdmin,
+  editAdmin,
   getAdmin,
   getAdminById,
   getSingleAdmin,
@@ -25,6 +27,12 @@ const useAdminStore = create((set) => ({
   fetchSingleAdmin: async (id) => {
     const response = await getSingleAdmin(id);
     set({ single: response.data || [] });
+  },
+  updateAdmin: async (id, data) => {
+    await editAdmin(id, data);
+  },
+  deleteAdmins: async (id) => {
+    await deleteAdmin(id);
   },
 }));
 

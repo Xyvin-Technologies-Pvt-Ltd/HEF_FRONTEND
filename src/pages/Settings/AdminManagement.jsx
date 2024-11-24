@@ -7,6 +7,8 @@ import StyledTable from "../../ui/StyledTable.jsx";
 import { adminColumns } from "../../assets/json/TableData";
 import { useListStore } from "../../store/listStore.js";
 import { ReactComponent as AddIcon } from "../../assets/icons/AddIcon.svg";
+import { toast } from "react-toastify";
+import { useAdminStore } from "../../store/adminStore.js";
 
 export default function AdminManagement() {
   const navigate = useNavigate();
@@ -17,6 +19,7 @@ export default function AdminManagement() {
   const [pageNo, setPageNo] = useState(1);
   const [row, setRow] = useState(10);
   const [search, setSearch] = useState("");
+  const { deleteAdmins } = useAdminStore();
   const handleOpenFilter = () => {
     setFilterOpen(true);
   };
@@ -26,6 +29,27 @@ export default function AdminManagement() {
   };
   const handleSelectionChange = (newSelectedIds) => {
     setSelectedRows(newSelectedIds);
+  };
+  const handleDelete = async () => {
+    if (selectedRows.length > 0) {
+      try {
+        await Promise.all(selectedRows?.map((id) => deleteAdmins(id)));
+        toast.success("Deleted successfully");
+        setIsChange(!isChange);
+        setSelectedRows([]);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+  const handleRowDelete = async (id) => {
+    try {
+      await deleteAdmins(id);
+      toast.success("Deleted successfully");
+      setIsChange(!isChange);
+    } catch (error) {
+      console.log(error);
+    }
   };
   const handleEdit = (id) => {
     navigate(`/settings/add-admin`, {
@@ -92,7 +116,10 @@ export default function AdminManagement() {
               setPageNo={setPageNo}
               rowPerSize={row}
               setRowPerSize={setRow}
+              
               onSelectionChange={handleSelectionChange}
+              onDelete={handleDelete}
+              onDeleteRow={handleRowDelete}
             />{" "}
           </Box>
         </Grid>

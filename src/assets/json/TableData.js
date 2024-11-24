@@ -69,6 +69,11 @@ export const feedColumns = [
   { title: "Image", field: "media" },
   { title: "Status", field: "status" },
 ];
+export const levelColumns = [
+  { title: "Name", field: "name" },
+  { title: "Category", field: "category" },
+  { title: "Created on", field: "createdAt", padding: "none" },
+];
 export const postColumns = [
   { title: "Date", field: "createdAt", padding: "none" },
   { title: "Type", field: "type" },

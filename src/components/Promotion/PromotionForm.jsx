@@ -12,7 +12,6 @@ import {
 import { StyledButton } from "../../ui/StyledButton.jsx";
 import { Controller, useForm } from "react-hook-form";
 import StyledSelectField from "../../ui/StyledSelectField.jsx";
-import { StyledEventUpload } from "../../ui/StyledEventUpload.jsx";
 import StyledInput from "../../ui/StyledInput.jsx";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { StyledMultilineTextField } from "../../ui/StyledMultilineTextField.jsx";

@@ -20,7 +20,7 @@ const AddAdmin = () => {
   const navigate = useNavigate();
   const { fetchListofRole, role } = useDropDownStore();
   const [loading, setLoading] = useState(false);
-  const { addAdmins, fetchSingleAdmin, single } = useAdminStore();
+  const { addAdmins, fetchSingleAdmin, single, updateAdmin } = useAdminStore();
   const location = useLocation();
   const { adminId, isUpdate } = location.state || {};
 
@@ -34,7 +34,12 @@ const AddAdmin = () => {
         phone: data?.phone,
         password: "admin@akcaf",
       };
-      await addAdmins(formData);
+      if (isUpdate) {
+        await updateAdmin(adminId, formData);
+      } else {
+        await addAdmins(formData);
+      }
+
       reset();
       navigate("/settings");
     } catch (error) {
@@ -61,7 +66,9 @@ const AddAdmin = () => {
   useEffect(() => {
     if (single && isUpdate) {
       setValue("name", single.name);
-      const selectedRole = roleList.find((role) => role.value === single.role?._id);
+      const selectedRole = roleList.find(
+        (role) => role.value === single.role?._id
+      );
       setValue("role", selectedRole);
       setValue("email", single.email);
       setValue("phone", single.phone);

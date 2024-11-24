@@ -6,11 +6,11 @@ import StyledSelectField from "../../ui/StyledSelectField";
 import { StyledMultilineTextField } from "../../ui/StyledMultilineTextField";
 import { StyledButton } from "../../ui/StyledButton";
 import { StyledEventUpload } from "../../ui/StyledEventUpload";
-import { useDropDownStore } from "../../store/dropDownStore";
 import uploadFileToS3 from "../../utils/s3Upload";
 import { toast } from "react-toastify";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useMemberStore } from "../../store/Memberstore";
+import { getLevels, getAllLevel } from "../../api/hierarchyapi";
 
 const AddMember = () => {
   const {
@@ -23,89 +23,74 @@ const AddMember = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { memberId, isUpdate } = location.state || {};
-  const { college, fetchListofCollege } = useDropDownStore();
+
   const { addMembers, fetchMemberById, member, updateMember, loading } =
     useMemberStore();
-
-  const [selectedCollege, setSelectedCollege] = useState(null); // initially selected college
-  const [courseOptions, setCourseOptions] = useState([]);
-  const [batchOptions, setBatchOptions] = useState([]);
   const [loadings, setLoadings] = useState(false);
   const [imageFile, setImageFile] = useState(null);
-
-  useEffect(() => {
-    fetchListofCollege();
-  }, []);
+  const [additionalPhones, setAdditionalPhones] = useState([]);
+  const [addMoreDisabled, setAddMoreDisabled] = useState(false);
+  const [stateOptions, setStateOptions] = useState([]);
+  const [zoneOptions, setZoneOptions] = useState([]);
+  const [districtOptions, setDistrictOptions] = useState([]);
+  const [chapterOptions, setChapterOptions] = useState([]);
+  const [selectedZone, setSelectedZone] = useState("");
+  const [selectedDistrict, setSelectedDistrict] = useState("");
 
   useEffect(() => {
     if (isUpdate && memberId) {
       fetchMemberById(memberId);
     }
   }, [memberId, isUpdate]);
-  const collegeList =
-    college && Array.isArray(college)
-      ? college?.map((item) => ({
-          value: item._id,
-          label: item.collegeName,
-        }))
-      : [];
+  const business = [{ value: "IT Services", label: "IT Services" }];
+  const sub = [
+    { value: "Software Development", label: "Software Development" },
+  ];
+  const addPhoneNumber = () => {
+    if (additionalPhones.length < 3) {
+      const updatedPhones = [...additionalPhones, ""];
+      setAdditionalPhones(updatedPhones);
+
+      setValue(`additionalPhones`, updatedPhones);
+    }
+
+    if (additionalPhones.length === 2) {
+      setAddMoreDisabled(true);
+    }
+  };
+
   useEffect(() => {
     if (isUpdate && member) {
-      const selectedCollege = collegeList?.find(
-        (item) => item?.value === member?.college?._id
-      );
-      setSelectedCollege(selectedCollege);
-      setValue("college", selectedCollege || "");
-      setValue("first", member?.name?.first || "");
-      setValue("middle", member?.name?.middle || "");
-      setValue("last", member?.name?.last || "");
+      setValue("name", member?.name || "");
       setValue("email", member?.email || "");
       setValue("phone", member?.phone || "");
       setValue("bio", member?.bio || "");
       setValue("image", member?.image || "");
-      if (selectedCollege) {
-        handleCollegeChange(selectedCollege);
-        setValue(
-          "course",
-          member?.course
-            ? { value: member?.course?._id, label: member?.course?.courseName }
-            : ""
-        );
-        setValue(
-          "batch",
-          member?.batch ? { value: member?.batch, label: member?.batch } : ""
-        );
-      }
+      setValue("address", member?.address || "");
+      setValue("memberId", member?.memberId || "");
+      setAdditionalPhones(member?.secondaryPhone);
+      setValue("company_name", member?.company?.name || "");
+      setValue("company_email", member?.company?.email || "");
+      setValue("company_website", member?.company?.websites || "");
+
       const selectedRole = roleOptions?.find(
         (item) => item?.value === member?.role
       );
       setValue("role", selectedRole || "");
+      const selectedBusinessCatergory = business?.find(
+        (item) => item?.value === member?.businessCatogary
+      );
+      setValue("businessCatogary", selectedBusinessCatergory || "");
+      const selectedSubCatergory = sub?.find(
+        (item) => item?.value === member?.businessSubCatogary
+      );
+      setValue("businessSubCatogary", selectedSubCatergory || "");
       const selectedStatus = statusOptions?.find(
         (item) => item?.value === member?.status
       );
       setValue("status", selectedStatus || "");
     }
   }, [member, isUpdate, setValue]);
-
-  const handleCollegeChange = (selectedCollegeId) => {
-    const selectedCollege = college?.find(
-      (item) => item?._id === selectedCollegeId?.value
-    );
-    if (selectedCollege) {
-      const updatedCourses = selectedCollege?.course?.map((course) => ({
-        value: course?._id,
-        label: course?.courseName,
-      }));
-      setCourseOptions(updatedCourses);
-      const updatedBatches = selectedCollege?.batch?.map((batch) => ({
-        value: batch,
-        label: batch,
-      }));
-      setBatchOptions(updatedBatches);
-      setValue("course", "");
-      setValue("batch", "");
-    }
-  };
 
   const roleOptions = [
     { value: "president", label: "President" },
@@ -124,9 +109,6 @@ const AddMember = () => {
     event.preventDefault();
     reset();
     setImageFile(null);
-    setSelectedCollege(null);
-    setCourseOptions([]);
-    setBatchOptions([]);
     navigate(-1);
   };
 
@@ -149,25 +131,34 @@ const AddMember = () => {
           return;
         }
       }
+      const filteredPhones = (data?.additionalPhones || []).filter(
+        (phone) => phone.trim() !== ""
+      );
       const formData = {
-        name: {
-          first: data?.first,
-          ...(data?.middle && { middle: data?.middle }),
-          last: data?.last,
-        },
+        name: data?.name,
+
         email: data?.email,
         phone: data?.phone,
-        college: data?.college.value,
-        course: data?.course.value,
-        batch: data?.batch.value,
+        secondaryPhone: filteredPhones,
         role: data?.role.value,
         status: data?.status.value,
         bio: data?.bio,
+        address: data?.address,
         image: imageUrl,
+        company: {
+          name: data?.company_name,
+          phone: data?.company_phone,
+          email: data?.company_email,
+          websites: data?.company_website,
+        },
+        businessCatogary: data?.businessCatogary?.value,
+        businessSubCatogary: data?.businessSubCatogary?.value,
+        chapter: data?.chapter?.value,
       };
       if (isUpdate) {
         await updateMember(memberId, formData);
       } else {
+        formData.memberId = data?.memberId;
         await addMembers(formData);
       }
       reset();
@@ -178,7 +169,57 @@ const AddMember = () => {
       setLoadings(false);
     }
   };
+  const fetchData = async (type, id) => {
+    try {
+      const response = await getLevels(id, type);
 
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+  useEffect(() => {
+    const fetchStates = async () => {
+      try {
+        const stateData = await getAllLevel("state");
+        const formattedOptions = stateData?.data?.map((state) => ({
+          value: state?.id,
+          label: state?.name,
+        }));
+        setStateOptions(formattedOptions);
+      } catch (error) {
+        console.error("Error fetching admin data:", error);
+      }
+    };
+
+    fetchStates();
+  }, []);
+  const handleStateChange = async (stateId) => {
+    setZoneOptions([]);
+    setDistrictOptions([]);
+    setChapterOptions([]);
+    const zones = await fetchData("state", stateId.value);
+    setZoneOptions(zones.map(({ _id, name }) => ({ value: _id, label: name })));
+  };
+
+  const handleZoneChange = async (zoneId) => {
+    console.log("zoneId", zoneId);
+    setSelectedZone(zoneId);
+    setDistrictOptions([]);
+    setChapterOptions([]);
+    const districts = await fetchData("zone", zoneId);
+    setDistrictOptions(
+      districts.map(({ _id, name }) => ({ value: _id, label: name }))
+    );
+  };
+  const handleDistrictChange = async (districtId) => {
+    setSelectedDistrict(districtId);
+    setChapterOptions([]);
+    const chapters = await fetchData("district", districtId);
+    setChapterOptions(
+      chapters.map(({ _id, name }) => ({ value: _id, label: name }))
+    );
+  };
   return (
     <>
       {loading ? (
@@ -198,173 +239,56 @@ const AddMember = () => {
                   variant="h6"
                   color="textSecondary"
                 >
-                  First Name
+                  Full Name
                 </Typography>
                 <Controller
-                  name="first"
+                  name="name"
                   control={control}
                   defaultValue=""
-                  rules={{ required: "First Name is required" }}
+                  rules={{ required: "Full Name is required" }}
                   render={({ field }) => (
                     <>
                       <StyledInput
-                        placeholder="Enter the First name"
+                        placeholder="Enter the Full name"
                         {...field}
                       />
-                      {errors.first && (
+                      {errors.name && (
                         <span style={{ color: "red" }}>
-                          {errors.first.message}
+                          {errors.name.message}
                         </span>
                       )}
                     </>
                   )}
                 />
               </Grid>
-
               <Grid item xs={12}>
                 <Typography
                   sx={{ marginBottom: 1 }}
                   variant="h6"
                   color="textSecondary"
                 >
-                  Middle Name
+                  Member Id
                 </Typography>
                 <Controller
-                  name="middle"
+                  name="memberId"
                   control={control}
                   defaultValue=""
+                  rules={{ required: "Member Id is required" }}
                   render={({ field }) => (
                     <>
                       <StyledInput
-                        placeholder="Enter the Middle Name"
+                        placeholder="Enter the Member Id"
                         {...field}
                       />
-                      {errors.middle && (
+                      {errors.memberId && (
                         <span style={{ color: "red" }}>
-                          {errors.middle.message}
+                          {errors.memberId.message}
                         </span>
                       )}
                     </>
                   )}
                 />
               </Grid>
-
-              <Grid item xs={12}>
-                <Typography
-                  sx={{ marginBottom: 1 }}
-                  variant="h6"
-                  color="textSecondary"
-                >
-                  Last Name
-                </Typography>
-                <Controller
-                  name="last"
-                  control={control}
-                  defaultValue=""
-                  rules={{ required: "Last Name is required" }}
-                  render={({ field }) => (
-                    <>
-                      <StyledInput
-                        placeholder="Enter the Last Name"
-                        {...field}
-                      />
-                      {errors.last && (
-                        <span style={{ color: "red" }}>
-                          {errors.last.message}
-                        </span>
-                      )}
-                    </>
-                  )}
-                />
-              </Grid>
-
-              <Grid item xs={12}>
-                <Typography
-                  sx={{ marginBottom: 1 }}
-                  variant="h6"
-                  color="textSecondary"
-                >
-                  College Name
-                </Typography>
-                <Controller
-                  name="college"
-                  control={control}
-                  defaultValue=""
-                  rules={{ required: "College Name is required" }}
-                  render={({ field }) => (
-                    <>
-                      <StyledSelectField
-                        placeholder="Choose the college"
-                        options={collegeList}
-                        {...field}
-                        onChange={(e) => {
-                          field.onChange(e);
-                          handleCollegeChange(e);
-                          setSelectedCollege(e);
-                        }}
-                      />
-                      {errors.college && (
-                        <span style={{ color: "red" }}>
-                          {errors.college.message}
-                        </span>
-                      )}
-                    </>
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Typography
-                  sx={{ marginBottom: 1 }}
-                  variant="h6"
-                  color="textSecondary"
-                >
-                  Course Name
-                </Typography>
-                <Controller
-                  name="course"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <>
-                      <StyledSelectField
-                        placeholder="Choose the course"
-                        options={courseOptions}
-                        {...field}
-                      />
-                    </>
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Typography
-                  sx={{ marginBottom: 1 }}
-                  variant="h6"
-                  color="textSecondary"
-                >
-                  Batch
-                </Typography>
-                <Controller
-                  name="batch"
-                  control={control}
-                  defaultValue=""
-                  rules={{ required: "Batch is required" }}
-                  render={({ field }) => (
-                    <>
-                      <StyledSelectField
-                        placeholder="Choose the batch"
-                        options={batchOptions}
-                        {...field}
-                      />
-                      {errors.batch && (
-                        <span style={{ color: "red" }}>
-                          {errors.batch.message}
-                        </span>
-                      )}
-                    </>
-                  )}
-                />
-              </Grid>
-
               <Grid item xs={6}>
                 <Typography
                   sx={{ marginBottom: 1 }}
@@ -426,7 +350,6 @@ const AddMember = () => {
                   )}
                 />
               </Grid>
-
               <Grid item xs={6}>
                 <Typography
                   sx={{ marginBottom: 1 }}
@@ -455,7 +378,6 @@ const AddMember = () => {
                   )}
                 />
               </Grid>
-
               <Grid item xs={6}>
                 <Typography
                   sx={{ marginBottom: 1 }}
@@ -482,8 +404,37 @@ const AddMember = () => {
                       )}
                     </>
                   )}
-                />
-              </Grid>
+                />{" "}
+                {additionalPhones.map((phone, index) => (
+                  <Grid marginTop={2} key={index}>
+                    <Controller
+                      name={`additionalPhones.${index}`}
+                      control={control}
+                      defaultValue={phone}
+                      render={({ field }) => (
+                        <StyledInput
+                          value={phone}
+                          placeholder={`Enter Phone Number ${index + 1}`}
+                          {...field}
+                        />
+                      )}
+                    />
+                  </Grid>
+                ))}
+                <Typography
+                  onClick={addPhoneNumber}
+                  display={addMoreDisabled ? "none" : ""}
+                  sx={{
+                    color: "#004797",
+                    cursor: addMoreDisabled ? "default" : "pointer",
+                    marginTop: 1,
+                    fontSize: "0.9rem",
+                    textDecoration: addMoreDisabled ? "line-through" : "none",
+                  }}
+                >
+                  + Add more
+                </Typography>
+              </Grid>{" "}
               <Grid item xs={12}>
                 <Typography
                   sx={{ marginBottom: 1 }}
@@ -499,6 +450,243 @@ const AddMember = () => {
                   render={({ field }) => (
                     <>
                       <StyledMultilineTextField placeholder="Bio" {...field} />
+                    </>
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Typography
+                  sx={{ marginBottom: 1 }}
+                  variant="h6"
+                  color="textSecondary"
+                >
+                  Personal Address
+                </Typography>
+                <Controller
+                  name="address"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <>
+                      <StyledInput
+                        placeholder="Enter the Personal Address"
+                        {...field}
+                      />
+                    </>
+                  )}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <Typography
+                  sx={{ marginBottom: 1 }}
+                  variant="h6"
+                  color="textSecondary"
+                >
+                  Company Name
+                </Typography>
+                <Controller
+                  name="company_name"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <>
+                      <StyledInput
+                        placeholder="Enter the name of Company"
+                        {...field}
+                      />
+                    </>
+                  )}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <Typography
+                  sx={{ marginBottom: 1 }}
+                  variant="h6"
+                  color="textSecondary"
+                >
+                  Company Phone
+                </Typography>
+                <Controller
+                  name="company_phoneNumber"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <>
+                      <StyledInput
+                        placeholder="Enter the phone number"
+                        {...field}
+                      />
+                    </>
+                  )}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <Typography
+                  sx={{ marginBottom: 1 }}
+                  variant="h6"
+                  color="textSecondary"
+                >
+                  Company Email
+                </Typography>
+                <Controller
+                  name="company_email"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <>
+                      <StyledInput
+                        placeholder="Enter the company email id"
+                        {...field}
+                      />
+                    </>
+                  )}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <Typography
+                  sx={{ marginBottom: 1 }}
+                  variant="h6"
+                  color="textSecondary"
+                >
+                  Website
+                </Typography>
+                <Controller
+                  name="company_website"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <>
+                      <StyledInput
+                        placeholder="Enter the website link"
+                        {...field}
+                      />
+                    </>
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Typography
+                  sx={{ marginBottom: 1 }}
+                  variant="h6"
+                  color="textSecondary"
+                >
+                  Business category
+                </Typography>
+                <Controller
+                  name="businessCatogary"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <>
+                      <StyledSelectField
+                        placeholder="Select business category"
+                        options={business}
+                        {...field}
+                      />
+                    </>
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Typography
+                  sx={{ marginBottom: 1 }}
+                  variant="h6"
+                  color="textSecondary"
+                >
+                  Subcategory
+                </Typography>
+                <Controller
+                  name="businessSubCatogary"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <>
+                      <StyledSelectField
+                        placeholder="Select subcategory"
+                        options={sub}
+                        {...field}
+                      />
+                    </>
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant="h6" color="textSecondary">
+                  HEF Designation
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Controller
+                  name="state"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <>
+                      <StyledSelectField
+                        placeholder="Choose the state"
+                        options={stateOptions}
+                        {...field}
+                        onChange={(e) => {
+                          field.onChange(e);
+                          handleStateChange(e);
+                        }}
+                      />{" "}
+                    </>
+                  )}
+                />
+              </Grid>{" "}
+              <Grid item xs={6}>
+                <Controller
+                  name="zone"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <>
+                      <StyledSelectField
+                        placeholder="Choose the zone"
+                        options={zoneOptions}
+                        {...field}
+                        onChange={(e) => {
+                          field.onChange(e);
+                          handleZoneChange(e.value);
+                        }}
+                      />
+                    </>
+                  )}
+                />
+              </Grid>{" "}
+              <Grid item xs={6}>
+                <Controller
+                  name="district"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <>
+                      <StyledSelectField
+                        placeholder="Choose the district"
+                        options={districtOptions}
+                        {...field}
+                        onChange={(e) => {
+                          field.onChange(e);
+                          handleDistrictChange(e.value);
+                        }}
+                      />
+                    </>
+                  )}
+                />
+              </Grid>{" "}
+              <Grid item xs={6}>
+                <Controller
+                  name="chapter"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <>
+                      <StyledSelectField
+                        placeholder="Choose the chapter"
+                        options={chapterOptions}
+                        {...field}
+                      />
                     </>
                   )}
                 />
@@ -532,7 +720,6 @@ const AddMember = () => {
                   )}
                 />
               </Grid>
-
               <Grid item xs={6}></Grid>
               <Grid item xs={6}>
                 <Stack

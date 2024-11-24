@@ -15,7 +15,7 @@ const AddMemberPage = () => {
       >
         <Stack>
           <Typography variant="h4" color="textSecondary">
-            Add Member
+             Member
           </Typography>
         </Stack>
       </Stack>

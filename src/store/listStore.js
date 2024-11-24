@@ -11,6 +11,7 @@ import { getNews } from "../api/newsapi";
 import { getMember } from "../api/memberapi";
 import { getGroup, getGroupById } from "../api/groupapi";
 import { getReport } from "../api/reportapi";
+import { getAllLevel } from "../api/hierarchyapi";
 
 const useListStore = create((set, get) => ({
   lists: [],
@@ -40,21 +41,7 @@ const useListStore = create((set, get) => ({
     set({ rowPerSize: value });
   },
 
-  fetchColleges: async (filter) => {
-    set({ loading: true });
-    const allData = await getCollege(filter);
-    set({
-      lists: allData?.data || [],
-      coursedetails:
-        allData?.data?.map((college) => ({
-          collegeId: college._id,
-          courses: college.courseDetails || [],
-        })) || [],
-    });
-    set({ totalCount: allData?.totalCount || 0 });
-
-    set({ loading: false });
-  },
+ 
   fetchEvent: async (filter) => {
     set({ loading: true });
     const allData = await getEvents(filter);
@@ -125,9 +112,9 @@ const useListStore = create((set, get) => ({
     set({ totalCount: allData?.totalCount || 0 });
     set({ loading: false });
   },
-  fetchGroup: async (filter) => {
+  fetchLevels: async (type,filter) => {
     set({ loading: true });
-    const allData = await getGroup(filter);
+    const allData = await getAllLevel(type,filter);
     set({ lists: allData?.data || [] });
     set({ totalCount: allData?.totalCount || 0 });
     set({ loading: false });
@@ -151,13 +138,7 @@ const useListStore = create((set, get) => ({
     set({ totalCount: allData?.totalCount || 0 });
     set({ loading: false });
   },
-  fetchBatch: async (collegeId, courseId, filter) => {
-    set({ loading: true });
-    const allData = await getBatch(collegeId, courseId, filter);
-    set({ lists: allData?.data || [] });
-    set({ totalCount: allData?.totalCount || 0 });
-    set({ loading: false });
-  },
+ 
   fetchReport: async (filter) => {
     set({ loading: true });
     const allData = await getReport(filter);

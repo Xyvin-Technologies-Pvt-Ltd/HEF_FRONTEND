@@ -32,7 +32,7 @@ import NewspaperOutlinedIcon from "@mui/icons-material/NewspaperOutlined";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
 import logo from "../assets/images/logo.png";
-import ApprovalIcon from '@mui/icons-material/Approval';
+import ApprovalIcon from "@mui/icons-material/Approval";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import { GridView, LogoutOutlined, PaymentOutlined } from "@mui/icons-material";
 import { useAdminStore } from "../store/adminStore";
@@ -40,6 +40,7 @@ const drawerWidth = 250;
 const subNavigation = [
   { name: "Dashboard", to: "/dashboard", icon: <GridView /> },
   { name: "Users", to: "/members", icon: <PeopleAltOutlinedIcon /> },
+  { name: "Levels", to: "/levels", icon: <PeopleAltOutlinedIcon /> },
   { name: "Business", to: "/business", icon: <SchoolOutlinedIcon /> },
   {
     name: "Approvals",
@@ -228,7 +229,7 @@ const Layout = (props) => {
               <ListItemIcon
                 sx={{
                   minWidth: 24,
-                  marginLeft:1,
+                  marginLeft: 1,
                   marginRight: 1,
                   color: location.pathname === item.to ? "#2C2829" : "#686465",
                 }}

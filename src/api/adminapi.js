@@ -57,9 +57,26 @@ export const fetchListofAdminById = async (id) => {
   }
 };
 
-export const fetchAdminActivity= async (id) => {
+export const fetchAdminActivity = async (id) => {
   try {
     const response = await axiosInstance.get(`/admin/single/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(error.response.data.message);
+  }
+};
+export const editAdmin = async (id, data) => {
+  try {
+    const response = await axiosInstance.put(`/admin/${id}`, data);
+    toast.success(response.data.message);
+    return response.data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};
+export const deleteAdmin = async (id) => {
+  try {
+    const response = await axiosInstance.delete(`/admin/${id}`);
     return response.data;
   } catch (error) {
     console.error(error.response.data.message);

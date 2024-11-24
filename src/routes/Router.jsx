@@ -2,7 +2,6 @@ import { createBrowserRouter } from "react-router-dom";
 import Layout from "../Layout/Layout";
 import DashboardPage from "../pages/Dashboard/DashboardPage";
 import MemberPage from "../pages/Members/MemberPage";
-import GroupPage from "../pages/Groups/GroupPage";
 import EventsListPage from "../pages/Events/EventsListPage";
 import EventHistoryPage from "../pages/Events/EventHistoryPage";
 import ApprovalPage from "../pages/Approvals/ApprovalPage";
@@ -14,7 +13,6 @@ import LogoutPage from "../pages/Logout/LogoutPage";
 import AddMemberPage from "../pages/Members/AddMemberPage";
 import EventSinglePage from "../pages/Events/EventSinglePage";
 import EditEvent from "../pages/Events/EditEvent";
-import AddGroupPage from "../pages/Groups/AddGroupPage";
 import Createpromotion from "../pages/Promotions/CreatePromotion";
 import MemberView from "../pages/Members/MemberView";
 import AddAdminPage from "../pages/Settings/AddAdminPage";
@@ -22,7 +20,6 @@ import AddRolePage from "../pages/Settings/AddRolePage";
 import LoginPage from "../pages/LoginPage";
 import EditNews from "../pages/News/EditNews";
 import EditPromotion from "../pages/Promotions/EditPromotion";
-import GroupMembers from "../pages/Groups/GroupMembers";
 import PaymentPage from "../pages/payments/PaymentPage";
 import QRPage from "../pages/QRPage";
 import { PrivateRoute } from "./PrivateRouter";
@@ -30,6 +27,8 @@ import ReportPage from "../pages/Reports/ReportPage";
 import AddNews from "../components/News/AddNews";
 import CreateNews from "../pages/News/CreateNews";
 import BusinessPage from "../pages/Business/BusinessPage";
+import LevelPage from "../pages/Level/LevelPage";
+import AddLevelPage from "../pages/Level/AddLevel";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -89,36 +88,24 @@ const router = createBrowserRouter([
       </PrivateRoute>
     ),
   },
+ {
+    path: "/levels",
+  element: (
+    <PrivateRoute>
+      <Layout>
+        <LevelPage />
+      </Layout>
+    </PrivateRoute>
+  )},
   {
-    path: "/groups",
-    element: (
-      <PrivateRoute>
-        <Layout>
-          <GroupPage />
-        </Layout>
-      </PrivateRoute>
-    ),
-  },
-  {
-    path: "/group/:id",
-    element: (
-      <PrivateRoute>
-        <Layout>
-          <GroupMembers />
-        </Layout>
-      </PrivateRoute>
-    ),
-  },
-  {
-    path: "/groups/group",
-    element: (
-      <PrivateRoute>
-        <Layout>
-          <AddGroupPage />
-        </Layout>
-      </PrivateRoute>
-    ),
-  },
+    path: "/levels/level",
+  element: (
+    <PrivateRoute>
+      <Layout>
+        <AddLevelPage />
+      </Layout>
+    </PrivateRoute>
+  )},
   {
     path: "/events/list",
     element: (
