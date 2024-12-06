@@ -162,7 +162,8 @@ export default function Promotionform({ isUpdate }) {
       } else if (type === "poster") {
         formData.type = "poster";
         formData.media = imageUrl;
-        formData.link = data?.link;
+        if (data?.link) formData.link = data?.link;
+     
       }
       if (isUpdate && id) {
         await updatePromotion(id, formData);

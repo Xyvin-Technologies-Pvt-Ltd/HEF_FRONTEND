@@ -14,6 +14,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { StyledMultilineTextField } from "../../ui/StyledMultilineTextField.jsx";
 import StyledCropImage from "../../ui/StyledCropImage.jsx";
+import { useDropDownStore } from "../../store/dropDownStore.js";
 
 export default function AddEvent({ setSelectedTab, isUpdate }) {
   const {
@@ -25,11 +26,22 @@ export default function AddEvent({ setSelectedTab, isUpdate }) {
   } = useForm();
   const { id } = useParams();
   const [loadings, setLoadings] = useState(false);
+  const { user, fetchListofUser } = useDropDownStore();
   const [type, setType] = useState();
   const navigate = useNavigate();
   const handleTypeChange = (selectedOption) => {
     setType(selectedOption?.value);
   };
+  useEffect(() => {
+    fetchListofUser();
+  }, []);
+  const users =
+    user && Array.isArray(user)
+      ? user.map((i) => ({
+          value: i._id,
+          label: i.name,
+        }))
+      : [];
   const [speakers, setSpeakers] = useState([
     {
       name: "",
@@ -105,7 +117,7 @@ export default function AddEvent({ setSelectedTab, isUpdate }) {
     try {
       setLoadings(true);
       let imageUrl = data?.image || "";
-  
+
       if (imageFile) {
         try {
           imageUrl = await new Promise((resolve, reject) => {
@@ -120,16 +132,17 @@ export default function AddEvent({ setSelectedTab, isUpdate }) {
           return;
         }
       }
-  
+
       // Filter out speakers with all empty fields
       const filteredSpeakers = data.speakers.filter(
-        (speaker) => speaker.name || speaker.designation || speaker.role || speaker.image
+        (speaker) =>
+          speaker.name || speaker.designation || speaker.role || speaker.image
       );
-  
+
       const speakersData = await Promise.all(
         filteredSpeakers.map(async (speaker, index) => {
           let speakerImageUrl = speakers[index]?.image || "";
-  
+
           if (speaker?.image && typeof speaker.image === "object") {
             try {
               speakerImageUrl = await new Promise((resolve, reject) => {
@@ -143,7 +156,7 @@ export default function AddEvent({ setSelectedTab, isUpdate }) {
               console.error(`Failed to upload image for speaker:`, error);
             }
           }
-  
+
           return {
             name: speaker?.name,
             designation: speaker?.designation,
@@ -152,7 +165,7 @@ export default function AddEvent({ setSelectedTab, isUpdate }) {
           };
         })
       );
-  
+
       const formData = {
         type: data?.type?.value,
         eventName: data?.eventName,
@@ -164,15 +177,16 @@ export default function AddEvent({ setSelectedTab, isUpdate }) {
         speakers: speakersData,
         description: data?.description,
         organiserName: data?.organiserName,
+        coordinator: data?.coordinator?.map((coordinator) => coordinator.value),
       };
-  
+
       if (type === "Online") {
         formData.platform = data?.platform.value;
         formData.link = data?.link;
       } else {
         formData.venue = data?.venue;
       }
-  
+
       if (isUpdate && id) {
         await updateEvent(id, formData);
         navigate("/events/list");
@@ -180,7 +194,7 @@ export default function AddEvent({ setSelectedTab, isUpdate }) {
         await addEvent(formData);
         setSelectedTab(0);
       }
-  
+
       reset();
     } catch (error) {
       toast.error(error.message);
@@ -188,7 +202,6 @@ export default function AddEvent({ setSelectedTab, isUpdate }) {
       setLoadings(false);
     }
   };
-  
 
   const addSpeaker = () => {
     setSpeakers([
@@ -303,7 +316,8 @@ export default function AddEvent({ setSelectedTab, isUpdate }) {
                         onChange={(file) => {
                           setImageFile(file);
                           onChange(file);
-                        }}ratio={16 / 9}
+                        }}
+                        ratio={16 / 9}
                         value={value}
                       />
                       {errors.image && (
@@ -548,6 +562,36 @@ export default function AddEvent({ setSelectedTab, isUpdate }) {
                       {errors.organiserName && (
                         <span style={{ color: "red" }}>
                           {errors.organiserName.message}
+                        </span>
+                      )}
+                    </>
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Typography
+                  sx={{ marginBottom: 1 }}
+                  variant="h6"
+                  color="textSecondary"
+                >
+                  Coordinator
+                </Typography>
+                <Controller
+                  name="coordinator"
+                  control={control}
+                  defaultValue=""
+                  rules={{ required: "Coordinator is required" }}
+                  render={({ field }) => (
+                    <>
+                      <StyledSelectField
+                        placeholder="Select member"
+                        options={users}
+                        isMulti
+                        {...field}
+                      />
+                      {errors.coordinator && (
+                        <span style={{ color: "red" }}>
+                          {errors.coordinator.message}
                         </span>
                       )}
                     </>

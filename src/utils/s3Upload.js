@@ -14,6 +14,7 @@ const uploadFileToS3 = async (file, onSuccess, onError) => {
       secretAccessKey: SECRET_ACCESS_KEY,
     },
   });
+console.log("s3",S3_BUCKET,REGION,ACCESS_KEY_ID,SECRET_ACCESS_KEY);
 
   try {
     let fileToUpload = file;

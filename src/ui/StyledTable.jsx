@@ -149,8 +149,8 @@ const StyledTable = ({
         return "#9E9E9E";
       case "cancelled":
         return "#FF5722";
-        case "blocked":
-          return "red";
+      case "blocked":
+        return "red";
       case "published":
         return "#3F51B5";
       case "unpublished":
@@ -383,6 +383,9 @@ const StyledTable = ({
                                   style={{ color: "red" }}
                                 >
                                   Delete
+                                </MenuItem>{" "}
+                                <MenuItem onClick={handleAction}>
+                                  Suspend
                                 </MenuItem>
                               </>,
                             ]

@@ -6,10 +6,10 @@ import StyledSearchbar from "../../ui/StyledSearchbar";
 import { memberColumns, userData } from "../../assets/json/TableData";
 import { useNavigate } from "react-router-dom";
 import DeleteProfile from "../../components/Member/DeleteProfile";
-import { useMemberStore } from "../../store/Memberstore";
 import { useListStore } from "../../store/listStore";
 import { getMember } from "../../api/memberapi";
 import { generateExcel } from "../../utils/generateExcel";
+import SuspendProfile from "../../components/Member/SuspendProfile";
 
 const MemberPage = () => {
   const navigate = useNavigate();
@@ -17,6 +17,7 @@ const MemberPage = () => {
   const [search, setSearch] = useState("");
   const [isChange, setIschange] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [suspendOpen, setSuspendOpen] = useState(false);
   const [memberId, setMemberId] = useState(null);
   const [pageNo, setPageNo] = useState(1);
   const [row, setRow] = useState(10);
@@ -36,7 +37,16 @@ const MemberPage = () => {
     setDeleteOpen(true);
   };
   const handleCloseDelete = () => {
+    setMemberId(null);
     setDeleteOpen(false);
+  };
+  const handleSuspend = (id) => {
+    setMemberId(id);
+    setSuspendOpen(true);
+  };
+  const handleCloseSuspend = () => {
+    setMemberId(null);
+    setSuspendOpen(false);
   };
   const handleChange = () => {
     setIschange(!isChange);
@@ -58,6 +68,7 @@ const MemberPage = () => {
   };
   return (
     <>
+    
       <Stack
         direction={"row"}
         padding={"10px"}
@@ -120,12 +131,19 @@ const MemberPage = () => {
                 state: { memberId: id, isUpdate: true },
               });
             }}
+            onAction={handleSuspend}
             rowPerSize={row}
             setRowPerSize={setRow}
           />
           <DeleteProfile
             open={deleteOpen}
             onClose={handleCloseDelete}
+            onChange={handleChange}
+            id={memberId}
+          />
+          <SuspendProfile
+            open={suspendOpen}
+            onClose={handleCloseSuspend}
             onChange={handleChange}
             id={memberId}
           />

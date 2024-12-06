@@ -33,7 +33,6 @@ const MemberProfile = ({ data, loading }) => {
       {loading ? (
        <>
        <Grid container spacing={2}>
-         {/* Video Section */}
          <Grid item md={12}>
            <Typography variant="h5" color="textTertiary" mt={1}>
              video

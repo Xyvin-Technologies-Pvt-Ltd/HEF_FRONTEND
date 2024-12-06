@@ -29,6 +29,8 @@ import CreateNews from "../pages/News/CreateNews";
 import BusinessPage from "../pages/Business/BusinessPage";
 import LevelPage from "../pages/Level/LevelPage";
 import AddLevelPage from "../pages/Level/AddLevel";
+import EventView from "../pages/Events/EventView";
+import AddEventPage from "../pages/Events/AddEventPage";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -111,7 +113,7 @@ const router = createBrowserRouter([
     element: (
       <PrivateRoute>
         <Layout>
-          <EventsListPage />
+          <EventView />
         </Layout>
       </PrivateRoute>
     ),
@@ -137,11 +139,11 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/events/history",
+    path: "/events/add",
     element: (
       <PrivateRoute>
         <Layout>
-          <EventHistoryPage />
+          <AddEventPage />
         </Layout>
       </PrivateRoute>
     ),

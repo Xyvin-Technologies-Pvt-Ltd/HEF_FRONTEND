@@ -72,6 +72,7 @@ const AddMember = () => {
       setValue("company_name", member?.company?.name || "");
       setValue("company_email", member?.company?.email || "");
       setValue("company_website", member?.company?.websites || "");
+      setValue("company_phone", member?.company?.phone || "");
 
       const selectedRole = roleOptions?.find(
         (item) => item?.value === member?.role
@@ -405,7 +406,7 @@ const AddMember = () => {
                     </>
                   )}
                 />{" "}
-                {additionalPhones.map((phone, index) => (
+                {additionalPhones?.map((phone, index) => (
                   <Grid marginTop={2} key={index}>
                     <Controller
                       name={`additionalPhones.${index}`}
@@ -507,7 +508,7 @@ const AddMember = () => {
                   Company Phone
                 </Typography>
                 <Controller
-                  name="company_phoneNumber"
+                  name="company_phone"
                   control={control}
                   defaultValue=""
                   render={({ field }) => (
