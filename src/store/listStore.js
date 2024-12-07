@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { getBatch, getCollege, getMemberByBatch } from "../api/collegeapi";
 import { getEvents } from "../api/eventapi";
 import { getPromotion } from "../api/promotionapi";
 import { getFeed, getFeedByUser } from "../api/feedapi";
@@ -9,7 +8,6 @@ import { getAdmin } from "../api/adminapi";
 import { getPayment } from "../api/paymentapi";
 import { getNews } from "../api/newsapi";
 import { getMember } from "../api/memberapi";
-import { getGroup, getGroupById } from "../api/groupapi";
 import { getReport } from "../api/reportapi";
 import { getAllLevel } from "../api/hierarchyapi";
 
@@ -119,25 +117,8 @@ const useListStore = create((set, get) => ({
     set({ totalCount: allData?.totalCount || 0 });
     set({ loading: false });
   },
-  fetchMembers: async (id, filter) => {
-    set({ loading: true });
-    const allData = await getGroupById(id, filter);
-    set({ lists: allData?.data?.participantsData || [] });
-    set({ totalCount: allData?.totalCount || 0 });
-    set({ loading: false });
-  },
-  getMember: async (collegeId, courseId, batchId, filter) => {
-    set({ loading: true });
-    const allData = await getMemberByBatch(
-      collegeId,
-      courseId,
-      batchId,
-      filter
-    );
-    set({ lists: allData?.data || [] });
-    set({ totalCount: allData?.totalCount || 0 });
-    set({ loading: false });
-  },
+
+ 
  
   fetchReport: async (filter) => {
     set({ loading: true });

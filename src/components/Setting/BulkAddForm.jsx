@@ -4,7 +4,6 @@ import Papa from "papaparse";
 import * as XLSX from "xlsx";
 import DropZone from "../../ui/DropZone";
 import { StyledButton } from "../../ui/StyledButton";
-import { addCollegeBulk } from "../../api/collegeapi";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
@@ -68,7 +67,7 @@ const BulkAddForm = () => {
           parseFile(file, async (parsedData) => {
             if (parsedData && parsedData.length > 0) {
               console.log("Parsed Data:", parsedData);
-              await addCollegeBulk(parsedData);
+            
               navigate("/colleges");
             } else {
               toast("Parsed data is empty or invalid.");

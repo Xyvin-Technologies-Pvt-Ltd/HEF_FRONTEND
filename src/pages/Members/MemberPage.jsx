@@ -1,55 +1,16 @@
-import React, { useEffect, useState } from "react";
-import StyledTable from "../../ui/StyledTable";
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, Stack, Tab, Tabs, Typography } from "@mui/material";
+import React, { useState } from "react";
+import MemberList from "./MemberList";
+import MemberAccess from "./MemberAccess";
 import { StyledButton } from "../../ui/StyledButton";
-import StyledSearchbar from "../../ui/StyledSearchbar";
-import { memberColumns, userData } from "../../assets/json/TableData";
-import { useNavigate } from "react-router-dom";
-import DeleteProfile from "../../components/Member/DeleteProfile";
-import { useListStore } from "../../store/listStore";
-import { getMember } from "../../api/memberapi";
-import { generateExcel } from "../../utils/generateExcel";
-import SuspendProfile from "../../components/Member/SuspendProfile";
+
+import { ReactComponent as AddIcon } from "../../assets/icons/AddIcon.svg";
 
 const MemberPage = () => {
-  const navigate = useNavigate();
-  const { fetchMember } = useListStore();
-  const [search, setSearch] = useState("");
-  const [isChange, setIschange] = useState(false);
-  const [deleteOpen, setDeleteOpen] = useState(false);
-  const [suspendOpen, setSuspendOpen] = useState(false);
-  const [memberId, setMemberId] = useState(null);
-  const [pageNo, setPageNo] = useState(1);
-  const [row, setRow] = useState(10);
-  useEffect(() => {
-    let filter = {};
-    filter.pageNo = pageNo;
-    if (search) {
-      filter.search = search;
-      setPageNo(1);
-    }
-    filter.limit = row;
-    fetchMember(filter);
-  }, [isChange, pageNo, search, row]);
+  const [selectedTab, setSelectedTab] = useState(0);
 
-  const handleRowDelete = (id) => {
-    setMemberId(id);
-    setDeleteOpen(true);
-  };
-  const handleCloseDelete = () => {
-    setMemberId(null);
-    setDeleteOpen(false);
-  };
-  const handleSuspend = (id) => {
-    setMemberId(id);
-    setSuspendOpen(true);
-  };
-  const handleCloseSuspend = () => {
-    setMemberId(null);
-    setSuspendOpen(false);
-  };
-  const handleChange = () => {
-    setIschange(!isChange);
+  const handleChange = (event, newValue) => {
+    setSelectedTab(newValue);
   };
   const handleDownload = async () => {
     try {
@@ -68,7 +29,6 @@ const MemberPage = () => {
   };
   return (
     <>
-    
       <Stack
         direction={"row"}
         padding={"10px"}
@@ -79,7 +39,7 @@ const MemberPage = () => {
       >
         <Stack>
           <Typography variant="h4" color="textSecondary">
-            Members List
+            Users
           </Typography>
         </Stack>
         <Stack direction={"row"} spacing={2}>
@@ -90,64 +50,53 @@ const MemberPage = () => {
           />
           <StyledButton
             variant={"primary"}
-            name={"Add new member"}
+            name={
+              <>
+                <AddIcon />
+                Add User
+              </>
+            }
             onClick={() => {
               navigate("/members/member");
             }}
           />
         </Stack>
       </Stack>
-      <Box padding={"15px"}>
-        <Stack
-          direction={"row"}
-          justifyContent={"end"}
-          paddingBottom={"15px"}
-          alignItems={"center"}
-        >
-          <Stack direction={"row"} spacing={2}>
-            <StyledSearchbar
-              placeholder={"Search"}
-              onchange={(e) => setSearch(e.target.value)}
-            />
-          </Stack>
-        </Stack>
-        <Box
-          borderRadius={"16px"}
-          bgcolor={"white"}
-          p={1}
-          border={"1px solid rgba(0, 0, 0, 0.12)"}
-        >
-          <StyledTable
-            columns={memberColumns}
-            member
-            onDeleteRow={handleRowDelete}
-            onView={(id) => {
-              navigate(`/members/${id}`);
-            }}
-            pageNo={pageNo}
-            setPageNo={setPageNo}
-            onModify={(id) => {
-              navigate(`/members/member`, {
-                state: { memberId: id, isUpdate: true },
-              });
-            }}
-            onAction={handleSuspend}
-            rowPerSize={row}
-            setRowPerSize={setRow}
-          />
-          <DeleteProfile
-            open={deleteOpen}
-            onClose={handleCloseDelete}
-            onChange={handleChange}
-            id={memberId}
-          />
-          <SuspendProfile
-            open={suspendOpen}
-            onClose={handleCloseSuspend}
-            onChange={handleChange}
-            id={memberId}
-          />
-        </Box>
+      <Tabs
+        value={selectedTab}
+        onChange={handleChange}
+        aria-label="tabs"
+        TabIndicatorProps={{
+          style: {
+            backgroundColor: "#F58220",
+            height: 4,
+            borderRadius: "4px",
+          },
+        }}
+        sx={{
+          marginTop: "20px",
+          bgcolor: "white",
+          paddingTop: "4px",
+          "& .MuiTabs-indicator": {
+            backgroundColor: "#F58220",
+          },
+          "& .MuiTab-root": {
+            textTransform: "none",
+            fontSize: "16px",
+            fontWeight: 600,
+            color: "#686465",
+          },
+          "& .MuiTab-root.Mui-selected": {
+            color: "#F58220",
+          },
+        }}
+      >
+        <Tab label="User Details" />
+        <Tab label="Accessess" />
+      </Tabs>
+      <Box padding="15px" marginBottom={4}>
+        {selectedTab === 0 && <MemberList />}
+        {selectedTab === 1 && <MemberAccess />}
       </Box>
     </>
   );

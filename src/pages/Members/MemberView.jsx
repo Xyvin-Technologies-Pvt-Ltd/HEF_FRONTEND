@@ -14,6 +14,7 @@ import MemberPosts from "../../components/Member/MemberPosts";
 import MemberAnalytics from "../../components/Member/MemberAnalytics";
 import { useMemberStore } from "../../store/Memberstore";
 import { useFeedStore } from "../../store/feedStore";
+import Subscription from "./Subscription";
 
 const MemberView = () => {
   const [selectedTab, setSelectedTab] = useState(0);
@@ -75,6 +76,7 @@ const MemberView = () => {
         }}
       >
         <Tab label="Profile" />
+        <Tab label="Subscriptions" />
         <Tab label="Posts" />
         <Tab label="Analytics" />
       </Tabs>
@@ -85,6 +87,11 @@ const MemberView = () => {
           </Grid>
         )}
         {selectedTab === 1 && (
+          <Grid spacing={2}>
+            <Subscription id={id} loading={loading} />
+          </Grid>
+        )}
+        {selectedTab === 2 && (
           <Grid>
             <MemberPosts id={id} />
           </Grid>

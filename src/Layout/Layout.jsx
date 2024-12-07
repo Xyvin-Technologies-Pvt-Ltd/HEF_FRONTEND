@@ -39,8 +39,9 @@ import { useAdminStore } from "../store/adminStore";
 const drawerWidth = 250;
 const subNavigation = [
   { name: "Dashboard", to: "/dashboard", icon: <GridView /> },
-  { name: "Users", to: "/members", icon: <PeopleAltOutlinedIcon /> },
   { name: "Levels", to: "/levels", icon: <PeopleAltOutlinedIcon /> },
+  { name: "Users", to: "/members", icon: <PeopleAltOutlinedIcon /> },
+
   { name: "Business", to: "/business", icon: <SchoolOutlinedIcon /> },
   {
     name: "Approvals",
@@ -48,8 +49,8 @@ const subNavigation = [
     icon: <ApprovalIcon />,
   },
   {
-    name: "Payments",
-    to: "/payments",
+    name: "Subscriptions",
+    to: "/subscriptions",
     icon: <AccountBalanceWalletIcon />,
   },
 

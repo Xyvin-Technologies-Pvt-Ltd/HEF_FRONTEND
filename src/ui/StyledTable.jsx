@@ -40,7 +40,7 @@ const StyledTableCell = styled(TableCell)`
   &.${tableCellClasses.body} {
     font-size: 14px;
     background-color: #fff;
-    padding: 16px;
+    padding: 10px;
     font-weight: 400;
     color: rgba(0, 0, 0, 0.87);
     text-align: center;

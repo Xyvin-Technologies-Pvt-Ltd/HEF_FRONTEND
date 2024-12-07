@@ -2,7 +2,7 @@ import { Box, Grid, Skeleton, Typography } from "@mui/material";
 import React, { useState } from "react";
 import UserCard from "../../ui/UserCard";
 import CompanyCard from "../../ui/CompanyCard";
-import AwardCard from "../../ui/AwardCard";
+import FileCopyIcon from "@mui/icons-material/FileCopy";
 import { ReactComponent as WebsiteIcon } from "../../assets/icons/AppWebsiteIcon.svg";
 import { ReactComponent as InstagramIcon } from "../../assets/icons/AppInstagramIcon.svg";
 import { ReactComponent as TwitterIcon } from "../../assets/icons/AppTwitterIcon.svg";
@@ -21,8 +21,8 @@ const MemberProfile = ({ data, loading }) => {
         return <TwitterIcon />;
       case "linkedin":
         return <LinkedInIcon />;
-        case "facebook":
-          return <FacebookIcon />;
+      case "facebook":
+        return <FacebookIcon />;
       default:
         return null;
     }
@@ -31,44 +31,44 @@ const MemberProfile = ({ data, loading }) => {
   return (
     <>
       {loading ? (
-       <>
-       <Grid container spacing={2}>
-         <Grid item md={12}>
-           <Typography variant="h5" color="textTertiary" mt={1}>
-             video
-           </Typography>
-         </Grid>
-         {[...Array(3)].map((_, index) => (
-           <Grid item md={4} xs={12} key={index}>
-             <Skeleton variant="rectangular" width="100%" height={200} />
-           </Grid>
-         ))}
- 
-         {/* Certificates Section */}
-         <Grid item md={12}>
-           <Typography variant="h5" color="textTertiary" mt={1}>
-             Certificates
-           </Typography>
-         </Grid>
-         {[...Array(2)].map((_, index) => (
-           <Grid item md={6} xs={12} key={index}>
-             <Skeleton variant="rectangular" width="100%" height={150} />
-           </Grid>
-         ))}
- 
-         {/* Awards Section */}
-         <Grid item md={12}>
-           <Typography variant="h5" color="textTertiary" mt={1}>
-             Awards
-           </Typography>
-         </Grid>
-         {[...Array(2)].map((_, index) => (
-           <Grid item md={6} xs={12} key={index}>
-             <Skeleton variant="rectangular" width="100%" height={150} />
-           </Grid>
-         ))}
-       </Grid>
-     </>
+        <>
+          <Grid container spacing={2}>
+            <Grid item md={12}>
+              <Typography variant="h5" color="textTertiary" mt={1}>
+                video
+              </Typography>
+            </Grid>
+            {[...Array(3)].map((_, index) => (
+              <Grid item md={4} xs={12} key={index}>
+                <Skeleton variant="rectangular" width="100%" height={200} />
+              </Grid>
+            ))}
+
+            {/* Certificates Section */}
+            <Grid item md={12}>
+              <Typography variant="h5" color="textTertiary" mt={1}>
+                Certificates
+              </Typography>
+            </Grid>
+            {[...Array(2)].map((_, index) => (
+              <Grid item md={6} xs={12} key={index}>
+                <Skeleton variant="rectangular" width="100%" height={150} />
+              </Grid>
+            ))}
+
+            {/* Awards Section */}
+            <Grid item md={12}>
+              <Typography variant="h5" color="textTertiary" mt={1}>
+                Awards
+              </Typography>
+            </Grid>
+            {[...Array(2)].map((_, index) => (
+              <Grid item md={6} xs={12} key={index}>
+                <Skeleton variant="rectangular" width="100%" height={150} />
+              </Grid>
+            ))}
+          </Grid>
+        </>
       ) : (
         <Grid container spacing={4} padding={2}>
           <Grid item md={7}>
@@ -191,6 +191,34 @@ const MemberProfile = ({ data, loading }) => {
               {data?.awards?.map((award, index) => (
                 <Grid item md={4} xs={12} key={index}>
                   <AwardBox award={award} />
+                </Grid>
+              ))}
+            </>
+          )}
+          {data?.file && data?.file.length > 0 && (
+            <>
+              <Grid item md={12}>
+                <Typography variant="h5" color="textTertiary" mt={1}>
+                  Files
+                </Typography>
+              </Grid>
+              {data?.file?.map((file, index) => (
+                <Grid item md={12} xs={12} key={index}>
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="flex-start"
+                    bgcolor="white"
+                    borderRadius={"12px"}
+                    p={2}
+                  >
+                    <FileCopyIcon style={{ marginRight: "8px" }} />
+                    <Typography variant="h5" color="#6D6D6D" fontWeight={400}>
+                      <a href={file} target="_blank" rel="noopener noreferrer">
+                        {file}
+                      </a>
+                    </Typography>
+                  </Box>
                 </Grid>
               ))}
             </>

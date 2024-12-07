@@ -64,14 +64,27 @@ const UserCard = ({ user }) => {
               width: "fit-content",
             }}
           >
-            {user?.role}
+            {user?.subscription}
           </Typography>
           <Typography variant="h5" color={"textPrimary"}>
-            {user?.name?.first} {user?.name?.middle} {user?.name?.last}
+            {user?.name}
           </Typography>
-          <Typography variant="h7" color={"textPrimary"}>
-            {user?.college?.collegeName}
-          </Typography>
+          <Stack direction={"row"} spacing={2}>
+            <Typography variant="h7" color={"textPrimary"}>
+              User Id :
+            </Typography>
+            <Typography variant="h7" color={"textPrimary"} fontWeight={600}>
+              {user?.memberId}
+            </Typography>
+          </Stack>
+          <Stack direction={"row"} spacing={2}>
+            <Typography variant="h7" color={"textPrimary"}>
+              Designation :
+            </Typography>
+            <Typography variant="h7" color={"textPrimary"} fontWeight={600}>
+              {user?.role}
+            </Typography>
+          </Stack>
           <Stack direction="row" alignItems="center" spacing={1}>
             <Stack>
               <PhoneIcon />{" "}
