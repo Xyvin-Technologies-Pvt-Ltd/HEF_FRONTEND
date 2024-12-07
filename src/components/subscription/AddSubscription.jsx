@@ -28,11 +28,17 @@ const AddSubscription = ({
   const [expiryDate, setExpiryDate] = useState(null);
   const { addSubscription, updateSubscription } = useSubscriptionStore();
   useEffect(() => {
+    console.log("currentExpiryDate:", currentExpiryDate);
     if (currentExpiryDate) {
-      setExpiryDate(new Date(currentExpiryDate));
-      setValue("expiryDate", new Date(currentExpiryDate).toISOString());
+      const parsedDate = new Date(currentExpiryDate);
+      console.log("Parsed Date:", parsedDate);
+      if (!isNaN(parsedDate)) {
+        setExpiryDate(parsedDate);
+        setValue("expiryDate", parsedDate.toISOString());
+      }
     }
   }, [currentExpiryDate, setValue]);
+  
   const onSubmit = async (formData) => {
     try {
       const newData = {

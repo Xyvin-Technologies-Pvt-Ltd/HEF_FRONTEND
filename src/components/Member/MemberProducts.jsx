@@ -9,36 +9,48 @@ import FeedApproval from "../Approve/FeedApproval";
 import FeedReject from "../Approve/FeedReject";
 import { useListStore } from "../../store/listStore";
 import { StyledButton } from "../../ui/StyledButton";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { useProductStore } from "../../store/productStore";
 
 const MemberProducts = ({ id }) => {
+  const navigate = useNavigate();
   const { fetchFeedByUser } = useListStore();
   const [pageNo, setPageNo] = useState(1);
+  const[isChange, setIsChange] = useState(false);
+  const [selectedRows, setSelectedRows] = useState([]);
   const [row, setRow] = useState(10);
-  const [rejectOpen, setRejectOpen] = useState(false);
-  const [approveOpen, setApproveOpen] = useState(false);
-  const [isChange, setIsChange] = useState(false);
-  const [approvalId, setApprovalId] = useState(null);
+  const{deleteProduct}=useProductStore()
   useEffect(() => {
     let filter = {};
 
     filter.pageNo = pageNo;
     filter.limit = row;
     fetchFeedByUser(id, filter);
-  }, [isChange, pageNo, row]);
-
-  const handleReject = (id) => {
-    setApprovalId(id);
-    setRejectOpen(true);
+  }, [pageNo, row, isChange]);
+  const handleSelectionChange = (newSelectedIds) => {
+    setSelectedRows(newSelectedIds);
   };
-  const handleCloseReject = () => {
-    setRejectOpen(false);
+  const handleDelete = async () => {
+    if (selectedRows.length > 0) {
+      try {
+        await Promise.all(selectedRows?.map((id) =>deleteProduct(id)));
+        toast.success("Deleted successfully");
+        setIsChange(!isChange);
+        setSelectedRows([]);
+      } catch (error) {
+        console.log(error);
+      }
+    }
   };
-  const handleApprove = (id) => {
-    setApprovalId(id);
-    setApproveOpen(true);
-  };
-  const handleCloseApprove = () => {
-    setApproveOpen(false);
+  const handleRowDelete = async (id) => {
+    try {
+      await deleteProduct(id);
+      toast.success("Deleted successfully");
+      setIsChange(!isChange);
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <>
@@ -61,6 +73,9 @@ const MemberProducts = ({ id }) => {
                   Add Product
                 </>
               }
+              onClick={() => {
+                navigate(`/products/${id}`);
+              }}
             />
           </Stack>
         </Stack>{" "}
@@ -72,26 +87,19 @@ const MemberProducts = ({ id }) => {
         >
           <StyledTable
             columns={postColumns}
-            payment
-            onAction={handleReject}
-            onModify={handleApprove}
+            onSelectionChange={handleSelectionChange}
+          onDelete={handleDelete}
+          onDeleteRow={handleRowDelete}
+            onModify={(id) => {
+              navigate(`/products/${id}`, {
+                state: { productId: id, isUpdate: true },
+              });
+            }}
             pageNo={pageNo}
             setPageNo={setPageNo}
             rowPerSize={row}
             setRowPerSize={setRow}
           />{" "}
-          <FeedApproval
-            open={approveOpen}
-            onClose={handleCloseApprove}
-            id={approvalId}
-            setIsChange={setIsChange}
-          />
-          <FeedReject
-            open={rejectOpen}
-            onClose={handleCloseReject}
-            id={approvalId}
-            setIsChange={setIsChange}
-          />
         </Box>
       </>
     </>

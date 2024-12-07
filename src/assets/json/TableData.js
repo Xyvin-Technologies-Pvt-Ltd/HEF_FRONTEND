@@ -74,9 +74,9 @@ export const levelColumns = [
 ];
 export const postColumns = [
   { title: "Date", field: "createdAt", padding: "none" },
-  { title: "Type", field: "type" },
+  { title: "Name", field: "name" },
   { title: "Image", field: "media" },
-  { title: "Content", field: "content" },
+  { title: "Description", field: "description" },
   { title: "Status", field: "status" },
 ];
 export const approvalColumns = [

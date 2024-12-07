@@ -31,6 +31,8 @@ import LevelPage from "../pages/Level/LevelPage";
 import AddLevelPage from "../pages/Level/AddLevel";
 import EventView from "../pages/Events/EventView";
 import AddEventPage from "../pages/Events/AddEventPage";
+import AddProduct from "../components/Member/AddProduct";
+import AddProductPage from "../pages/Members/AddProductPage";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -195,6 +197,16 @@ const router = createBrowserRouter([
       <PrivateRoute>
         <Layout>
           <PaymentPage />
+        </Layout>
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/products/:id",
+    element: (
+      <PrivateRoute>
+        <Layout>
+          <AddProductPage/>
         </Layout>
       </PrivateRoute>
     ),

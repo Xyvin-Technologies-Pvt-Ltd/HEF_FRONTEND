@@ -1,8 +1,8 @@
 import { create } from "zustand";
 import { getEvents } from "../api/eventapi";
 import { getPromotion } from "../api/promotionapi";
-import { getFeed, getFeedByUser } from "../api/feedapi";
-import { getApproval } from "../api/productapi";
+import { getFeed } from "../api/feedapi";
+import { getApproval, getFeedByUser } from "../api/productapi";
 import { fetchRole } from "../api/roleManagementapi";
 import { getAdmin } from "../api/adminapi";
 import { getNews } from "../api/newsapi";
