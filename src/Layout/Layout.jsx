@@ -42,7 +42,7 @@ const subNavigation = [
   { name: "Levels", to: "/levels", icon: <PeopleAltOutlinedIcon /> },
   { name: "Users", to: "/members", icon: <PeopleAltOutlinedIcon /> },
 
-  { name: "Business", to: "/business", icon: <SchoolOutlinedIcon /> },
+  { name: "Activity", to: "/activity", icon: <SchoolOutlinedIcon /> },
   {
     name: "Approvals",
     to: "/approvals",

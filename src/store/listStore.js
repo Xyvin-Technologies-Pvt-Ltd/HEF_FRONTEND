@@ -10,6 +10,7 @@ import { getMember } from "../api/memberapi";
 import { getReport } from "../api/reportapi";
 import { getAllLevel } from "../api/hierarchyapi";
 import { getAllSubscription } from "../api/subscriptionapi";
+import { getActivities } from "../api/activityapi";
 
 const useListStore = create((set, get) => ({
   lists: [],
@@ -43,6 +44,13 @@ const useListStore = create((set, get) => ({
   fetchEvent: async (filter) => {
     set({ loading: true });
     const allData = await getEvents(filter);
+    set({ lists: allData?.data || [] });
+    set({ totalCount: allData?.totalCount || 0 });
+    set({ loading: false });
+  },
+  fetchActivity: async (filter) => {
+    set({ loading: true });
+    const allData = await getActivities(filter);
     set({ lists: allData?.data || [] });
     set({ totalCount: allData?.totalCount || 0 });
     set({ loading: false });

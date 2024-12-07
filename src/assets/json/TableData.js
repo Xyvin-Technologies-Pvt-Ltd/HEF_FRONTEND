@@ -51,7 +51,7 @@ export const batchColumns = [
   { title: "Batch", field: "_id", padding: "none" },
   { title: "No of members", field: "noOfMembers" },
 ];
-export const collegeColumns = [
+export const activityColumns = [
   { title: "College name", field: "collegeName", padding: "none" },
   { title: "Country", field: "country" },
   { title: "State", field: "state" },

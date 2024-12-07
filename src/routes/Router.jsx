@@ -83,7 +83,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/business",
+    path: "/activity",
     element: (
       <PrivateRoute>
         <Layout>

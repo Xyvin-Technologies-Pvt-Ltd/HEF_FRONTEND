@@ -1,15 +1,38 @@
 import React, { useEffect, useState } from "react";
-import { Box, Divider, Grid, Tab, Tabs, Typography } from "@mui/material";
-import FeedList from "../Approvals/FeedList";
-import MembershipApproval from "../Approvals/MembershipApproval";
-import BusinessState from "../../components/Business/BusinessState";
+import {
+  Box,
+  Divider,
+  Grid,
+  Stack,
+  Tab,
+  Tabs,
+  Typography,
+} from "@mui/material";
+
+import StyledTable from "../../ui/StyledTable";
+import { activityColumns } from "../../assets/json/TableData";
+import StyledSearchbar from "../../ui/StyledSearchbar";
+import { useListStore } from "../../store/listStore";
 
 const BusinessPage = () => {
   const [selectedTab, setSelectedTab] = useState(0);
-
+  const [pageNo, setPageNo] = useState(1);
+  const [search, setSearch] = useState();
+  const [row, setRow] = useState(10);
+  const{fetchActivity} = useListStore();
   const handleChange = (event, newValue) => {
     setSelectedTab(newValue);
   };
+  useEffect(() => {
+    let filter = {};
+    if (search) {
+      filter.search = search;
+      setPageNo(1);
+    }
+    filter.pageNo = pageNo;
+    filter.limit = row;
+    fetchActivity(filter);
+  }, [ pageNo, search, row]);
   return (
     <>
       {" "}
@@ -21,7 +44,7 @@ const BusinessPage = () => {
         alignItems={"center"}
       >
         <Typography variant="h4" color={"textSecondary"}>
-          Business
+          Activity
         </Typography>
       </Box>
       <Tabs
@@ -37,6 +60,8 @@ const BusinessPage = () => {
         }}
         sx={{
           paddingTop: "0px",
+          margin: 2,
+          backgroundColor: "white",
           "& .MuiTabs-indicator": {
             backgroundColor: "#F58220",
           },
@@ -51,39 +76,39 @@ const BusinessPage = () => {
           },
         }}
       >
-        <Tab label="State PSRT" />
-        <Tab label="Zone PSRT" />
-        <Tab label="District PSRT" />
-        <Tab label="Chapter PSRT" />
-        <Tab label="Members" />
+        <Tab label="All" />
+        <Tab label="Business" />
+        <Tab label="1 on 1 meeting" />
+        <Tab label="Referrals" />
       </Tabs>
-      <Divider />
       <Box padding={"15px"}>
-        {selectedTab === 0 && (
-          <Grid>
-            <BusinessState />
-          </Grid>
-        )}
-        {selectedTab === 1 && (
-          <Grid>
-            <BusinessState />
-          </Grid>
-        )}
-        {selectedTab === 2 && (
-          <Grid>
-            <BusinessState />
-          </Grid>
-        )}
-        {selectedTab === 3 && (
-          <Grid>
-            <BusinessState />
-          </Grid>
-        )}{" "}
-        {selectedTab === 4 && (
-          <Grid>
-            <BusinessState />
-          </Grid>
-        )}
+        <Stack
+          direction={"row"}
+          justifyContent={"end"}
+          paddingBottom={"15px"}
+          alignItems={"center"}
+        >
+          <Stack direction={"row"} spacing={2} mt={2}>
+            <StyledSearchbar placeholder={"Search"} />
+          </Stack>
+        </Stack>
+        <Box
+          borderRadius={"16px"}
+          bgcolor={"white"}
+          p={1}
+          border={"1px solid rgba(0, 0, 0, 0.12)"}
+        >
+          <StyledTable
+            columns={activityColumns}
+            pageNo={pageNo}
+            setPageNo={setPageNo}
+            // payment
+            // onModify={handleApprove}
+            // onAction={handleReject}
+            rowPerSize={row}
+            setRowPerSize={setRow}
+          />
+        </Box>
       </Box>
     </>
   );

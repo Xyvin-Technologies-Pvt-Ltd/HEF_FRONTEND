@@ -1,4 +1,4 @@
-import { Box, Grid, Stack, Tab, Tabs, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import React, { useState } from "react";
 import EventList from "../../components/Event/EventList";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -10,10 +10,6 @@ import { useNavigate } from "react-router-dom";
 const EventListpage = () => {
   const navigate = useNavigate();
   const [selectedTab, setSelectedTab] = useState(0);
-
-  const handleChange = (event, newValue) => {
-    setSelectedTab(newValue);
-  };
 
   return (
     <>
@@ -76,7 +72,7 @@ const EventListpage = () => {
           >
             <CalendarMonthIcon
               style={{
-                color: selectedTab === 0? "#292D32" : "#F58220",
+                color: selectedTab === 0 ? "#292D32" : "#F58220",
               }}
             />
           </Box>
