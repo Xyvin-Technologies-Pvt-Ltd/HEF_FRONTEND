@@ -46,19 +46,8 @@ const AddMember = () => {
   const sub = [
     { value: "Software Development", label: "Software Development" },
   ];
-  const addPhoneNumber = () => {
-    if (additionalPhones.length < 3) {
-      const updatedPhones = [...additionalPhones, ""];
-      setAdditionalPhones(updatedPhones);
 
-      setValue(`additionalPhones`, updatedPhones);
-    }
-
-    if (additionalPhones.length === 2) {
-      setAddMoreDisabled(true);
-    }
-  };
-
+ 
   useEffect(() => {
     if (isUpdate && member) {
       setValue("name", member?.name || "");
@@ -67,8 +56,20 @@ const AddMember = () => {
       setValue("bio", member?.bio || "");
       setValue("image", member?.image || "");
       setValue("address", member?.address || "");
-      setValue("memberId", member?.memberId || "");
-      setAdditionalPhones(member?.secondaryPhone);
+      setValue("whatsapp", member?.secondaryPhone?.whatsapp);
+      setValue(
+        "business",
+        member?.secondaryPhone?.business
+      );
+      if (member?.secondaryPhone?.whatsapp) {
+        setAdditionalPhones([{ name: "WhatsApp Number", key: "whatsapp" }]);
+      };
+      if (member?.secondaryPhone?.business) {
+        setAdditionalPhones((prev) => [
+          ...prev,
+          { name: "Business Number", key: "business" },
+        ]);
+      }
       setValue("company_name", member?.company?.name || "");
       setValue("company_email", member?.company?.email || "");
       setValue("company_website", member?.company?.websites || "");
@@ -92,7 +93,26 @@ const AddMember = () => {
       setValue("status", selectedStatus || "");
     }
   }, [member, isUpdate, setValue]);
+  const addPhoneNumber = () => {
+    setAdditionalPhones((prevPhones) => {
+      const newPhones = [...prevPhones];
 
+      if (newPhones.length === 0) {
+        newPhones.push({ name: "WhatsApp Number", key: "whatsapp" });
+      } else if (newPhones.length === 1) {
+        newPhones.push({
+          name: "Business Number",
+          key: "business",
+        });
+      }
+
+      if (newPhones.length === 2) {
+        setAddMoreDisabled(true);
+      }
+
+      return newPhones;
+    });
+  };
   const roleOptions = [
     { value: "president", label: "President" },
     { value: "secretary", label: "Secretary" },
@@ -116,36 +136,38 @@ const AddMember = () => {
   const onSubmit = async (data) => {
     try {
       setLoadings(true);
-      let imageUrl = data?.image || "";
+      // let imageUrl = data?.image || "";
 
-      if (imageFile) {
-        try {
-          imageUrl = await new Promise((resolve, reject) => {
-            uploadFileToS3(
-              imageFile,
-              (location) => resolve(location),
-              (error) => reject(error)
-            );
-          });
-        } catch (error) {
-          console.error("Failed to upload image:", error);
-          return;
-        }
-      }
-      const filteredPhones = (data?.additionalPhones || []).filter(
-        (phone) => phone.trim() !== ""
-      );
+      // if (imageFile) {
+      //   try {
+      //     imageUrl = await new Promise((resolve, reject) => {
+      //       uploadFileToS3(
+      //         imageFile,
+      //         (location) => resolve(location),
+      //         (error) => reject(error)
+      //       );
+      //     });
+      //   } catch (error) {
+      //     console.error("Failed to upload image:", error);
+      //     return;
+      //   }
+      // }
+
       const formData = {
         name: data?.name,
 
         email: data?.email,
         phone: data?.phone,
-        secondaryPhone: filteredPhones,
+        secondaryPhone: {
+          whatsapp: data?.whatsapp ? data.whatsapp : undefined,
+          business: data.business ? data.business : undefined,
+        },
         role: data?.role.value,
         status: data?.status.value,
         bio: data?.bio,
         address: data?.address,
-        image: imageUrl,
+        image:
+          " https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-C_UAhXq9GfuGO452EEzfbKnh1viQB9EDBQ&s",
         company: {
           name: data?.company_name,
           phone: data?.company_phone,
@@ -159,7 +181,6 @@ const AddMember = () => {
       if (isUpdate) {
         await updateMember(memberId, formData);
       } else {
-        formData.memberId = data?.memberId;
         await addMembers(formData);
       }
       reset();
@@ -256,34 +277,6 @@ const AddMember = () => {
                       {errors.name && (
                         <span style={{ color: "red" }}>
                           {errors.name.message}
-                        </span>
-                      )}
-                    </>
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Typography
-                  sx={{ marginBottom: 1 }}
-                  variant="h6"
-                  color="textSecondary"
-                >
-                  Member Id
-                </Typography>
-                <Controller
-                  name="memberId"
-                  control={control}
-                  defaultValue=""
-                  rules={{ required: "Member Id is required" }}
-                  render={({ field }) => (
-                    <>
-                      <StyledInput
-                        placeholder="Enter the Member Id"
-                        {...field}
-                      />
-                      {errors.memberId && (
-                        <span style={{ color: "red" }}>
-                          {errors.memberId.message}
                         </span>
                       )}
                     </>
@@ -406,18 +399,19 @@ const AddMember = () => {
                     </>
                   )}
                 />{" "}
-                {additionalPhones?.map((phone, index) => (
-                  <Grid marginTop={2} key={index}>
+                {additionalPhones.map((phone) => (
+                  <Grid marginTop={2} key={phone.key}>
                     <Controller
-                      name={`additionalPhones.${index}`}
+                      name={phone.key}
                       control={control}
-                      defaultValue={phone}
+                      defaultValue=""
                       render={({ field }) => (
-                        <StyledInput
-                          value={phone}
-                          placeholder={`Enter Phone Number ${index + 1}`}
-                          {...field}
-                        />
+                        <>
+                          <StyledInput
+                            placeholder={`Enter ${phone.name.toLowerCase()}`}
+                            {...field}
+                          />
+                        </>
                       )}
                     />
                   </Grid>

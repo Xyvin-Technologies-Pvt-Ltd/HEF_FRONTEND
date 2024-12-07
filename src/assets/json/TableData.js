@@ -1,6 +1,6 @@
 export const memberColumns = [
   { title: "Name", field: "name", padding: "none" },
-  { title: "Member ID", field: "uid" },
+  { title: "Member ID", field: "memberId" },
   { title: "Company Name", field: "companyName" },
   { title: "Phone Number", field: "phone" },
   { title: "Status", field: "status" },

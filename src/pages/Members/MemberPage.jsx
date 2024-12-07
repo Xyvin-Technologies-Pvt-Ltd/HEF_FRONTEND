@@ -5,6 +5,7 @@ import MemberAccess from "./MemberAccess";
 import { StyledButton } from "../../ui/StyledButton";
 
 import { ReactComponent as AddIcon } from "../../assets/icons/AddIcon.svg";
+import { useNavigate } from "react-router-dom";
 
 const MemberPage = () => {
   const [selectedTab, setSelectedTab] = useState(0);
@@ -12,6 +13,7 @@ const MemberPage = () => {
   const handleChange = (event, newValue) => {
     setSelectedTab(newValue);
   };
+  const navigate = useNavigate();
   const handleDownload = async () => {
     try {
       const data = await getMember({ fullUser: true });

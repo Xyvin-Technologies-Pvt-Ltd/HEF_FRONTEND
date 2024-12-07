@@ -22,7 +22,7 @@ export const getAdminById = async () => {
 };
 export const getSingleAdmin = async (id) => {
   try {
-    const response = await axiosInstance.get(`/admin/single/${id}`);
+    const response = await axiosInstance.get(`/admin/profile/${id}`);
     return response.data;
   } catch (error) {
     console.error(error.response.data.message);
@@ -48,26 +48,10 @@ export const getAdmin = async (filter) => {
   }
 };
 
-export const fetchListofAdminById = async (id) => {
-  try {
-    const response = await axiosInstance.get(`/admin/single/${id}`);
-    return response.data;
-  } catch (error) {
-    console.error(error.response.data.message);
-  }
-};
 
-export const fetchAdminActivity = async (id) => {
-  try {
-    const response = await axiosInstance.get(`/admin/single/${id}`);
-    return response.data;
-  } catch (error) {
-    console.error(error.response.data.message);
-  }
-};
 export const editAdmin = async (id, data) => {
   try {
-    const response = await axiosInstance.put(`/admin/${id}`, data);
+    const response = await axiosInstance.put(`/admin/profile/${id}`, data);
     toast.success(response.data.message);
     return response.data;
   } catch (error) {
@@ -76,7 +60,7 @@ export const editAdmin = async (id, data) => {
 };
 export const deleteAdmin = async (id) => {
   try {
-    const response = await axiosInstance.delete(`/admin/${id}`);
+    const response = await axiosInstance.delete(`/admin/profile/${id}`);
     return response.data;
   } catch (error) {
     console.error(error.response.data.message);
