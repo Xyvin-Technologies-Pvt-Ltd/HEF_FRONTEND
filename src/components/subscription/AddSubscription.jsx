@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Typography,
   Dialog,
@@ -14,28 +14,48 @@ import { ReactComponent as CloseIcon } from "../../assets/icons/CloseIcon.svg";
 import { StyledCalender } from "../../ui/StyledCalender";
 import StyledInput from "../../ui/StyledInput";
 import useSubscriptionStore from "../../store/subscriptionStore";
+import { toast } from "react-toastify";
 
-const AddSubscription = ({ open, onClose, data , onChange}) => {
-  const { handleSubmit, control, setValue, watch } = useForm();
+const AddSubscription = ({
+  open,
+  onClose,
+  data,
+  onChange,
+  id,
+  currentExpiryDate,
+}) => {
+  const { handleSubmit, control, setValue, watch,reset } = useForm();
   const [expiryDate, setExpiryDate] = useState(null);
-  const { addSubscription } = useSubscriptionStore();
+  const { addSubscription, updateSubscription } = useSubscriptionStore();
+  useEffect(() => {
+    if (currentExpiryDate) {
+      setExpiryDate(new Date(currentExpiryDate));
+      setValue("expiryDate", new Date(currentExpiryDate).toISOString());
+    }
+  }, [currentExpiryDate, setValue]);
   const onSubmit = async (formData) => {
     try {
       const newData = {
         expiryDate: formData.expiryDate,
         user: data,
       };
-      await addSubscription(newData);
+      if (currentExpiryDate && id) {
+        await updateSubscription(id, newData);
+      } else {
+        await addSubscription(newData);
+      }
+
       onChange();
       onClose();
     } catch (error) {
-      console.error("Error adding subscription:", error);
+      toast.error(error.message);
     }
   };
 
   const handleClear = (event) => {
     event.preventDefault();
     onClose();
+    reset();
   };
 
   const handleTimeMetricChange = (selectedOption) => {
@@ -57,28 +77,30 @@ const AddSubscription = ({ open, onClose, data , onChange}) => {
       return;
     }
 
-    const currentDate = new Date();
+    const baseDate = currentExpiryDate
+      ? new Date(currentExpiryDate)
+      : new Date();
     const numberValue = parseInt(value, 10);
 
     switch (metric) {
       case 1: // Year
-        currentDate.setFullYear(currentDate.getFullYear() + numberValue);
+        baseDate.setFullYear(baseDate.getFullYear() + numberValue);
         break;
       case 2: // Month
-        currentDate.setMonth(currentDate.getMonth() + numberValue);
+        baseDate.setMonth(baseDate.getMonth() + numberValue);
         break;
       case 3: // Week
-        currentDate.setDate(currentDate.getDate() + numberValue * 7);
+        baseDate.setDate(baseDate.getDate() + numberValue * 7);
         break;
       case 4: // Day
-        currentDate.setDate(currentDate.getDate() + numberValue);
+        baseDate.setDate(baseDate.getDate() + numberValue);
         break;
       default:
         break;
     }
 
-    setExpiryDate(currentDate);
-    setValue("expiryDate", currentDate.toISOString());
+    setExpiryDate(baseDate);
+    setValue("expiryDate", baseDate.toISOString());
   };
 
   const option = [
@@ -104,7 +126,7 @@ const AddSubscription = ({ open, onClose, data , onChange}) => {
             alignItems="center"
           >
             <Typography variant="h3" color={"#4F4F4F"}>
-              Change subscription
+              Subscription
             </Typography>
             <Typography
               onClick={(event) => handleClear(event)}
