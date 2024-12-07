@@ -26,13 +26,14 @@ import { PrivateRoute } from "./PrivateRouter";
 import ReportPage from "../pages/Reports/ReportPage";
 import AddNews from "../components/News/AddNews";
 import CreateNews from "../pages/News/CreateNews";
-import BusinessPage from "../pages/Business/BusinessPage";
+import BusinessPage from "../pages/Activity/BusinessPage";
 import LevelPage from "../pages/Level/LevelPage";
 import AddLevelPage from "../pages/Level/AddLevel";
 import EventView from "../pages/Events/EventView";
 import AddEventPage from "../pages/Events/AddEventPage";
 import AddProduct from "../components/Member/AddProduct";
 import AddProductPage from "../pages/Members/AddProductPage";
+import AddActivityPage from "../pages/Activity/AddActivityPage";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -92,24 +93,36 @@ const router = createBrowserRouter([
       </PrivateRoute>
     ),
   },
- {
+  {
+    path: "/activity/activity",
+    element: (
+      <PrivateRoute>
+        <Layout>
+          <AddActivityPage />
+        </Layout>
+      </PrivateRoute>
+    ),
+  },
+  {
     path: "/levels",
-  element: (
-    <PrivateRoute>
-      <Layout>
-        <LevelPage />
-      </Layout>
-    </PrivateRoute>
-  )},
+    element: (
+      <PrivateRoute>
+        <Layout>
+          <LevelPage />
+        </Layout>
+      </PrivateRoute>
+    ),
+  },
   {
     path: "/levels/level",
-  element: (
-    <PrivateRoute>
-      <Layout>
-        <AddLevelPage />
-      </Layout>
-    </PrivateRoute>
-  )},
+    element: (
+      <PrivateRoute>
+        <Layout>
+          <AddLevelPage />
+        </Layout>
+      </PrivateRoute>
+    ),
+  },
   {
     path: "/events/list",
     element: (
@@ -206,7 +219,7 @@ const router = createBrowserRouter([
     element: (
       <PrivateRoute>
         <Layout>
-          <AddProductPage/>
+          <AddProductPage />
         </Layout>
       </PrivateRoute>
     ),

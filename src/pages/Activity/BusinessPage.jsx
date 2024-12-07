@@ -13,13 +13,18 @@ import StyledTable from "../../ui/StyledTable";
 import { activityColumns } from "../../assets/json/TableData";
 import StyledSearchbar from "../../ui/StyledSearchbar";
 import { useListStore } from "../../store/listStore";
+import { StyledButton } from "../../ui/StyledButton";
+
+import { ReactComponent as AddIcon } from "../../assets/icons/AddIcon.svg";
+import { useNavigate } from "react-router-dom";
 
 const BusinessPage = () => {
+  const navigate = useNavigate();
   const [selectedTab, setSelectedTab] = useState(0);
   const [pageNo, setPageNo] = useState(1);
   const [search, setSearch] = useState();
   const [row, setRow] = useState(10);
-  const{fetchActivity} = useListStore();
+  const { fetchActivity } = useListStore();
   const handleChange = (event, newValue) => {
     setSelectedTab(newValue);
   };
@@ -32,21 +37,38 @@ const BusinessPage = () => {
     filter.pageNo = pageNo;
     filter.limit = row;
     fetchActivity(filter);
-  }, [ pageNo, search, row]);
+  }, [pageNo, search, row]);
   return (
     <>
       {" "}
-      <Box
+      <Stack
+        direction={"row"}
         padding={"10px"}
-        bgcolor={"#FFFFFF"}
+        bgcolor={"#fff"}
         height={"70px"}
-        display={"flex"}
         alignItems={"center"}
+        justifyContent={"space-between"}
       >
-        <Typography variant="h4" color={"textSecondary"}>
-          Activity
-        </Typography>
-      </Box>
+        <Stack>
+          <Typography variant="h4" color={"textSecondary"}>
+            Activity
+          </Typography>
+        </Stack>
+        <Stack direction={"row"} spacing={2} justifyContent={"flex-end"}>
+          <StyledButton
+            variant={"primary"}
+            name={
+              <>
+                <AddIcon />
+                Create Activity
+              </>
+            }
+            onClick={() => {
+              navigate("/activity/activity");
+            }}
+          />
+        </Stack>
+      </Stack>
       <Tabs
         value={selectedTab}
         onChange={handleChange}
