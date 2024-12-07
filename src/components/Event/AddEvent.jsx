@@ -16,7 +16,7 @@ import { StyledMultilineTextField } from "../../ui/StyledMultilineTextField.jsx"
 import StyledCropImage from "../../ui/StyledCropImage.jsx";
 import { useDropDownStore } from "../../store/dropDownStore.js";
 
-export default function AddEvent({ setSelectedTab, isUpdate }) {
+export default function AddEvent({ isUpdate }) {
   const {
     control,
     handleSubmit,
@@ -101,11 +101,9 @@ export default function AddEvent({ setSelectedTab, isUpdate }) {
     if (isUpdate) {
       navigate("/events/list");
     }
-    setSelectedTab(0);
 
     reset();
   };
-  console.log(setSelectedTab);
   const option = [{ value: "Zoom", label: "Zoom" }];
 
   const types = [
@@ -116,22 +114,22 @@ export default function AddEvent({ setSelectedTab, isUpdate }) {
   const onSubmit = async (data) => {
     try {
       setLoadings(true);
-      let imageUrl = data?.image || "";
+      // let imageUrl = data?.image || "";
 
-      if (imageFile) {
-        try {
-          imageUrl = await new Promise((resolve, reject) => {
-            uploadFileToS3(
-              imageFile,
-              (location) => resolve(location),
-              (error) => reject(error)
-            );
-          });
-        } catch (error) {
-          console.error("Failed to upload image:", error);
-          return;
-        }
-      }
+      // if (imageFile) {
+      //   try {
+      //     imageUrl = await new Promise((resolve, reject) => {
+      //       uploadFileToS3(
+      //         imageFile,
+      //         (location) => resolve(location),
+      //         (error) => reject(error)
+      //       );
+      //     });
+      //   } catch (error) {
+      //     console.error("Failed to upload image:", error);
+      //     return;
+      //   }
+      // }
 
       // Filter out speakers with all empty fields
       const filteredSpeakers = data.speakers.filter(
@@ -141,27 +139,28 @@ export default function AddEvent({ setSelectedTab, isUpdate }) {
 
       const speakersData = await Promise.all(
         filteredSpeakers.map(async (speaker, index) => {
-          let speakerImageUrl = speakers[index]?.image || "";
+          // let speakerImageUrl = speakers[index]?.image || "";
 
-          if (speaker?.image && typeof speaker.image === "object") {
-            try {
-              speakerImageUrl = await new Promise((resolve, reject) => {
-                uploadFileToS3(
-                  speaker.image,
-                  (location) => resolve(location),
-                  (error) => reject(error)
-                );
-              });
-            } catch (error) {
-              console.error(`Failed to upload image for speaker:`, error);
-            }
-          }
+          // if (speaker?.image && typeof speaker.image === "object") {
+          //   try {
+          //     speakerImageUrl = await new Promise((resolve, reject) => {
+          //       uploadFileToS3(
+          //         speaker.image,
+          //         (location) => resolve(location),
+          //         (error) => reject(error)
+          //       );
+          //     });
+          //   } catch (error) {
+          //     console.error(`Failed to upload image for speaker:`, error);
+          //   }
+          // }
 
           return {
             name: speaker?.name,
             designation: speaker?.designation,
             role: speaker?.role,
-            image: speakerImageUrl || "",
+            image:
+              " https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-C_UAhXq9GfuGO452EEzfbKnh1viQB9EDBQ&s",
           };
         })
       );
@@ -169,7 +168,8 @@ export default function AddEvent({ setSelectedTab, isUpdate }) {
       const formData = {
         type: data?.type?.value,
         eventName: data?.eventName,
-        image: imageUrl,
+        image:
+          " https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-C_UAhXq9GfuGO452EEzfbKnh1viQB9EDBQ&s",
         startDate: data?.startDate,
         startTime: data?.startTime,
         endDate: data?.endDate,
@@ -192,7 +192,7 @@ export default function AddEvent({ setSelectedTab, isUpdate }) {
         navigate("/events/list");
       } else {
         await addEvent(formData);
-        setSelectedTab(0);
+        navigate("/events/list");
       }
 
       reset();

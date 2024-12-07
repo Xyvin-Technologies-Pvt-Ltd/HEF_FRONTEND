@@ -119,7 +119,7 @@ const EventView = () => {
           />
         </Stack>
       </Stack>{" "}
-      <Box padding={"60px"}paddingTop={"20px"}>
+      <Box padding={"60px"} paddingTop={"20px"}>
         <Box display="flex" alignItems="center" marginBottom={2}>
           <Typography variant="h5" fontWeight="bold" marginRight={2}>
             {moment().year(currentYear).month(currentMonth).format("MMMM YYYY")}
@@ -311,41 +311,82 @@ const EventView = () => {
                   </Stack>
                 </Stack>
               </Stack>
-              <Typography>Speakers</Typography>
-
-              {selectedEvent?.speakers?.map((speaker, index) => (
-                <li
-                  key={index}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    margin: "8px 0",
-                  }}
-                >
+              <Stack direction={"row"}>
+                <Stack width={"50%"}>
                   {" "}
-                  <Typography
-                    variant="body1"
-                    color="textSecondary"
-                    style={{ marginRight: "8px" }}
-                  >
-                    {index + 1}.
-                  </Typography>
-                  <img
-                    src={speaker?.image}
-                    alt={speaker?.name}
-                    style={{
-                      width: "24px",
-                      height: "24px",
-                      borderRadius: "50%",
-                      objectFit: "cover",
-                      marginRight: "8px",
-                    }}
-                  />
-                  <Typography variant="body1" color="textSecondary">
-                    {speaker?.name} ({speaker?.designation})
-                  </Typography>
-                </li>
-              ))}
+                  <Typography>Speakers</Typography>
+                  {selectedEvent?.speakers?.map((speaker, index) => (
+                    <li
+                      key={index}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        margin: "8px 0",
+                      }}
+                    >
+                      {" "}
+                      <Typography
+                        variant="h7"
+                        color="textSecondary"
+                        style={{ marginRight: "8px" }}
+                      >
+                        {index + 1}.
+                      </Typography>
+                      <img
+                        src={speaker?.image}
+                        alt={speaker?.name}
+                        style={{
+                          width: "24px",
+                          height: "24px",
+                          borderRadius: "50%",
+                          objectFit: "cover",
+                          marginRight: "8px",
+                        }}
+                      />
+                      <Typography variant="h7" color="textSecondary">
+                        {speaker?.name} ({speaker?.designation})
+                      </Typography>
+                    </li>
+                  ))}
+                </Stack>
+                <Stack width={"50%"}>
+                  {" "}
+                  <Typography>Coordinators</Typography>
+                  {selectedEvent?.coordinator?.map((speaker, index) => (
+                    <li
+                      key={index}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        margin: "8px 0",
+                      }}
+                    >
+                      {" "}
+                      <Typography
+                        variant="h7"
+                        color="textSecondary"
+                        style={{ marginRight: "8px" }}
+                      >
+                        {index + 1}.
+                      </Typography>
+                      <img
+                        src={speaker?.image}
+                        alt={speaker?.name}
+                        style={{
+                          width: "24px",
+                          height: "24px",
+                          borderRadius: "50%",
+                          objectFit: "cover",
+                          marginRight: "8px",
+                        }}
+                      />
+                      <Typography variant="h7" color="textSecondary">
+                        {speaker?.name} ({speaker?.role})
+                      </Typography>
+                    </li>
+                  ))}
+                </Stack>
+              </Stack>
             </Box>
             <DialogActions>
               <StyledButton

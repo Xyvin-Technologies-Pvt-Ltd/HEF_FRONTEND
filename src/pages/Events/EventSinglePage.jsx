@@ -8,6 +8,7 @@ import PostponeEvent from "../../components/Event/PostponeEvent";
 import { StyledButton } from "../../ui/StyledButton";
 import EventCard from "../../ui/EventCard";
 import { useEventStore } from "../../store/eventStore";
+import OrganinserCard from "../../components/Event/OrganinserCard";
 const EventSinglePage = () => {
   const [selectedTab, setSelectedTab] = useState(0);
   const [postponeOpen, setPostponeOpen] = useState(false);
@@ -79,16 +80,20 @@ const EventSinglePage = () => {
       </Box>{" "}
       <Box padding="30px" marginBottom={4}>
         <Grid container alignItems="center" spacing={4}>
-        {loading ? (
-          <Grid item md={6}>
-            <Skeleton variant="rectangular" width="100%" height={200} />
-        </Grid>) : 
-        (
-          <Grid item md={6}>
-            <EventCard user={event} />
-          </Grid>
-        )}
-          
+          {loading ? (
+            <Grid item md={6}>
+              <Skeleton variant="rectangular" width="100%" height={200} />
+            </Grid>
+          ) : (
+            <>
+              <Grid item md={6}>
+                <EventCard user={event} />
+              </Grid>
+              <Grid item md={6} xs={12}>
+                <OrganinserCard data={event} />
+              </Grid>
+            </>
+          )}
         </Grid>
       </Box>
       <Box marginBottom={4}>
