@@ -96,29 +96,7 @@ const EventView = () => {
   };
   return (
     <>
-      <Stack
-        direction={"row"}
-        padding={"10px"}
-        bgcolor={"#fff"}
-        height={"70px"}
-        alignItems={"center"}
-        justifyContent={"space-between"}
-      >
-        <Stack>
-          <Typography variant="h4" color="textSecondary">
-            Events
-          </Typography>
-        </Stack>
-        <Stack direction={"row"} spacing={2}>
-          <StyledButton
-            variant={"primary"}
-            name={"Add Event"}
-            onClick={() => {
-              navigate("/events/add");
-            }}
-          />
-        </Stack>
-      </Stack>{" "}
+     
       <Box padding={"60px"} paddingTop={"20px"}>
         <Box display="flex" alignItems="center" marginBottom={2}>
           <Typography variant="h5" fontWeight="bold" marginRight={2}>
@@ -195,7 +173,13 @@ const EventView = () => {
                   ))
                 ) : (
                   <Box display="flex" alignItems="center" gap={1}>
-                    <Typography variant="h7" color="#333333">
+                    <Typography variant="h7" color="#333333" sx={{
+                textDecoration: "underline",
+                cursor: "pointer",
+              }}
+              onClick={() => {
+                navigate(`/events/add`);
+              }}>
                       Add Event
                     </Typography>
                     <AddCircleOutlineIcon sx={{ marginLeft: "2px" }} />

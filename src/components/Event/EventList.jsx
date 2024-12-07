@@ -51,7 +51,7 @@ const EventList = () => {
         paddingBottom={"15px"}
         alignItems={"center"}
       >
-        <Stack direction={"row"} spacing={2}>
+        <Stack direction={"row"} spacing={2} mt={2}>
           <StyledSearchbar
             placeholder={"Search"}
             onchange={(e) => {

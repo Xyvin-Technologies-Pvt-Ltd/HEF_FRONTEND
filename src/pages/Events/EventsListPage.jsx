@@ -1,9 +1,14 @@
-import { Box, Grid, Tab, Tabs } from "@mui/material";
+import { Box, Grid, Stack, Tab, Tabs, Typography } from "@mui/material";
 import React, { useState } from "react";
 import EventList from "../../components/Event/EventList";
-import AddEvent from "../../components/Event/AddEvent";
+import MenuIcon from "@mui/icons-material/Menu";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import { StyledButton } from "../../ui/StyledButton";
+import EventView from "./EventView";
+import { useNavigate } from "react-router-dom";
 
 const EventListpage = () => {
+  const navigate = useNavigate();
   const [selectedTab, setSelectedTab] = useState(0);
 
   const handleChange = (event, newValue) => {
@@ -12,50 +17,71 @@ const EventListpage = () => {
 
   return (
     <>
-      <Tabs
-        value={selectedTab}
-        onChange={handleChange}
-        aria-label="tabs"
-        TabIndicatorProps={{
-          style: {
-            backgroundColor: "#F58220",
-            height: 4,
-            borderRadius: "4px",
-          },
-        }}
-        sx={{
-          bgcolor: "white",
-          paddingTop: "24px",
-          "& .MuiTabs-indicator": {
-            backgroundColor: "#F58220",
-          },
-          "& .MuiTab-root": {
-            textTransform: "none",
-            fontSize: "16px",
-            fontWeight: 600,
-            color: "#686465",
-          },
-          "& .MuiTab-root.Mui-selected": {
-            color: "#F58220",
-          },
-        }}
+      <Stack
+        direction={"row"}
+        padding={"10px"}
+        bgcolor={"#fff"}
+        height={"70px"}
+        alignItems={"center"}
+        justifyContent={"space-between"}
       >
-        <Tab label="Events" />
-        <Tab label="Add Events" />
-      </Tabs>
-      <Box padding="15px" marginBottom={4}>
-        {selectedTab === 0 && (
-          <Grid spacing={2}>
-            <EventList />
-          </Grid>
-        )}
-        {selectedTab === 1 && (
-          <Grid container>
-            <Grid item md={8}>
-              <AddEvent setSelectedTab={setSelectedTab} />
-            </Grid>
-          </Grid>
-        )}
+        <Stack>
+          <Typography variant="h4" color="textSecondary">
+            Events
+          </Typography>
+        </Stack>
+        <Stack direction={"row"} spacing={2}>
+          <StyledButton
+            variant={"primary"}
+            name={"Add Event"}
+            onClick={() => {
+              navigate("/events/add");
+            }}
+          />
+        </Stack>
+      </Stack>{" "}
+      <Box padding="15px">
+        <Stack spacing={2} direction="row" justifyContent="flex-end">
+          <Box
+            bgcolor={selectedTab === 0 ? "#FFF0E2" : "#FFFFFF"}
+            borderRadius="50%"
+            width="48px"
+            height="48px"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            style={{ cursor: "pointer" }}
+            onClick={() => {
+              setSelectedTab(0);
+            }}
+          >
+            <MenuIcon
+              style={{
+                color: selectedTab === 1 ? "#292D32" : "#F58220",
+              }}
+            />
+          </Box>
+          <Box
+            bgcolor={selectedTab === 1 ? "#FFF0E2" : "#FFFFFF"}
+            borderRadius="50%"
+            width="48px"
+            height="48px"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            style={{ cursor: "pointer" }}
+            onClick={() => {
+              setSelectedTab(1);
+            }}
+          >
+            <CalendarMonthIcon
+              style={{
+                color: selectedTab === 0? "#292D32" : "#F58220",
+              }}
+            />
+          </Box>
+        </Stack>
+        {selectedTab === 0 ? <EventList /> : <EventView />}
       </Box>
     </>
   );

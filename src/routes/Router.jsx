@@ -115,7 +115,7 @@ const router = createBrowserRouter([
     element: (
       <PrivateRoute>
         <Layout>
-          <EventView />
+          <EventsListPage />
         </Layout>
       </PrivateRoute>
     ),
