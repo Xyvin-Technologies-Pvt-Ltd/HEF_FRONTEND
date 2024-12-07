@@ -10,7 +10,7 @@ import {
   import { useForm } from "react-hook-form";
   import { StyledButton } from "../ui/StyledButton";
   import { ReactComponent as CloseIcon } from "../assets/icons/CloseIcon.svg";
-  import { useApprovalStore } from "../store/approval-store";
+ 
   
   const PostView = ({ open, onClose,  data }) => {
     const { handleSubmit } = useForm();

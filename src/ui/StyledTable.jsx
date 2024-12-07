@@ -40,7 +40,7 @@ const StyledTableCell = styled(TableCell)`
   &.${tableCellClasses.body} {
     font-size: 14px;
     background-color: #fff;
-    padding: 10px;
+    padding: 14px;
     font-weight: 400;
     color: rgba(0, 0, 0, 0.87);
     text-align: center;
@@ -273,6 +273,7 @@ const StyledTable = ({
                         "createdAt",
                         "startDate",
                         "endDate",
+                        "expiryDate"
                       ].includes(column.field) ? (
                         formatIndianDate(row[column.field])
                       ) : [
@@ -344,7 +345,7 @@ const StyledTable = ({
                       )}{" "}
                       {!menu &&
                         row.status !== "rejected" &&
-                        row.status !== "approved" && (
+                        row.status !== "accepted" && (
                           <IconButton
                             aria-controls="simple-menu"
                             aria-haspopup="true"

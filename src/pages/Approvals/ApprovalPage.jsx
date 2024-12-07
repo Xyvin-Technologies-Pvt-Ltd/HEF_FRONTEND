@@ -15,6 +15,7 @@ import FeedApproval from "../../components/Approve/FeedApproval";
 import { useListStore } from "../../store/listStore";
 import { feedColumns } from "../../assets/json/TableData";
 import StyledSearchbar from "../../ui/StyledSearchbar";
+import MembershipApproval from "./MembershipApproval";
 
 const ApprovalPage = () => {
   const [selectedTab, setSelectedTab] = useState(0);
@@ -95,57 +96,21 @@ const ApprovalPage = () => {
           },
         }}
       >
-        <Tab label="State PSRT" />
-        <Tab label="Zone PSRT" />
-        <Tab label="District PSRT" />
-        <Tab label="Chapter PSRT" />
-        <Tab label="Members" />
+        <Tab label="Requirements" />
+        <Tab label="Products" />
       </Tabs>
       <Divider />{" "}
       <Box padding={"15px"}>
-        {" "}
-        <Stack
-          direction={"row"}
-          justifyContent={"end"}
-          paddingBottom={"15px"}
-          alignItems={"center"}
-        >
-          <Stack direction={"row"} spacing={2}>
-            <StyledSearchbar
-              placeholder={"Search"}
-              onchange={(e) => setSearch(e.target.value)}
-            />
-          </Stack>
-        </Stack>
-        <Box
-          borderRadius={"16px"}
-          bgcolor={"white"}
-          p={1}
-          border={"1px solid rgba(0, 0, 0, 0.12)"}
-        >
-          <StyledTable
-            columns={feedColumns}
-            pageNo={pageNo}
-            setPageNo={setPageNo}
-            payment
-            onModify={handleApprove}
-            onAction={handleReject}
-            rowPerSize={row}
-            setRowPerSize={setRow}
-          />
-          <FeedReject
-            open={rejectOpen}
-            onClose={handleCloseReject}
-            id={approvalId}
-            setIsChange={setIsChange}
-          />
-          <FeedApproval
-            open={approveOpen}
-            onClose={handleCloseApprove}
-            id={approvalId}
-            setIsChange={setIsChange}
-          />
-        </Box>
+      {selectedTab === 0 && (
+          <Grid>
+            <FeedList />
+          </Grid>
+        )}
+        {selectedTab === 1 && (
+          <Grid>
+            <MembershipApproval />
+          </Grid>
+        )}
       </Box>
     </>
   );

@@ -1,17 +1,17 @@
 import { Typography, Dialog, DialogContent, Stack } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { StyledButton } from "../../ui/StyledButton";
-import { useApprovalStore } from "../../store/approvalstore";
+import { useProductStore } from "../../store/productStore";
 
 const ApproveApproval = ({ open, onClose, setIsChange, id }) => {
   const { handleSubmit } = useForm();
-  const { updateApproval } = useApprovalStore();
+  const { updateProduct} = useProductStore();
   const onSubmit = async () => {
     try {
       const formData = {
-        status: "awaiting_payment",
+        status: "accepted",
       };
-      await updateApproval(id, formData);
+      await updateProduct(id, formData);
       setIsChange((prev) => !prev);
     } catch (error) {
       console.error("Error approving feed:", error);

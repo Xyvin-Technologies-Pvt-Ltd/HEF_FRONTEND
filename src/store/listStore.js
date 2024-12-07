@@ -2,14 +2,14 @@ import { create } from "zustand";
 import { getEvents } from "../api/eventapi";
 import { getPromotion } from "../api/promotionapi";
 import { getFeed, getFeedByUser } from "../api/feedapi";
-import { getApproval } from "../api/approvalapi";
+import { getApproval } from "../api/productapi";
 import { fetchRole } from "../api/roleManagementapi";
 import { getAdmin } from "../api/adminapi";
-import { getPayment } from "../api/paymentapi";
 import { getNews } from "../api/newsapi";
 import { getMember } from "../api/memberapi";
 import { getReport } from "../api/reportapi";
 import { getAllLevel } from "../api/hierarchyapi";
+import { getAllSubscription } from "../api/subscriptionapi";
 
 const useListStore = create((set, get) => ({
   lists: [],
@@ -91,7 +91,7 @@ const useListStore = create((set, get) => ({
   },
   fetchPayment: async (filter) => {
     set({ loading: true });
-    const allData = await getPayment(filter);
+    const allData = await getAllSubscription(filter);
     set({ lists: allData?.data || [] });
     set({ totalCount: allData?.totalCount || 0 });
     set({ loading: false });

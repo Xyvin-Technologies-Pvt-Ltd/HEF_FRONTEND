@@ -10,11 +10,11 @@ import {
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import MemberProfile from "../../components/Member/MemberProfile";
-import MemberPosts from "../../components/Member/MemberPosts";
 import MemberAnalytics from "../../components/Member/MemberAnalytics";
 import { useMemberStore } from "../../store/Memberstore";
 import { useFeedStore } from "../../store/feedStore";
 import Subscription from "./Subscription";
+import MemberProducts from "../../components/Member/MemberProducts";
 
 const MemberView = () => {
   const [selectedTab, setSelectedTab] = useState(0);
@@ -77,7 +77,7 @@ const MemberView = () => {
       >
         <Tab label="Profile" />
         <Tab label="Subscriptions" />
-        <Tab label="Posts" />
+        <Tab label="Products" />
         <Tab label="Analytics" />
       </Tabs>
       <Box padding="15px" marginBottom={4}>
@@ -93,11 +93,11 @@ const MemberView = () => {
         )}
         {selectedTab === 2 && (
           <Grid>
-            <MemberPosts id={id} />
+            <MemberProducts id={id} />
           </Grid>
         )}
 
-        {selectedTab === 2 && (
+        {selectedTab === 3 && (
           <Grid container item xs={12}>
             {" "}
             <MemberAnalytics />

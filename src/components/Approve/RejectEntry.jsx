@@ -11,8 +11,8 @@ import { ReactComponent as CloseIcon } from "../../assets/icons/CloseIcon.svg";
 
 import { StyledButton } from "../../ui/StyledButton";
 import { StyledMultilineTextField } from "../../ui/StyledMultilineTextField";
+import { useProductStore } from "../../store/productStore";
 
-import { useApprovalStore } from "../../store/approvalstore";
 
 const RejectEntry = ({ open, onClose, id, setIsChange }) => {
   const {
@@ -21,7 +21,7 @@ const RejectEntry = ({ open, onClose, id, setIsChange }) => {
     formState: { errors },
     getValues,
   } = useForm();
-  const { updateApproval } = useApprovalStore();
+  const { updateProduct } = useProductStore();
   const onSubmit = async (formData) => {
     try {
       const updateData = {
@@ -29,7 +29,7 @@ const RejectEntry = ({ open, onClose, id, setIsChange }) => {
         status: "rejected",
       };
 
-      await updateApproval(id, updateData);
+      await updateProduct(id, updateData);
 
       setIsChange((prev) => !prev);
     } catch (error) {

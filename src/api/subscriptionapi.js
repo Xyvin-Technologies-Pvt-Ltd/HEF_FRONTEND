@@ -27,3 +27,11 @@ export const createSubscription = async (data) => {
       throw error.response.data;
     }
   };
+  export const getAllSubscription = async () => {
+    try {
+      const response = await axiosInstance.get("/subscription");
+      return response.data;
+    } catch (error) {
+      return null;
+    }
+  };

@@ -3,7 +3,6 @@ import StyledTable from "../../ui/StyledTable";
 import { Box,  Stack, Typography } from "@mui/material";
 import { StyledButton } from "../../ui/StyledButton";
 import StyledSearchbar from "../../ui/StyledSearchbar";
-import { usePaymentStore } from "../../store/paymentstore";
 import { paymentColumns } from "../../assets/json/TableData";
 import { useListStore } from "../../store/listStore";
 
@@ -35,7 +34,7 @@ const MemberPage = () => {
       >
         <Stack>
           <Typography variant="h4" color="textSecondary">
-            Payments
+           Subscriptions
           </Typography>
         </Stack>
         <Stack direction={"row"} spacing={2}>

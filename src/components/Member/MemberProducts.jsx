@@ -2,16 +2,18 @@ import React, { useEffect, useState } from "react";
 import StyledTable from "../../ui/StyledTable";
 import StyledSearchbar from "../../ui/StyledSearchbar";
 import { Box, Stack } from "@mui/material";
-import { useFeedStore } from "../../store/feedStore";
+
+import { ReactComponent as AddIcon } from "../../assets/icons/AddIcon.svg";
 import { postColumns } from "../../assets/json/TableData";
 import FeedApproval from "../Approve/FeedApproval";
 import FeedReject from "../Approve/FeedReject";
 import { useListStore } from "../../store/listStore";
+import { StyledButton } from "../../ui/StyledButton";
 
-const MemberPosts = ({ id }) => {
+const MemberProducts = ({ id }) => {
   const { fetchFeedByUser } = useListStore();
   const [pageNo, setPageNo] = useState(1);
-  const[row,setRow] = useState(10)
+  const [row, setRow] = useState(10);
   const [rejectOpen, setRejectOpen] = useState(false);
   const [approveOpen, setApproveOpen] = useState(false);
   const [isChange, setIsChange] = useState(false);
@@ -20,9 +22,9 @@ const MemberPosts = ({ id }) => {
     let filter = {};
 
     filter.pageNo = pageNo;
-    filter.limit = row
+    filter.limit = row;
     fetchFeedByUser(id, filter);
-  }, [isChange, pageNo,row]);
+  }, [isChange, pageNo, row]);
 
   const handleReject = (id) => {
     setApprovalId(id);
@@ -49,7 +51,17 @@ const MemberPosts = ({ id }) => {
           alignItems={"center"}
         >
           <Stack direction={"row"} spacing={2}>
-            <StyledSearchbar />
+            {" "}
+            <StyledSearchbar placeholder={"Search by name"} />
+            <StyledButton
+              variant={"primary"}
+              name={
+                <>
+                  <AddIcon />
+                  Add Product
+                </>
+              }
+            />
           </Stack>
         </Stack>{" "}
         <Box
@@ -86,4 +98,4 @@ const MemberPosts = ({ id }) => {
   );
 };
 
-export default MemberPosts;
+export default MemberProducts;

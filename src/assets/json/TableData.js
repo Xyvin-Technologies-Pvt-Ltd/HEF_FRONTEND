@@ -33,10 +33,8 @@ export const groupColumns = [
 ];
 export const paymentColumns = [
   { title: "Member name", field: "fullName", padding: "none" },
-  { title: "Date", field: "createdAt" },
-  { title: "Time", field: "updatedAt" },
-  { title: "Transaction ID", field: "razorpayId", padding: "none" },
-  { title: "Amount", field: "amount" },
+  { title: " Expiry Date", field: "expiryDate" },
+  { title: "Created on", field: "createdAt", padding: "none" },
   { title: "Status", field: "status" },
 ];
 export const reportColumns = [
@@ -83,11 +81,10 @@ export const postColumns = [
 ];
 export const approvalColumns = [
   { title: "Date", field: "createdAt", padding: "none" },
-  { title: "Name", field: "fullName" },
-  { title: "Phone Number", field: "phone" },
-  { title: "Email", field: "email" },
-  { title: "Course", field: "course" },
-  { title: "Batch number", field: "batch" },
+  { title: "Seller", field: "sellerName" },
+  { title: "Name", field: "name" },
+  { title: "Image", field: "image" },
+  { title: "Status", field: "status" },
 ];
 export const adminColumns = [
   { title: "Name", field: "name", padding: "none" },
