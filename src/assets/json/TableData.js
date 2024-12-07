@@ -52,12 +52,11 @@ export const batchColumns = [
   { title: "No of members", field: "noOfMembers" },
 ];
 export const activityColumns = [
-  { title: "College name", field: "collegeName", padding: "none" },
-  { title: "Country", field: "country" },
-  { title: "State", field: "state" },
-  { title: "No of courses", field: "noOfCourses" },
-  { title: "No of batches", field: "noOfBatches" },
-  { title: "No of members", field: "noOfMembers" },
+  { title: "Date", field: "collegeName", padding: "none" },
+  { title: "Sender", field: "country" },
+  { title: "Receiver", field: "state" },
+  { title: "Request Type", field: "noOfCourses" },
+  { title: "Status", field: "noOfBatches" },
 ];
 export const feedColumns = [
   { title: "Date", field: "createdAt", padding: "none" },

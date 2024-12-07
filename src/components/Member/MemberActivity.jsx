@@ -1,24 +1,13 @@
 import React, { useEffect, useState } from "react";
-import {
-  Box,
-  Divider,
-  Grid,
-  Stack,
-  Tab,
-  Tabs,
-  Typography,
-} from "@mui/material";
+import { Box,  Stack, Tab, Tabs } from "@mui/material";
 
 import StyledTable from "../../ui/StyledTable";
 import { activityColumns } from "../../assets/json/TableData";
 import StyledSearchbar from "../../ui/StyledSearchbar";
-import { useListStore } from "../../store/listStore";
-import { StyledButton } from "../../ui/StyledButton";
-
-import { ReactComponent as AddIcon } from "../../assets/icons/AddIcon.svg";
 import { useNavigate } from "react-router-dom";
+import { useListStore } from "../../store/listStore";
 
-const BusinessPage = () => {
+const MemberActivity = () => {
   const navigate = useNavigate();
   const [selectedTab, setSelectedTab] = useState(0);
   const [pageNo, setPageNo] = useState(1);
@@ -34,46 +23,13 @@ const BusinessPage = () => {
       filter.search = search;
       setPageNo(1);
     }
-    if (selectedTab === 1) {
-      filter.type = "Business";
-    } else if (selectedTab === 2) {
-      filter.type = "One v One Meeting";
-    }
     filter.pageNo = pageNo;
     filter.limit = row;
     fetchActivity(filter);
-  }, [pageNo, search, row, selectedTab]);
+  }, [pageNo, search, row]);
   return (
     <>
       {" "}
-      <Stack
-        direction={"row"}
-        padding={"10px"}
-        bgcolor={"#fff"}
-        height={"70px"}
-        alignItems={"center"}
-        justifyContent={"space-between"}
-      >
-        <Stack>
-          <Typography variant="h4" color={"textSecondary"}>
-            Activity
-          </Typography>
-        </Stack>
-        <Stack direction={"row"} spacing={2} justifyContent={"flex-end"}>
-          <StyledButton
-            variant={"primary"}
-            name={
-              <>
-                <AddIcon />
-                Create Activity
-              </>
-            }
-            onClick={() => {
-              navigate("/activity/activity");
-            }}
-          />
-        </Stack>
-      </Stack>
       <Tabs
         value={selectedTab}
         onChange={handleChange}
@@ -87,7 +43,7 @@ const BusinessPage = () => {
         }}
         sx={{
           paddingTop: "0px",
-          margin: 2,
+
           backgroundColor: "white",
           "& .MuiTabs-indicator": {
             backgroundColor: "#F58220",
@@ -129,9 +85,7 @@ const BusinessPage = () => {
             columns={activityColumns}
             pageNo={pageNo}
             setPageNo={setPageNo}
-            // payment
-            // onModify={handleApprove}
-            // onAction={handleReject}
+            menu
             rowPerSize={row}
             setRowPerSize={setRow}
           />
@@ -141,4 +95,4 @@ const BusinessPage = () => {
   );
 };
 
-export default BusinessPage;
+export default MemberActivity;

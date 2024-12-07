@@ -15,6 +15,7 @@ import { useMemberStore } from "../../store/Memberstore";
 import { useFeedStore } from "../../store/feedStore";
 import Subscription from "./Subscription";
 import MemberProducts from "../../components/Member/MemberProducts";
+import MemberActivity from "../../components/Member/MemberActivity";
 
 const MemberView = () => {
   const [selectedTab, setSelectedTab] = useState(0);
@@ -78,6 +79,7 @@ const MemberView = () => {
         <Tab label="Profile" />
         <Tab label="Subscriptions" />
         <Tab label="Products" />
+        <Tab label="Activity" />
         <Tab label="Analytics" />
       </Tabs>
       <Box padding="15px" marginBottom={4}>
@@ -96,8 +98,13 @@ const MemberView = () => {
             <MemberProducts id={id} />
           </Grid>
         )}
-
         {selectedTab === 3 && (
+          <Grid>
+            <MemberActivity id={id} />
+          </Grid>
+        )}
+
+        {selectedTab === 4 && (
           <Grid container item xs={12}>
             {" "}
             <MemberAnalytics />
