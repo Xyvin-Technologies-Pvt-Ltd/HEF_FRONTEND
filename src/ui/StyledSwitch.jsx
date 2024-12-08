@@ -5,27 +5,26 @@ const SwitchContainer = styled.label`
   display: inline-block;
   position: relative;
   width: 45px;
-  height: 15px;
+  height: 20px; 
   border-radius: 23px;
-  background: ${(props) => (props.checked ? "#27AE60" : "#b3b3b3")};
-  padding: 10px;
-  transition: 300ms all;
+  background: ${(props) => (props.checked ? "#FF9800" : "#b3b3b3")}; 
+  padding: 2px; 
+  transition: background 300ms ease;
   cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
   opacity: ${(props) => (props.disabled ? 0.5 : 1)};
 `;
 
 const SwitchHandle = styled.div`
   position: absolute;
-  width: 20px;
-  height: 20px;
+  width: 16px; 
+  height: 16px; 
   border-radius: 50%;
   top: 50%;
-  left: ${(props) => {
-    return props.checked ? "22px" : "4px";
-  }};
+  left: ${(props) => (props.checked ? "calc(100% - 18px)" : "2px")}; 
   background: white;
   transform: translateY(-50%);
-  transition: 300ms all;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2); 
+  transition: left 300ms ease;
 `;
 
 const Input = styled.input`
@@ -38,11 +37,8 @@ const StyledSwitch = ({ checked, onChange, variant, disabled }) => {
       onChange(e);
     }
   };
- 
 
-  
   return (
-    
     <SwitchContainer variant={variant} checked={checked} disabled={disabled}>
       <Input
         type="checkbox"
