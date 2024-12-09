@@ -18,6 +18,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { getLevels, getAllLevel } from "../../api/hierarchyapi";
 import { useDropDownStore } from "../../store/dropDownStore";
 import useActivityStore from "../../store/activityStore";
+import { StyledCalender } from "../../ui/StyledCalender";
+import { StyledTime } from "../../ui/StyledTime";
 
 const AddActivity = () => {
   const {
@@ -28,11 +30,8 @@ const AddActivity = () => {
     formState: { errors },
   } = useForm();
   const navigate = useNavigate();
-  const location = useLocation();
-  const { memberId, isUpdate } = location.state || {};
   const { user, fetchListofUser } = useDropDownStore();
-  const { AddActivity, fetchMemberById, member, updateMember, loading } =
-    useActivityStore();
+  const { addActivity } = useActivityStore();
   const [type, setType] = useState();
   const [showReferralField, setShowReferralField] = useState(false);
   const [loadings, setLoadings] = useState(false);
@@ -42,11 +41,6 @@ const AddActivity = () => {
   const [chapterOptions, setChapterOptions] = useState([]);
   const [memberOptions, setMemberOptions] = useState([]);
 
-  useEffect(() => {
-    if (isUpdate && memberId) {
-      fetchMemberById(memberId);
-    }
-  }, [memberId, isUpdate]);
   const mode = [
     { value: "online", label: "online" },
     { value: "offline", label: "offline" },
@@ -65,40 +59,6 @@ const AddActivity = () => {
           label: i.name,
         }))
       : [];
-  useEffect(() => {
-    if (isUpdate && member) {
-      setValue("name", member?.name || "");
-      setValue("email", member?.email || "");
-      setValue("phone", member?.phone || "");
-      setValue("bio", member?.bio || "");
-      setValue("image", member?.image || "");
-      setValue("address", member?.address || "");
-      setValue("whatsapp", member?.secondaryPhone?.whatsapp);
-      setValue("business", member?.secondaryPhone?.business);
-
-      setValue("company_name", member?.company?.name || "");
-      setValue("company_email", member?.company?.email || "");
-      setValue("company_website", member?.company?.websites || "");
-      setValue("company_phone", member?.company?.phone || "");
-
-      const selectedRole = roleOptions?.find(
-        (item) => item?.value === member?.role
-      );
-      setValue("role", selectedRole || "");
-      const selectedBusinessCatergory = business?.find(
-        (item) => item?.value === member?.businessCatogary
-      );
-      setValue("businessCatogary", selectedBusinessCatergory || "");
-      const selectedSubCatergory = sub?.find(
-        (item) => item?.value === member?.businessSubCatogary
-      );
-      setValue("businessSubCatogary", selectedSubCatergory || "");
-      const selectedStatus = statusOptions?.find(
-        (item) => item?.value === member?.status
-      );
-      setValue("status", selectedStatus || "");
-    }
-  }, [member, isUpdate, setValue]);
 
   const handleClear = (event) => {
     event.preventDefault();
@@ -118,6 +78,8 @@ const AddActivity = () => {
         title: data?.title,
         description: data?.description,
         member: data?.member?.value,
+        date: data?.date,
+        time: data?.time,
       };
       if (type === "online") {
         formData.meetingLink = data?.link;
@@ -128,13 +90,10 @@ const AddActivity = () => {
         formData.referral = data?.referral?.value;
       }
 
-      if (isUpdate) {
-        await updateMember(memberId, formData);
-      } else {
-        await AddActivity(formData);
-      }
+      await addActivity(formData);
+
       reset();
-      navigate("/members");
+      navigate("/activity");
     } catch (error) {
       toast.error(error.message);
     } finally {
@@ -203,431 +162,461 @@ const AddActivity = () => {
   };
   return (
     <>
-      {loading ? (
-        <LinearProgress />
-      ) : (
-        <Box
-          sx={{ padding: 3 }}
-          bgcolor={"white"}
-          borderRadius={"12px"}
-          border={"1px solid rgba(0, 0, 0, 0.12)"}
-        >
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <Grid container spacing={4}>
-              <Grid item xs={12}>
-                <Typography
-                  sx={{ marginBottom: 1 }}
-                  variant="h6"
-                  color="textSecondary"
-                >
-                  Type
-                </Typography>
-                <Controller
-                  name="type"
-                  control={control}
-                  defaultValue=""
-                  rules={{ required: "Type is required" }}
-                  render={({ field }) => (
-                    <>
-                      <StyledSelectField
-                        placeholder="Choose activity type"
-                        options={activityOptions}
-                        {...field}
-                      />
-                      {errors.type && (
-                        <span style={{ color: "red" }}>
-                          {errors.type.message}
-                        </span>
-                      )}
-                    </>
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Typography variant="h6" color="textSecondary">
-                  Sender
-                </Typography>
-              </Grid>
-              <Grid item xs={6}>
-                <Controller
-                  name="state"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <>
-                      <StyledSelectField
-                        placeholder="Choose the state"
-                        options={stateOptions}
-                        {...field}
-                        onChange={(e) => {
-                          field.onChange(e);
-                          handleStateChange(e);
-                        }}
-                      />{" "}
-                    </>
-                  )}
-                />
-              </Grid>{" "}
-              <Grid item xs={6}>
-                <Controller
-                  name="zone"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <>
-                      <StyledSelectField
-                        placeholder="Choose the zone"
-                        options={zoneOptions}
-                        {...field}
-                        onChange={(e) => {
-                          field.onChange(e);
-                          handleZoneChange(e.value);
-                        }}
-                      />
-                    </>
-                  )}
-                />
-              </Grid>{" "}
-              <Grid item xs={6}>
-                <Controller
-                  name="district"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <>
-                      <StyledSelectField
-                        placeholder="Choose the district"
-                        options={districtOptions}
-                        {...field}
-                        onChange={(e) => {
-                          field.onChange(e);
-                          handleDistrictChange(e.value);
-                        }}
-                      />
-                    </>
-                  )}
-                />
-              </Grid>{" "}
-              <Grid item xs={6}>
-                <Controller
-                  name="chapter"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <>
-                      <StyledSelectField
-                        placeholder="Choose the chapter"
-                        options={chapterOptions}
-                        {...field}
-                        onChange={(e) => {
-                          field.onChange(e);
-                          handleChapterChange(e.value);
-                        }}
-                      />
-                    </>
-                  )}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <Controller
-                  name="sender"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <>
-                      <StyledSelectField
-                        placeholder="Choose the member"
-                        options={memberOptions}
-                        {...field}
-                      />
-                    </>
-                  )}
-                />
-              </Grid>{" "}
-              <Grid item xs={6}></Grid>
-              <Grid item xs={12}>
-                <Typography variant="h6" color="textSecondary">
-                  Receiver
-                </Typography>
-              </Grid>
-              <Grid item xs={6}>
-                <Controller
-                  name="state"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <>
-                      <StyledSelectField
-                        placeholder="Choose the state"
-                        options={stateOptions}
-                        {...field}
-                        onChange={(e) => {
-                          field.onChange(e);
-                          handleStateChange(e);
-                        }}
-                      />{" "}
-                    </>
-                  )}
-                />
-              </Grid>{" "}
-              <Grid item xs={6}>
-                <Controller
-                  name="zone"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <>
-                      <StyledSelectField
-                        placeholder="Choose the zone"
-                        options={zoneOptions}
-                        {...field}
-                        onChange={(e) => {
-                          field.onChange(e);
-                          handleZoneChange(e.value);
-                        }}
-                      />
-                    </>
-                  )}
-                />
-              </Grid>{" "}
-              <Grid item xs={6}>
-                <Controller
-                  name="district"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <>
-                      <StyledSelectField
-                        placeholder="Choose the district"
-                        options={districtOptions}
-                        {...field}
-                        onChange={(e) => {
-                          field.onChange(e);
-                          handleDistrictChange(e.value);
-                        }}
-                      />
-                    </>
-                  )}
-                />
-              </Grid>{" "}
-              <Grid item xs={6}>
-                <Controller
-                  name="chapter"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <>
-                      <StyledSelectField
-                        placeholder="Choose the chapter"
-                        options={chapterOptions}
-                        {...field}
-                        onChange={(e) => {
-                          field.onChange(e);
-                          handleChapterChange(e.value);
-                        }}
-                      />
-                    </>
-                  )}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <Controller
-                  name="member"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <>
-                      <StyledSelectField
-                        placeholder="Choose the member"
-                        options={memberOptions}
-                        {...field}
-                      />
-                    </>
-                  )}
-                />
-              </Grid>{" "}
-              <Grid item xs={6}></Grid>
-              <Grid item xs={12}>
-                <Typography
-                  sx={{ marginBottom: 1 }}
-                  variant="h6"
-                  color="textSecondary"
-                >
-                  Title
-                </Typography>
-                <Controller
-                  name="title"
-                  control={control}
-                  defaultValue=""
-                  rules={{ required: "Title is required" }}
-                  render={({ field }) => (
-                    <>
-                      <StyledInput placeholder="Enter the Title" {...field} />
-                      {errors.title && (
-                        <span style={{ color: "red" }}>
-                          {errors.title.message}
-                        </span>
-                      )}
-                    </>
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Typography
-                  sx={{ marginBottom: 1 }}
-                  variant="h6"
-                  color="textSecondary"
-                >
-                  Description
-                </Typography>
-                <Controller
-                  name="description"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <>
-                      <StyledMultilineTextField
-                        placeholder="Enter the Description"
-                        {...field}
-                      />
-                    </>
-                  )}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <Typography
-                  sx={{ marginBottom: 1 }}
-                  variant="h6"
-                  color="textSecondary"
-                >
-                  Choose Meeting Type
-                </Typography>
-                <Controller
-                  name="mode"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <>
-                      <StyledSelectField
-                        placeholder="Select type"
-                        options={mode}
-                        {...field}
-                        onChange={(e) => {
-                          field.onChange(e);
-                          handleTypeChange(e);
-                        }}
-                      />
-                    </>
-                  )}
-                />
-              </Grid>
-              {type === "offline" && (
-                <Grid item xs={6}>
-                  <Typography
-                    sx={{ marginBottom: 1 }}
-                    variant="h6"
-                    color="textSecondary"
-                  >
-                    Location
-                  </Typography>
-                  <Controller
-                    name="location"
-                    control={control}
-                    defaultValue=""
-                    render={({ field }) => (
-                      <>
-                        <StyledInput
-                          placeholder="Enter the Location"
-                          {...field}
-                        />
-                      </>
-                    )}
-                  />
-                </Grid>
-              )}
-              {type === "online" && (
-                <Grid item xs={6}>
-                  <Typography
-                    sx={{ marginBottom: 1 }}
-                    variant="h6"
-                    color="textSecondary"
-                  >
-                    Meeting Link
-                  </Typography>
-                  <Controller
-                    name="link"
-                    control={control}
-                    defaultValue=""
-                    render={({ field }) => (
-                      <>
-                        <StyledInput
-                          placeholder="Enter the Meeting Link"
-                          {...field}
-                        />
-                      </>
-                    )}
-                  />
-                </Grid>
-              )}
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={showReferralField}
-                      onChange={(e) => setShowReferralField(e.target.checked)}
-                      name="showReferral"
-                      color="primary"
+      <Box
+        sx={{ padding: 3 }}
+        bgcolor={"white"}
+        borderRadius={"12px"}
+        border={"1px solid rgba(0, 0, 0, 0.12)"}
+      >
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Grid container spacing={4}>
+            <Grid item xs={12}>
+              <Typography
+                sx={{ marginBottom: 1 }}
+                variant="h6"
+                color="textSecondary"
+              >
+                Type
+              </Typography>
+              <Controller
+                name="type"
+                control={control}
+                defaultValue=""
+                rules={{ required: "Type is required" }}
+                render={({ field }) => (
+                  <>
+                    <StyledSelectField
+                      placeholder="Choose activity type"
+                      options={activityOptions}
+                      {...field}
                     />
-                  }
-                  label="Referral"
-                />
-              </Grid>
-              {showReferralField && (
-                <Grid item xs={12}>
-                  <Typography
-                    sx={{ marginBottom: 1 }}
-                    variant="h6"
-                    color="textSecondary"
-                  >
-                    Referral
-                  </Typography>
-                  <Controller
-                    name="referral"
-                    control={control}
-                    defaultValue=""
-                    render={({ field }) => (
-                      <StyledSelectField
-                        placeholder="Choose the referral"
-                        options={userOptions}
+                    {errors.type && (
+                      <span style={{ color: "red" }}>
+                        {errors.type.message}
+                      </span>
+                    )}
+                  </>
+                )}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="h6" color="textSecondary">
+                Sender
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Controller
+                name="state"
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <>
+                    <StyledSelectField
+                      placeholder="Choose the state"
+                      options={stateOptions}
+                      {...field}
+                      onChange={(e) => {
+                        field.onChange(e);
+                        handleStateChange(e);
+                      }}
+                    />{" "}
+                  </>
+                )}
+              />
+            </Grid>{" "}
+            <Grid item xs={6}>
+              <Controller
+                name="zone"
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <>
+                    <StyledSelectField
+                      placeholder="Choose the zone"
+                      options={zoneOptions}
+                      {...field}
+                      onChange={(e) => {
+                        field.onChange(e);
+                        handleZoneChange(e.value);
+                      }}
+                    />
+                  </>
+                )}
+              />
+            </Grid>{" "}
+            <Grid item xs={6}>
+              <Controller
+                name="district"
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <>
+                    <StyledSelectField
+                      placeholder="Choose the district"
+                      options={districtOptions}
+                      {...field}
+                      onChange={(e) => {
+                        field.onChange(e);
+                        handleDistrictChange(e.value);
+                      }}
+                    />
+                  </>
+                )}
+              />
+            </Grid>{" "}
+            <Grid item xs={6}>
+              <Controller
+                name="chapter"
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <>
+                    <StyledSelectField
+                      placeholder="Choose the chapter"
+                      options={chapterOptions}
+                      {...field}
+                      onChange={(e) => {
+                        field.onChange(e);
+                        handleChapterChange(e.value);
+                      }}
+                    />
+                  </>
+                )}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <Controller
+                name="sender"
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <>
+                    <StyledSelectField
+                      placeholder="Choose the member"
+                      options={memberOptions}
+                      {...field}
+                    />
+                  </>
+                )}
+              />
+            </Grid>{" "}
+            <Grid item xs={6}></Grid>
+            <Grid item xs={12}>
+              <Typography variant="h6" color="textSecondary">
+                Receiver
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Controller
+                name="receiverstate"
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <>
+                    <StyledSelectField
+                      placeholder="Choose the state"
+                      options={stateOptions}
+                      {...field}
+                      onChange={(e) => {
+                        field.onChange(e);
+                        handleStateChange(e);
+                      }}
+                    />{" "}
+                  </>
+                )}
+              />
+            </Grid>{" "}
+            <Grid item xs={6}>
+              <Controller
+                name="recieverzone"
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <>
+                    <StyledSelectField
+                      placeholder="Choose the zone"
+                      options={zoneOptions}
+                      {...field}
+                      onChange={(e) => {
+                        field.onChange(e);
+                        handleZoneChange(e.value);
+                      }}
+                    />
+                  </>
+                )}
+              />
+            </Grid>{" "}
+            <Grid item xs={6}>
+              <Controller
+                name="recieverdistrict"
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <>
+                    <StyledSelectField
+                      placeholder="Choose the district"
+                      options={districtOptions}
+                      {...field}
+                      onChange={(e) => {
+                        field.onChange(e);
+                        handleDistrictChange(e.value);
+                      }}
+                    />
+                  </>
+                )}
+              />
+            </Grid>{" "}
+            <Grid item xs={6}>
+              <Controller
+                name="recieverchapter"
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <>
+                    <StyledSelectField
+                      placeholder="Choose the chapter"
+                      options={chapterOptions}
+                      {...field}
+                      onChange={(e) => {
+                        field.onChange(e);
+                        handleChapterChange(e.value);
+                      }}
+                    />
+                  </>
+                )}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <Controller
+                name="member"
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <>
+                    <StyledSelectField
+                      placeholder="Choose the member"
+                      options={memberOptions}
+                      {...field}
+                    />
+                  </>
+                )}
+              />
+            </Grid>{" "}
+            <Grid item xs={6}></Grid>
+            <Grid item xs={12}>
+              <Typography
+                sx={{ marginBottom: 1 }}
+                variant="h6"
+                color="textSecondary"
+              >
+                Title
+              </Typography>
+              <Controller
+                name="title"
+                control={control}
+                defaultValue=""
+                rules={{ required: "Title is required" }}
+                render={({ field }) => (
+                  <>
+                    <StyledInput placeholder="Enter the Title" {...field} />
+                    {errors.title && (
+                      <span style={{ color: "red" }}>
+                        {errors.title.message}
+                      </span>
+                    )}
+                  </>
+                )}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Typography
+                sx={{ marginBottom: 1 }}
+                variant="h6"
+                color="textSecondary"
+              >
+                Description
+              </Typography>
+              <Controller
+                name="description"
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <>
+                    <StyledMultilineTextField
+                      placeholder="Enter the Description"
+                      {...field}
+                    />
+                  </>
+                )}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <Typography
+                sx={{ marginBottom: 1 }}
+                variant="h6"
+                color="textSecondary"
+              >
+                Choose Meeting Type
+              </Typography>
+              <Controller
+                name="mode"
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <>
+                    <StyledSelectField
+                      placeholder="Select type"
+                      options={mode}
+                      {...field}
+                      onChange={(e) => {
+                        field.onChange(e);
+                        handleTypeChange(e);
+                      }}
+                    />
+                  </>
+                )}
+              />
+            </Grid>
+            {type === "offline" && (
+              <Grid item xs={6}>
+                <Typography
+                  sx={{ marginBottom: 1 }}
+                  variant="h6"
+                  color="textSecondary"
+                >
+                  Location
+                </Typography>
+                <Controller
+                  name="location"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <>
+                      <StyledInput
+                        placeholder="Enter the Location"
                         {...field}
                       />
-                    )}
-                  />
-                </Grid>
-              )}
-              <Grid item xs={6}></Grid>
-              <Grid item xs={6}>
-                <Stack
-                  direction={"row"}
-                  spacing={2}
-                  justifyContent={"flex-end"}
-                >
-                  <StyledButton
-                    name="Cancel"
-                    variant="secondary"
-                    onClick={(event) => handleClear(event)}
-                  />
-                  <StyledButton
-                    name={loadings ? "Saving..." : "Save"}
-                    variant="primary"
-                    type="submit"
-                  />
-                </Stack>
+                    </>
+                  )}
+                />
               </Grid>
+            )}
+            {type === "online" && (
+              <Grid item xs={6}>
+                <Typography
+                  sx={{ marginBottom: 1 }}
+                  variant="h6"
+                  color="textSecondary"
+                >
+                  Meeting Link
+                </Typography>
+                <Controller
+                  name="link"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <>
+                      <StyledInput
+                        placeholder="Enter the Meeting Link"
+                        {...field}
+                      />
+                    </>
+                  )}
+                />
+              </Grid>
+            )}
+            <Grid item xs={6}>
+              <Typography
+                sx={{ marginBottom: 1 }}
+                variant="h6"
+                color="textSecondary"
+              >
+                Date
+              </Typography>
+              <Controller
+                name="date"
+                control={control}
+                defaultValue={null}
+                render={({ field }) => (
+                  <>
+                    <StyledCalender {...field} />
+                  </>
+                )}
+              />
             </Grid>
-          </form>
-        </Box>
-      )}{" "}
+            <Grid item xs={6}>
+              <Typography
+                sx={{ marginBottom: 1 }}
+                variant="h6"
+                color="textSecondary"
+              >
+                Time
+              </Typography>
+              <Controller
+                name="time"
+                control={control}
+                defaultValue={null}
+                render={({ field }) => (
+                  <>
+                    <StyledTime {...field} />
+                  </>
+                )}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={showReferralField}
+                    onChange={(e) => setShowReferralField(e.target.checked)}
+                    name="showReferral"
+                    color="primary"
+                  />
+                }
+                label="Referral"
+              />
+            </Grid>
+            {showReferralField && (
+              <Grid item xs={12}>
+                <Typography
+                  sx={{ marginBottom: 1 }}
+                  variant="h6"
+                  color="textSecondary"
+                >
+                  Referral
+                </Typography>
+                <Controller
+                  name="referral"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <StyledSelectField
+                      placeholder="Choose the referral"
+                      options={userOptions}
+                      {...field}
+                    />
+                  )}
+                />
+              </Grid>
+            )}
+            <Grid item xs={6}></Grid>
+            <Grid item xs={6}>
+              <Stack direction={"row"} spacing={2} justifyContent={"flex-end"}>
+                <StyledButton
+                  name="Cancel"
+                  variant="secondary"
+                  onClick={(event) => handleClear(event)}
+                />
+                <StyledButton
+                  name={loadings ? "Saving..." : "Save"}
+                  variant="primary"
+                  type="submit"
+                />
+              </Stack>
+            </Grid>
+          </Grid>
+        </form>
+      </Box>
     </>
   );
 };

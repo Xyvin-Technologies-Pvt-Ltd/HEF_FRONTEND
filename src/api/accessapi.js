@@ -1,9 +1,9 @@
 import { toast } from "react-toastify";
 import axiosInstance from "./axiosintercepter";
 
-export const getActivities = async (filter) => {
+export const getAccess = async (filter) => {
   try {
-    const response = await axiosInstance.get("/analytic", {
+    const response = await axiosInstance.get("/useraccess", {
       params: filter,
     });
     return response.data;
@@ -11,9 +11,9 @@ export const getActivities = async (filter) => {
     console.error("Error caught:", error);
   }
 };
-export const createActivity = async (data) => {
+export const updateAccess = async (id, data) => {
   try {
-    const response = await axiosInstance.post("/analytic", data);
+    const response = await axiosInstance.put(`/useraccess/${id}`, data);
     toast.success(response.data.message);
     return response.data;
   } catch (error) {
