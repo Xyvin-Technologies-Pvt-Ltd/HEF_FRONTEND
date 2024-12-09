@@ -20,3 +20,12 @@ export const createActivity = async (data) => {
     throw error.response.data;
   }
 };
+export const deleteActivity = async (id) => {
+  try {
+    const response = await axiosInstance.delete(`/analytic/${id}`);
+
+    return response.data;
+  } catch (error) {
+    console.error("Error caught:", error);
+  }
+};

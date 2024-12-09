@@ -17,17 +17,34 @@ import { StyledButton } from "../../ui/StyledButton";
 
 import { ReactComponent as AddIcon } from "../../assets/icons/AddIcon.svg";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import useActivityStore from "../../store/activityStore";
 
 const BusinessPage = () => {
   const navigate = useNavigate();
   const [selectedTab, setSelectedTab] = useState(0);
   const [pageNo, setPageNo] = useState(1);
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [isChange, setIsChange] = useState(false);
   const [search, setSearch] = useState();
   const [row, setRow] = useState(10);
   const { fetchActivity } = useListStore();
+  const { removeActivity } = useActivityStore();
   const handleChange = (event, newValue) => {
     setSelectedTab(newValue);
   };
+  const handleSelectionChange = (newSelectedIds) => {
+    setSelectedRows(newSelectedIds);
+  };
+  const handleDelete = async () => {
+    if (selectedRows.length > 0) {
+      await Promise.all(selectedRows?.map((id) => removeActivity(id)));
+      toast.success("Deleted successfully");
+      setIsChange(!isChange);
+      setSelectedRows([]);
+    }
+  };
+
   useEffect(() => {
     let filter = {};
     if (search) {
@@ -42,7 +59,7 @@ const BusinessPage = () => {
     filter.pageNo = pageNo;
     filter.limit = row;
     fetchActivity(filter);
-  }, [pageNo, search, row, selectedTab]);
+  }, [isChange, pageNo, search, row, selectedTab]);
   return (
     <>
       {" "}
@@ -129,9 +146,8 @@ const BusinessPage = () => {
             columns={activityColumns}
             pageNo={pageNo}
             setPageNo={setPageNo}
-            // payment
-            // onModify={handleApprove}
-            // onAction={handleReject}
+            onDelete={handleDelete}
+            onSelectionChange={handleSelectionChange}
             rowPerSize={row}
             setRowPerSize={setRow}
           />
