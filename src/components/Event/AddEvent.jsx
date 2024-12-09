@@ -78,6 +78,11 @@ export default function AddEvent({ isUpdate }) {
       );
       setValue("platform", selectedplatform || "");
       setValue("link", event.link);
+      const selectedTags = event?.coordinator?.map((coord) => ({
+        value: coord?._id,
+        label: coord?.name,
+      }));
+      setValue("coordinator", selectedTags || []);
       setValue("speakers", event.speakers || []);
       setType(selectedType?.value);
 

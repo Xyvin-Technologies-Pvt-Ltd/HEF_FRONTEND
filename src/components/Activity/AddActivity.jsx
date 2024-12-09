@@ -113,12 +113,10 @@ const AddActivity = () => {
       return newPhones;
     });
   };
-  const roleOptions = [
-    { value: "president", label: "President" },
-    { value: "secretary", label: "Secretary" },
-    { value: "treasurer", label: "Treasurer" },
-    { value: "rep", label: "Rep" },
-    { value: "member", label: "Member" },
+  const activityOptions = [
+    { value: "Business", label: "Business" },
+    { value: "One v One Meeting", label: "One v One Meeting" },
+
   ];
 
   const statusOptions = [
@@ -255,41 +253,14 @@ const AddActivity = () => {
         >
           <form onSubmit={handleSubmit(onSubmit)}>
             <Grid container spacing={4}>
+            
               <Grid item xs={12}>
                 <Typography
                   sx={{ marginBottom: 1 }}
                   variant="h6"
                   color="textSecondary"
                 >
-                  Full Name
-                </Typography>
-                <Controller
-                  name="name"
-                  control={control}
-                  defaultValue=""
-                  rules={{ required: "Full Name is required" }}
-                  render={({ field }) => (
-                    <>
-                      <StyledInput
-                        placeholder="Enter the Full name"
-                        {...field}
-                      />
-                      {errors.name && (
-                        <span style={{ color: "red" }}>
-                          {errors.name.message}
-                        </span>
-                      )}
-                    </>
-                  )}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <Typography
-                  sx={{ marginBottom: 1 }}
-                  variant="h6"
-                  color="textSecondary"
-                >
-                  Role
+                Type
                 </Typography>
                 <Controller
                   name="role"
@@ -299,8 +270,8 @@ const AddActivity = () => {
                   render={({ field }) => (
                     <>
                       <StyledSelectField
-                        placeholder="Choose the Role"
-                        options={roleOptions}
+                        placeholder="Choose activity type"
+                        options={activityOptions}
                         {...field}
                       />
                       {errors.role && (
@@ -308,6 +279,87 @@ const AddActivity = () => {
                           {errors.role.message}
                         </span>
                       )}
+                    </>
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant="h6" color="textSecondary">
+                  HEF Designation
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Controller
+                  name="state"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <>
+                      <StyledSelectField
+                        placeholder="Choose the state"
+                        options={stateOptions}
+                        {...field}
+                        onChange={(e) => {
+                          field.onChange(e);
+                          handleStateChange(e);
+                        }}
+                      />{" "}
+                    </>
+                  )}
+                />
+              </Grid>{" "}
+              <Grid item xs={6}>
+                <Controller
+                  name="zone"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <>
+                      <StyledSelectField
+                        placeholder="Choose the zone"
+                        options={zoneOptions}
+                        {...field}
+                        onChange={(e) => {
+                          field.onChange(e);
+                          handleZoneChange(e.value);
+                        }}
+                      />
+                    </>
+                  )}
+                />
+              </Grid>{" "}
+              <Grid item xs={6}>
+                <Controller
+                  name="district"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <>
+                      <StyledSelectField
+                        placeholder="Choose the district"
+                        options={districtOptions}
+                        {...field}
+                        onChange={(e) => {
+                          field.onChange(e);
+                          handleDistrictChange(e.value);
+                        }}
+                      />
+                    </>
+                  )}
+                />
+              </Grid>{" "}
+              <Grid item xs={6}>
+                <Controller
+                  name="chapter"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <>
+                      <StyledSelectField
+                        placeholder="Choose the chapter"
+                        options={chapterOptions}
+                        {...field}
+                      />
                     </>
                   )}
                 />
@@ -605,87 +657,7 @@ const AddActivity = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={12}>
-                <Typography variant="h6" color="textSecondary">
-                  HEF Designation
-                </Typography>
-              </Grid>
-              <Grid item xs={6}>
-                <Controller
-                  name="state"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <>
-                      <StyledSelectField
-                        placeholder="Choose the state"
-                        options={stateOptions}
-                        {...field}
-                        onChange={(e) => {
-                          field.onChange(e);
-                          handleStateChange(e);
-                        }}
-                      />{" "}
-                    </>
-                  )}
-                />
-              </Grid>{" "}
-              <Grid item xs={6}>
-                <Controller
-                  name="zone"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <>
-                      <StyledSelectField
-                        placeholder="Choose the zone"
-                        options={zoneOptions}
-                        {...field}
-                        onChange={(e) => {
-                          field.onChange(e);
-                          handleZoneChange(e.value);
-                        }}
-                      />
-                    </>
-                  )}
-                />
-              </Grid>{" "}
-              <Grid item xs={6}>
-                <Controller
-                  name="district"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <>
-                      <StyledSelectField
-                        placeholder="Choose the district"
-                        options={districtOptions}
-                        {...field}
-                        onChange={(e) => {
-                          field.onChange(e);
-                          handleDistrictChange(e.value);
-                        }}
-                      />
-                    </>
-                  )}
-                />
-              </Grid>{" "}
-              <Grid item xs={6}>
-                <Controller
-                  name="chapter"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <>
-                      <StyledSelectField
-                        placeholder="Choose the chapter"
-                        options={chapterOptions}
-                        {...field}
-                      />
-                    </>
-                  )}
-                />
-              </Grid>
+             
               <Grid item xs={12}>
                 <Typography
                   sx={{ marginBottom: 1 }}
