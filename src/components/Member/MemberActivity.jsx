@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Box,  Stack, Tab, Tabs } from "@mui/material";
+import { Box, Stack, Tab, Tabs } from "@mui/material";
 
 import StyledTable from "../../ui/StyledTable";
 import { activityColumns } from "../../assets/json/TableData";
 import StyledSearchbar from "../../ui/StyledSearchbar";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useListStore } from "../../store/listStore";
 
 const MemberActivity = () => {
@@ -14,19 +14,21 @@ const MemberActivity = () => {
   const [search, setSearch] = useState();
   const [row, setRow] = useState(10);
   const { fetchActivity } = useListStore();
+  const {id}=useParams();
   const handleChange = (event, newValue) => {
     setSelectedTab(newValue);
   };
   useEffect(() => {
-    let filter = {};
+    let filter = {user:id};
     if (search) {
       filter.search = search;
       setPageNo(1);
     }
+    // filter.user = id;
     filter.pageNo = pageNo;
     filter.limit = row;
     fetchActivity(filter);
-  }, [pageNo, search, row]);
+  }, [pageNo, search, row, id]);
   return (
     <>
       {" "}

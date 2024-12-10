@@ -145,6 +145,7 @@ const BusinessPage = () => {
           <StyledTable
             columns={activityColumns}
             pageNo={pageNo}
+            menu
             setPageNo={setPageNo}
             onDelete={handleDelete}
             onSelectionChange={handleSelectionChange}

@@ -80,6 +80,7 @@ const AddActivity = () => {
         member: data?.member?.value,
         date: data?.date,
         time: data?.time,
+        status: "accepted",
       };
       if (type === "online") {
         formData.meetingLink = data?.link;
