@@ -30,7 +30,7 @@ const AddSubscription = ({
   useEffect(() => {
     console.log("currentExpiryDate:", currentExpiryDate);
     if (currentExpiryDate) {
-      const parsedDate = new Date(currentExpiryDate);
+      const parsedDate = currentExpiryDate ? new Date(currentExpiryDate) : new Date();
       console.log("Parsed Date:", parsedDate);
       if (!isNaN(parsedDate)) {
         setExpiryDate(parsedDate);
@@ -78,16 +78,19 @@ const AddSubscription = ({
   };
 
   const calculateExpiryDate = (metric, value) => {
-    if (!metric || !value) {
+    if (!metric || !value || isNaN(parseInt(value, 10))) {
       setExpiryDate(null);
+      setValue("expiryDate", null); // Reset expiry date if inputs are invalid
       return;
     }
-
-    const baseDate = currentExpiryDate
+  
+    // Use currentExpiryDate if available, else default to the current date
+    const baseDate = currentExpiryDate && !isNaN(new Date(currentExpiryDate))
       ? new Date(currentExpiryDate)
       : new Date();
+  
     const numberValue = parseInt(value, 10);
-
+  
     switch (metric) {
       case 1: // Year
         baseDate.setFullYear(baseDate.getFullYear() + numberValue);
@@ -104,10 +107,18 @@ const AddSubscription = ({
       default:
         break;
     }
-
-    setExpiryDate(baseDate);
-    setValue("expiryDate", baseDate.toISOString());
+  
+    if (!isNaN(baseDate)) {
+      setExpiryDate(baseDate);
+      const formattedDate = new Intl.DateTimeFormat("en-GB").format(baseDate); // Format as dd/mm/yyyy
+      setValue("expiryDate", formattedDate);
+    } else {
+      setExpiryDate(null);
+      setValue("expiryDate", null);
+    }
   };
+  
+  
 
   const option = [
     { value: 1, label: "Year" },

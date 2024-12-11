@@ -1,11 +1,6 @@
 import { Box, Grid, Stack, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { ReactComponent as RevenueIcon } from "../../assets/icons/RevenueIcon.svg";
-import { ReactComponent as MembershipRevenueIcon } from "../../assets/icons/MembershipRevenueIcon.svg";
-import { ReactComponent as AppRevenueIcon } from "../../assets/icons/AppRevenueIcon.svg";
-import { ReactComponent as TotalProductIcon } from "../../assets/icons/TotalProductIcon.svg";
-import { ReactComponent as TotalRequirementIcon } from "../../assets/icons/TotalRequirementIcon.svg";
-import { ReactComponent as TotalMemberIcon } from "../../assets/icons/TotalMemberIcon.svg";
 import { ReactComponent as ActiveMemberIcon } from "../../assets/icons/ActiveMemberIcon.svg";
 import { ReactComponent as PremiumIcon } from "../../assets/icons/PremiumIcon.svg";
 import { ReactComponent as FrozenIcon } from "../../assets/icons/FrozenIcon.svg";
@@ -13,6 +8,10 @@ import { ReactComponent as EventsIcon } from "../../assets/icons/EventsIcon.svg"
 import { ReactComponent as NewsIcon } from "../../assets/icons/NewsIcon.svg";
 import { ReactComponent as NotificationIcon } from "../../assets/icons/NotificationsIcon.svg";
 import { ReactComponent as PromotionIcon } from "../../assets/icons/PromotionIcon.svg";
+import { ReactComponent as StateIcon } from "../../assets/icons/StateIcon.svg";
+import { ReactComponent as ZoneIcon } from "../../assets/icons/ZoneIcon.svg";
+import { ReactComponent as DistrictIcon } from "../../assets/icons/DistrictIcon.svg";
+import { ReactComponent as ChapterIcon } from "../../assets/icons/ChapterIcon.svg";
 
 import moment from "moment";
 import { DashboardCard } from "../../components/Dashboard/DashboardCard";
@@ -22,53 +21,29 @@ const DashboardPage = () => {
   const [month, setMonth] = useState(new Date().getMonth() + 1);
   const [year, setYear] = useState(new Date().getFullYear());
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const totalMember = {
-    title: "Total KSSIA Members",
-    amount: data?.userCount,
-    icon: TotalMemberIcon,
-  };
+
   const totalRevenue = {
-    title: "Total Revenue",
+    title: "MemberShip Revenue",
     amount: `₹ ${data?.totalRevenue ? data?.totalRevenue : 0}`,
     icon: RevenueIcon,
     percentage: `${
       data?.totalRevenuePercentage ? data?.totalRevenuePercentage : 0
     }`,
   };
-  const membershipRevenue = {
-    title: "Membership Revenue",
-    amount: `₹ ${
-      data?.totalCategoryMembershipRevenue
-        ? data?.totalCategoryMembershipRevenue
-        : 0
-    }`,
-    icon: MembershipRevenueIcon,
-    percentage: `${
-      data?.membershipRevenuePercentage ? data?.membershipRevenuePercentage : 0
-    }`,
-  };
-  const appRevenue = {
-    title: "App Revenue",
-    amount: `₹ ${
-      data?.totalCategoryAppRevenue ? data?.totalCategoryAppRevenue : 0
-    }`,
-    icon: AppRevenueIcon,
-    percentage: `${
-      data?.appRevenuePercentage ? data?.appRevenuePercentage : 0
-    }`,
-  };
+
+
   const activeMember = {
-    title: "Active Users",
+    title: "Business",
     amount: data?.activeUserCount,
     icon: ActiveMemberIcon,
   };
   const premiumMember = {
-    title: "Premium Users",
+    title: "1 on 1 meetings",
     amount: data?.activePremiumUserCount,
     icon: PremiumIcon,
   };
   const frozenMember = {
-    title: "Frozen Users",
+    title: "Referrals",
     amount: data?.suspendedUserCount,
     icon: FrozenIcon,
   };
@@ -92,15 +67,25 @@ const DashboardPage = () => {
     amount: data?.promotionCount,
     icon: PromotionIcon,
   };
-  const products = {
-    title: "Total Products",
-    amount: data?.productCount,
-    icon: TotalProductIcon,
+  const states = {
+    title: "State PST Users",
+    amount: data?.eventCount,
+    icon: StateIcon,
   };
-  const requirements = {
-    title: "Total Requirements",
-    amount: data?.requirementCount,
-    icon: TotalRequirementIcon,
+  const zones = {
+    title: "Zone PST Users",
+    amount: data?.newsCount,
+    icon: ZoneIcon,
+  };
+  const districts = {
+    title: "District PST Users",
+    amount: 0,
+    icon: DistrictIcon,
+  };
+  const chapters = {
+    title: "Chapter PST Users",
+    amount: data?.promotionCount,
+    icon: ChapterIcon,
   };
   // const fetchData = async () => {
   //   try {
@@ -136,74 +121,65 @@ const DashboardPage = () => {
         </Typography>
       </Box>
       <Grid container padding={"15px"} paddingTop={3} spacing={4}>
-        <Grid item md={6}>
-          <Stack spacing={2}>
+        <Grid item md={6} >
+         <Stack direction={"row"} spacing={2}>
             {" "}
-            <DashboardCard
-              data={totalRevenue}
-              isDate
-              onDateChange={handleDateChange}
-              selectedDate={selectedDate}
-            />
-            <Stack direction={"row"} spacing={2}>
+            <Box width={"100%"}>
               {" "}
-              <Box width={"100%"}>
-                {" "}
-                <DashboardCard
-                  isMobile
-                  data={membershipRevenue}
-                  isDate
-                  onDateChange={handleDateChange}
-                  selectedDate={selectedDate}
-                />{" "}
-              </Box>{" "}
-              <Box width={"100%"}>
-                {" "}
-                <DashboardCard
-                  isMobile
-                  data={appRevenue}
-                  isDate
-                  onDateChange={handleDateChange}
-                  selectedDate={selectedDate}
-                />{" "}
-              </Box>
-            </Stack>
+              <DashboardCard
+                data={totalRevenue}height={"185px"}
+                // isDate
+                // onDateChange={handleDateChange}
+                // selectedDate={selectedDate}
+                isMobile
+              />
+            </Box>{" "}
+         
           </Stack>
         </Grid>
 
-        <Grid item md={6}>
+        <Grid item md={6} >
           {" "}
-          <Stack spacing={2}>
-            {" "}
-            <DashboardCard data={totalMember} />
-            <Stack direction={"row"} spacing={2}>
-              {" "}
-              <Box width={"100%"}>
-                {" "}
-                <DashboardCard isMobile data={activeMember} />{" "}
-              </Box>{" "}
-              <Box width={"100%"}>
-                {" "}
-                <DashboardCard isMobile data={premiumMember} />{" "}
-              </Box>
-              <Box width={"100%"}>
-                {" "}
-                <DashboardCard isMobile data={frozenMember} />{" "}
-              </Box>
-            </Stack>
-          </Stack>
-        </Grid>
-        <Grid item md={6}>
           <Stack direction={"row"} spacing={2}>
             {" "}
             <Box width={"100%"}>
               {" "}
-              <DashboardCard spacing data={products} />{" "}
+              <DashboardCard isMobile data={activeMember} height={"185px"}/>{" "}
             </Box>{" "}
             <Box width={"100%"}>
               {" "}
-              <DashboardCard spacing data={requirements} />{" "}
+              <DashboardCard isMobile data={premiumMember}height={"185px"} />{" "}
             </Box>
+            <Box width={"100%"}>
+              {" "}
+              <DashboardCard isMobile data={frozenMember} height={"185px"}/>{" "}
+            </Box>
+          </Stack>
+        </Grid>
+        <Grid item md={6}>
+          <Stack spacing={2}>
+            <Stack direction={"row"} spacing={2}>
+              {" "}
+              <Box width={"100%"}>
+                {" "}
+                <DashboardCard data={states} height={"160px"} />{" "}
+              </Box>{" "}
+              <Box width={"100%"}>
+                {" "}
+                <DashboardCard data={zones} height={"160px"} />{" "}
+              </Box>
+            </Stack>
+            <Stack direction={"row"} spacing={2}>
+              {" "}
+              <Box width={"100%"}>
+                {" "}
+                <DashboardCard data={districts} height={"160px"} />{" "}
+              </Box>{" "}
+              <Box width={"100%"}>
+                {" "}
+                <DashboardCard data={chapters} height={"160px"} />{" "}
+              </Box>
+            </Stack>
           </Stack>
         </Grid>
         <Grid item md={6}>
