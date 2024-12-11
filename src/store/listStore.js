@@ -4,7 +4,7 @@ import { getPromotion } from "../api/promotionapi";
 import { getFeed } from "../api/feedapi";
 import { getApproval, getFeedByUser } from "../api/productapi";
 import { fetchRole } from "../api/roleManagementapi";
-import { getAdmin } from "../api/adminapi";
+import { getAdmin, getAdminActivity } from "../api/adminapi";
 import { getNews } from "../api/newsapi";
 import { getMember } from "../api/memberapi";
 import { getReport } from "../api/reportapi";
@@ -40,7 +40,6 @@ const useListStore = create((set, get) => ({
     set({ rowPerSize: value });
   },
 
- 
   fetchEvent: async (filter) => {
     set({ loading: true });
     const allData = await getEvents(filter);
@@ -51,6 +50,13 @@ const useListStore = create((set, get) => ({
   fetchActivity: async (filter) => {
     set({ loading: true });
     const allData = await getActivities(filter);
+    set({ lists: allData?.data || [] });
+    set({ totalCount: allData?.totalCount || 0 });
+    set({ loading: false });
+  },
+  getActivity: async (filter) => {
+    set({ loading: true });
+    const allData = await getAdminActivity(filter);
     set({ lists: allData?.data || [] });
     set({ totalCount: allData?.totalCount || 0 });
     set({ loading: false });
@@ -118,16 +124,14 @@ const useListStore = create((set, get) => ({
     set({ totalCount: allData?.totalCount || 0 });
     set({ loading: false });
   },
-  fetchLevels: async (type,filter) => {
+  fetchLevels: async (type, filter) => {
     set({ loading: true });
-    const allData = await getAllLevel(type,filter);
+    const allData = await getAllLevel(type, filter);
     set({ lists: allData?.data || [] });
     set({ totalCount: allData?.totalCount || 0 });
     set({ loading: false });
   },
 
- 
- 
   fetchReport: async (filter) => {
     set({ loading: true });
     const allData = await getReport(filter);

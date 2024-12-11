@@ -16,19 +16,19 @@ import StyledSelectField from "./StyledSelectField";
 const AdminFilter = ({ open, onClose, onApply }) => {
   const [date, setDate] = useState("");
   const [status, setStatus] = useState(null);
-  const [type, setType] = useState("");
+  const [type, setType] = useState(null);
 
   const handleClear = (event) => {
     event.preventDefault();
-    setType("");
+    setType(null);
     setDate("");
     setStatus(null);
-    onApply({ type: "", date: "", status: "", date: "" });
+    onApply({ type: "", date: "", status: "" });
     onClose();
   };
 
   const handleApply = () => {
-    onApply({ type, date, status: status?.value || "" });
+    onApply({ type: type?.value || "", date, status: status?.value || "" });
     onClose();
   };
 
@@ -64,15 +64,22 @@ const AdminFilter = ({ open, onClose, onApply }) => {
       <DialogContent sx={{ padding: 0 }}>
         <Stack spacing={2} padding={2}>
           <Typography>Type</Typography>
-          <StyledInput
-            placeholder={"Enter Http Type"}
+          <StyledSelectField
+            placeholder="Select type"
+            options={[
+              { value: "GET", label: "GET" },
+              { value: "POST", label: "POST" },
+              { value: "PUT", label: "PUT" },
+              { value: "DELETE", label: "DELETE" },
+              { value: "PATCH", label: "PATCH" },
+            ]}
             value={type}
-            onChange={(e) => setType(e.target.value)}
+            onChange={(selectedOption) => setType(selectedOption)}
           />
           <Typography>Created At</Typography>
           <StyledCalender
             value={date}
-            onChange={(selectedDate) => setFrom(selectedDate)}
+            onChange={(selectedDate) => setDate(selectedDate)}
           />
 
           <Typography>Status</Typography>

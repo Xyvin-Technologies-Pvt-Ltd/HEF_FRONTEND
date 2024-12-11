@@ -6,9 +6,11 @@ import AddSubscription from "../../components/subscription/AddSubscription";
 import useSubscriptionStore from "../../store/subscriptionStore";
 import { Box, Divider, Grid, Stack, Typography } from "@mui/material";
 import moment from "moment";
+import SendNotification from "../../components/subscription/SendNotification";
 
 const Subscription = ({ id }) => {
   const [open, setOpen] = useState(false);
+  const [notiOpen, setNotiOpen] = useState(false);
   const [isChange, setIsChange] = useState(false);
   const { fetchSubscriptionById, subscription } = useSubscriptionStore();
 
@@ -49,17 +51,19 @@ const Subscription = ({ id }) => {
                 <Typography variant="h7" color={"#686465"} fontWeight={700}>
                   Subscription Status
                 </Typography>
-                <Typography
-                  variant="h8"
-                  color="#FF9500"
-                  sx={{
-                    padding: "0px 6px",
-                    borderRadius: "12px",
-                    border: "1px solid #FF9500",
-                  }}
-                >
-                  {subscription?.status}
-                </Typography>
+                {subscription?.status && (
+                  <Typography
+                    variant="h8"
+                    color="#FF9500"
+                    sx={{
+                      padding: "0px 6px",
+                      borderRadius: "12px",
+                      border: "1px solid #FF9500",
+                    }}
+                  >
+                    {subscription?.status}
+                  </Typography>
+                )}
               </Stack>
               <Divider />
               <Stack
@@ -94,11 +98,16 @@ const Subscription = ({ id }) => {
               <Grid container justifyContent="flex-end">
                 <Grid item xs={7}>
                   <Stack direction="row" spacing={2} justifyContent="flex-end">
-                    <StyledButton
+                    {/* <StyledButton
                       name="Send Notification"
                       variant="secondary"
+                      onClick={() => setNotiOpen(true)}
+                    /> */}
+                    <StyledButton
+                      name="Renew"
+                      variant="primary"
+                      onClick={() => setOpen(true)}
                     />
-                    <StyledButton name="Renew" variant="primary"onClick={() => setOpen(true)} />
                   </Stack>
                 </Grid>
               </Grid>
@@ -126,6 +135,11 @@ const Subscription = ({ id }) => {
         onChange={() => setIsChange(!isChange)}
         id={subscription?._id}
         currentExpiryDate={formatDate(subscription?.expiryDate)}
+      />
+      <SendNotification
+        open={notiOpen}
+        onClose={() => setNotiOpen(false)}
+        onChange={() => setIsChange(!isChange)}
       />
     </>
   );

@@ -3,7 +3,9 @@ import {
   addAdmin,
   deleteAdmin,
   editAdmin,
+  getActivityById,
   getAdmin,
+  getAdminActivity,
   getAdminById,
   getSingleAdmin,
 } from "../api/adminapi";
@@ -12,6 +14,7 @@ const useAdminStore = create((set) => ({
   admins: [],
   singleAdmin: [],
   single: [],
+  activity: [],
   addAdmins: async (data) => {
     await addAdmin(data);
   },
@@ -33,6 +36,10 @@ const useAdminStore = create((set) => ({
   },
   deleteAdmins: async (id) => {
     await deleteAdmin(id);
+  },
+  fetchAdminActivity: async (id) => {
+    const response = await getActivityById(id);
+    set({ activity: response.data || [] });
   },
 }));
 
