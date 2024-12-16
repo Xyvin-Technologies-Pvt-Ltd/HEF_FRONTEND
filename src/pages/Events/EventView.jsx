@@ -205,7 +205,7 @@ const EventView = () => {
                 <img
                   src={selectedEvent.image}
                   alt={selectedEvent.title}
-                  style={{ width: "448px", height: "352px", objectFit: "fill" }}
+                  style={{ width: "348px", height: "252px", objectFit: "fill" }}
                 />
                 <Stack spacing={2} width={"100%"}>
                   <Stack direction={"row"} justifyContent={"space-between"}>
