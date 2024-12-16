@@ -24,13 +24,15 @@ const AddSubscription = ({
   id,
   currentExpiryDate,
 }) => {
-  const { handleSubmit, control, setValue, watch,reset } = useForm();
+  const { handleSubmit, control, setValue, watch, reset } = useForm();
   const [expiryDate, setExpiryDate] = useState(null);
   const { addSubscription, updateSubscription } = useSubscriptionStore();
   useEffect(() => {
     console.log("currentExpiryDate:", currentExpiryDate);
     if (currentExpiryDate) {
-      const parsedDate = currentExpiryDate ? new Date(currentExpiryDate) : new Date();
+      const parsedDate = currentExpiryDate
+        ? new Date(currentExpiryDate)
+        : new Date();
       console.log("Parsed Date:", parsedDate);
       if (!isNaN(parsedDate)) {
         setExpiryDate(parsedDate);
@@ -38,7 +40,7 @@ const AddSubscription = ({
       }
     }
   }, [currentExpiryDate, setValue]);
-  
+
   const onSubmit = async (formData) => {
     try {
       const newData = {
@@ -83,14 +85,15 @@ const AddSubscription = ({
       setValue("expiryDate", null); // Reset expiry date if inputs are invalid
       return;
     }
-  
+
     // Use currentExpiryDate if available, else default to the current date
-    const baseDate = currentExpiryDate && !isNaN(new Date(currentExpiryDate))
-      ? new Date(currentExpiryDate)
-      : new Date();
-  
+    const baseDate =
+      currentExpiryDate && !isNaN(new Date(currentExpiryDate))
+        ? new Date(currentExpiryDate)
+        : new Date();
+
     const numberValue = parseInt(value, 10);
-  
+
     switch (metric) {
       case 1: // Year
         baseDate.setFullYear(baseDate.getFullYear() + numberValue);
@@ -107,18 +110,18 @@ const AddSubscription = ({
       default:
         break;
     }
-  
+
     if (!isNaN(baseDate)) {
       setExpiryDate(baseDate);
-      const formattedDate = new Intl.DateTimeFormat("en-GB").format(baseDate); // Format as dd/mm/yyyy
-      setValue("expiryDate", formattedDate);
+      const formattedDate = baseDate.toISOString().split("T")[0]; // Format as 'YYYY-MM-DD'
+setValue("expiryDate", formattedDate);
+setExpiryDate(formattedDate); // Update expiryDate to formatted string
+
     } else {
       setExpiryDate(null);
       setValue("expiryDate", null);
     }
   };
-  
-  
 
   const option = [
     { value: 1, label: "Year" },
@@ -126,7 +129,7 @@ const AddSubscription = ({
     { value: 3, label: "Week" },
     { value: 4, label: "Day" },
   ];
-
+console.log("expirydata",expiryDate);
   return (
     <Dialog
       open={open}
@@ -183,7 +186,7 @@ const AddSubscription = ({
               render={({ field }) => (
                 <StyledCalender
                   placeholder={"Select Date"}
-                  value={expiryDate ? new Date(expiryDate) : null}
+                  value={expiryDate}
                   disabled
                   {...field}
                 />

@@ -18,7 +18,7 @@ const Subscription = ({ id }) => {
     fetchSubscriptionById(id);
   }, [id, isChange, fetchSubscriptionById]);
   const formatDate = (date) => {
-    return date ? moment(date).format("DD-MM-YYYY") : "-";
+    return moment(date).format("DD-MM-YYYY");
   };
   return (
     <>
