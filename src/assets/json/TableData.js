@@ -17,6 +17,8 @@ export const adminActivityColumns = [
   { title: "Description", field: "description" },
   { title: "Endpoint", field: "apiEndpoint" },
   { title: "HTTP Method", field: "httpMethod" },
+  { title: "Created on", field: "createdAt", padding: "none" },
+  { title: "Status", field: "status" },
 ];
 export const groupmemberColumns = [
   { title: "Member ID", field: "memberId", padding: "none" },

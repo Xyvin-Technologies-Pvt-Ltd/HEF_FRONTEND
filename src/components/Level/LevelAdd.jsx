@@ -42,7 +42,7 @@ export default function LevelAdd({ isUpdate }) {
       try {
         const data = await getAllLevel(type);
         const formattedOptions = data?.data?.map((item) => ({
-          value: item?._id,
+          value: item?.id,
           label: item?.name,
         }));
         setter(formattedOptions);

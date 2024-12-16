@@ -10,13 +10,16 @@ import {
   Paper,
 } from "@mui/material";
 import { ReactComponent as CloseIcon } from "../../assets/icons/CloseIcon.svg";
+import moment from "moment";
 
 const ActivityView = ({ open, onClose, data }) => {
   const handleClear = (event) => {
     event.preventDefault();
     onClose();
   };
-
+  const formatDate = (date) => {
+    return date ? moment(date).format("DD-MM-YYYY") : "-";
+  };
   return (
     <Dialog
       open={open}
@@ -73,7 +76,7 @@ const ActivityView = ({ open, onClose, data }) => {
               {data?.status}
             </Typography>
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12}sm={6}>
             <Typography
               variant="subtitle1"
               color="textSecondary"
@@ -83,6 +86,18 @@ const ActivityView = ({ open, onClose, data }) => {
             </Typography>
             <Typography variant="h6" color="textPrimary">
               {data?.description}
+            </Typography>
+          </Grid>
+          <Grid item xs={12}sm={6}>
+            <Typography
+              variant="subtitle1"
+              color="textSecondary"
+              fontWeight="bold"
+            >
+             Error:
+            </Typography>
+            <Typography variant="h6" color="textPrimary">
+              {data?.errorMessage}
             </Typography>
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -110,7 +125,7 @@ const ActivityView = ({ open, onClose, data }) => {
             </Typography>
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid item xs={12}sm={6}>
             <Typography
               variant="subtitle1"
               color="textSecondary"
@@ -122,6 +137,18 @@ const ActivityView = ({ open, onClose, data }) => {
               {data?.host}
             </Typography>
           </Grid>
+          <Grid item xs={12}sm={6}>
+            <Typography
+              variant="subtitle1"
+              color="textSecondary"
+              fontWeight="bold"
+            >
+             Agent
+            </Typography>
+            <Typography variant="h6" color="textPrimary">
+              {data?.agent}
+            </Typography>
+          </Grid>
           <Grid item xs={12} sm={6}>
             <Typography
               variant="subtitle1"
@@ -131,21 +158,10 @@ const ActivityView = ({ open, onClose, data }) => {
               Created At:
             </Typography>
             <Typography variant="h6" color="textPrimary">
-              {new Date(data?.createdAt).toLocaleString()}
+              {formatDate(data?.createdAt)}
             </Typography>
           </Grid>
-          <Grid item xs={12} sm={6}>
-            <Typography
-              variant="subtitle1"
-              color="textSecondary"
-              fontWeight="bold"
-            >
-              Updated At:
-            </Typography>
-            <Typography variant="h6" color="textPrimary">
-              {new Date(data?.updatedAt).toLocaleString()}
-            </Typography>
-          </Grid>
+         
         </Grid>
       </DialogContent>
     </Dialog>

@@ -157,6 +157,10 @@ const StyledTable = ({
         return "#9C27B0";
       case "created":
         return "#FFC107";
+        case "success":
+        return "#4CAF50";
+        case "failure":
+        return "red";
       case "live":
         return "#03A9F4";
       default:
