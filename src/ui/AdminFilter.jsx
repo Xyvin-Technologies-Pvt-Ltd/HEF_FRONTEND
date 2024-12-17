@@ -9,7 +9,6 @@ import {
 } from "@mui/material";
 import { ReactComponent as CloseIcon } from "../assets/icons/CloseIcon.svg";
 import { StyledButton } from "./StyledButton";
-import StyledInput from "./StyledInput";
 import { StyledCalender } from "./StyledCalender";
 import StyledSelectField from "./StyledSelectField";
 

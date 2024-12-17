@@ -11,6 +11,9 @@ import {
 
 import StyledTable from "../../ui/StyledTable";
 import { activityColumns } from "../../assets/json/TableData";
+
+import { ReactComponent as FilterIcon } from "../../assets/icons/FilterIcon.svg";
+
 import StyledSearchbar from "../../ui/StyledSearchbar";
 import { useListStore } from "../../store/listStore";
 import { StyledButton } from "../../ui/StyledButton";
@@ -19,17 +22,27 @@ import { ReactComponent as AddIcon } from "../../assets/icons/AddIcon.svg";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import useActivityStore from "../../store/activityStore";
+import ActivityFilter from "../../components/Activity/ActivityFilter";
 
 const BusinessPage = () => {
   const navigate = useNavigate();
   const [selectedTab, setSelectedTab] = useState(0);
   const [pageNo, setPageNo] = useState(1);
+  const [filterOpen, setFilterOpen] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
   const [isChange, setIsChange] = useState(false);
   const [search, setSearch] = useState();
   const [row, setRow] = useState(10);
   const { fetchActivity } = useListStore();
   const { removeActivity } = useActivityStore();
+  const [filters, setFilters] = useState({
+    type: "",
+    status: "",
+    date: "",
+  });
+  const handleApplyFilter = (newFilters) => {
+    setFilters(newFilters);
+  };
   const handleChange = (event, newValue) => {
     setSelectedTab(newValue);
   };
@@ -134,6 +147,20 @@ const BusinessPage = () => {
         >
           <Stack direction={"row"} spacing={2} mt={2}>
             <StyledSearchbar placeholder={"Search"} />
+            <Box
+              bgcolor={"#FFFFFF"}
+              borderRadius={"50%"}
+              width={"48px"}
+              height={"48px"}
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              border="1px solid rgba(0, 0, 0, 0.12)"
+              onClick={() => setFilterOpen(true)}
+              style={{ cursor: "pointer" }}
+            >
+              <FilterIcon />
+            </Box>
           </Stack>
         </Stack>
         <Box
@@ -153,6 +180,11 @@ const BusinessPage = () => {
             setRowPerSize={setRow}
           />
         </Box>
+        <ActivityFilter
+          open={filterOpen}
+          onClose={() => setFilterOpen(false)}
+          onApply={handleApplyFilter}
+        />
       </Box>
     </>
   );
