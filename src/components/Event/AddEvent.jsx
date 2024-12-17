@@ -119,22 +119,22 @@ export default function AddEvent({ isUpdate }) {
   const onSubmit = async (data) => {
     try {
       setLoadings(true);
-      // let imageUrl = data?.image || "";
+      let imageUrl = data?.image || "";
 
-      // if (imageFile) {
-      //   try {
-      //     imageUrl = await new Promise((resolve, reject) => {
-      //       uploadFileToS3(
-      //         imageFile,
-      //         (location) => resolve(location),
-      //         (error) => reject(error)
-      //       );
-      //     });
-      //   } catch (error) {
-      //     console.error("Failed to upload image:", error);
-      //     return;
-      //   }
-      // }
+      if (imageFile) {
+        try {
+          imageUrl = await new Promise((resolve, reject) => {
+            uploadFileToS3(
+              imageFile,
+              (location) => resolve(location),
+              (error) => reject(error)
+            );
+          });
+        } catch (error) {
+          console.error("Failed to upload image:", error);
+          return;
+        }
+      }
 
       // Filter out speakers with all empty fields
       const filteredSpeakers = data.speakers.filter(
@@ -144,28 +144,27 @@ export default function AddEvent({ isUpdate }) {
 
       const speakersData = await Promise.all(
         filteredSpeakers.map(async (speaker, index) => {
-          // let speakerImageUrl = speakers[index]?.image || "";
+          let speakerImageUrl = speakers[index]?.image || "";
 
-          // if (speaker?.image && typeof speaker.image === "object") {
-          //   try {
-          //     speakerImageUrl = await new Promise((resolve, reject) => {
-          //       uploadFileToS3(
-          //         speaker.image,
-          //         (location) => resolve(location),
-          //         (error) => reject(error)
-          //       );
-          //     });
-          //   } catch (error) {
-          //     console.error(`Failed to upload image for speaker:`, error);
-          //   }
-          // }
+          if (speaker?.image && typeof speaker.image === "object") {
+            try {
+              speakerImageUrl = await new Promise((resolve, reject) => {
+                uploadFileToS3(
+                  speaker.image,
+                  (location) => resolve(location),
+                  (error) => reject(error)
+                );
+              });
+            } catch (error) {
+              console.error(`Failed to upload image for speaker:`, error);
+            }
+          }
 
           return {
             name: speaker?.name,
             designation: speaker?.designation,
             role: speaker?.role,
-            image:
-              " https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-C_UAhXq9GfuGO452EEzfbKnh1viQB9EDBQ&s",
+            image: speakerImageUrl || "",
           };
         })
       );
@@ -173,8 +172,7 @@ export default function AddEvent({ isUpdate }) {
       const formData = {
         type: data?.type?.value,
         eventName: data?.eventName,
-        image:
-          " https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-C_UAhXq9GfuGO452EEzfbKnh1viQB9EDBQ&s",
+        image: imageUrl || "",
         startDate: data?.startDate,
         startTime: data?.startTime,
         endDate: data?.endDate,

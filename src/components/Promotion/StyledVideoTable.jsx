@@ -15,13 +15,13 @@ const StyledVideoTable = () => {
   const { deletePromotions } = usePromotionStore();
   const { fetchPromotion } = useListStore();
   const [pageNo, setPageNo] = useState(1);
-  const[row, setRow] = useState(10)
+  const [row, setRow] = useState(10);
   useEffect(() => {
     let filter = { type: "video" };
     filter.pageNo = pageNo;
-    filter.limit = row
+    filter.limit = row;
     fetchPromotion(filter);
-  }, [isChange, pageNo,row]);
+  }, [isChange, pageNo, row]);
   const handleOpenFilter = () => {
     setFilterOpen(true);
   };
@@ -60,8 +60,8 @@ const StyledVideoTable = () => {
   const userColumns = [
     { title: "Start Date", field: "startDate", padding: "none" },
     { title: "End Date", field: "endDate", padding: "none" },
-
     { title: "Title", field: "title" },
+    { title: "Status", field: "status" },
   ];
   return (
     <>
@@ -70,9 +70,7 @@ const StyledVideoTable = () => {
         justifyContent={"end"}
         paddingBottom={"15px"}
         alignItems={"center"}
-      >
-       
-      </Stack>{" "}
+      ></Stack>{" "}
       <Box
         borderRadius={"16px"}
         bgcolor={"white"}

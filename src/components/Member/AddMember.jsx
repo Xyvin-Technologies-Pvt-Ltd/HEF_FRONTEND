@@ -47,7 +47,6 @@ const AddMember = () => {
     { value: "Software Development", label: "Software Development" },
   ];
 
- 
   useEffect(() => {
     if (isUpdate && member) {
       setValue("name", member?.name || "");
@@ -57,13 +56,10 @@ const AddMember = () => {
       setValue("image", member?.image || "");
       setValue("address", member?.address || "");
       setValue("whatsapp", member?.secondaryPhone?.whatsapp);
-      setValue(
-        "business",
-        member?.secondaryPhone?.business
-      );
+      setValue("business", member?.secondaryPhone?.business);
       if (member?.secondaryPhone?.whatsapp) {
         setAdditionalPhones([{ name: "WhatsApp Number", key: "whatsapp" }]);
-      };
+      }
       if (member?.secondaryPhone?.business) {
         setAdditionalPhones((prev) => [
           ...prev,
@@ -136,22 +132,22 @@ const AddMember = () => {
   const onSubmit = async (data) => {
     try {
       setLoadings(true);
-      // let imageUrl = data?.image || "";
+      let imageUrl = data?.image || "";
 
-      // if (imageFile) {
-      //   try {
-      //     imageUrl = await new Promise((resolve, reject) => {
-      //       uploadFileToS3(
-      //         imageFile,
-      //         (location) => resolve(location),
-      //         (error) => reject(error)
-      //       );
-      //     });
-      //   } catch (error) {
-      //     console.error("Failed to upload image:", error);
-      //     return;
-      //   }
-      // }
+      if (imageFile) {
+        try {
+          imageUrl = await new Promise((resolve, reject) => {
+            uploadFileToS3(
+              imageFile,
+              (location) => resolve(location),
+              (error) => reject(error)
+            );
+          });
+        } catch (error) {
+          console.error("Failed to upload image:", error);
+          return;
+        }
+      }
 
       const formData = {
         name: data?.name,
@@ -166,8 +162,7 @@ const AddMember = () => {
         status: data?.status.value,
         bio: data?.bio,
         address: data?.address,
-        image:
-          " https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-C_UAhXq9GfuGO452EEzfbKnh1viQB9EDBQ&s",
+        image: imageUrl ? imageUrl : "",
         company: {
           name: data?.company_name,
           phone: data?.company_phone,

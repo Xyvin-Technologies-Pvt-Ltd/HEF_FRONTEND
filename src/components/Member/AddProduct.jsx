@@ -56,26 +56,25 @@ const AddProduct = () => {
   const onSubmit = async (data) => {
     try {
       setLoading(true);
-      //   let imageUrl = data?.image || "";
+        let imageUrl = data?.image || "";
 
-      //   if (imageFile) {
-      //     try {
-      //       imageUrl = await new Promise((resolve, reject) => {
-      //         uploadFileToS3(
-      //           imageFile,
-      //           (location) => resolve(location),
-      //           (error) => reject(error)
-      //         );
-      //       });
-      //     } catch (error) {
-      //       console.error("Failed to upload image:", error);
-      //       return;
-      //     }
-      //   }
+        if (imageFile) {
+          try {
+            imageUrl = await new Promise((resolve, reject) => {
+              uploadFileToS3(
+                imageFile,
+                (location) => resolve(location),
+                (error) => reject(error)
+              );
+            });
+          } catch (error) {
+            console.error("Failed to upload image:", error);
+            return;
+          }
+        }
       const formData = {
         name: data?.productname,
-        image:
-          " https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-C_UAhXq9GfuGO452EEzfbKnh1viQB9EDBQ&s",
+        image: imageUrl ? imageUrl : "",
         price: data?.price,
         description: data?.description,
         offerPrice: data?.offer_price,
