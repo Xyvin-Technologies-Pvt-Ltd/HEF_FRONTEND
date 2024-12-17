@@ -1,5 +1,5 @@
-import { Box } from "@mui/material";
-import React from "react";
+import { Box, Stack, Typography } from "@mui/material";
+import React, { useState } from "react";
 import {
   BarChart,
   Bar,
@@ -9,8 +9,19 @@ import {
   CartesianGrid,
   ResponsiveContainer,
 } from "recharts";
+import DashboardSelect from "../../ui/DashboardSelect";
 
 const ActivityCharts = () => {
+  const [value, setValue] = useState("Monthly");
+  const handleSelectChange = (event) => {
+    setValue(event.target.value);
+  };
+  const options = [
+    { value: "Daily", label: "Daily" },
+    { value: "Weekly", label: "Weekly" },
+    { value: "Monthly", label: "Monthly" },
+    { value: "Yearly", label: "Yearly" },
+  ];
   const data = [
     { name: "Zone 1", value: 450 },
     { name: "Zone 2", value: 550 },
@@ -30,7 +41,19 @@ const ActivityCharts = () => {
       border={"1px solid rgba(0, 0, 0, 0.25)"}
       borderRadius={"10px"}
     >
-      <h3 style={{ textAlign: "left", marginLeft: "10px" }}>Activity Chart</h3>
+      <Stack direction={"row"} justifyContent={"space-between"}>
+        <Typography variant="h7">Activity Chart</Typography>
+        <DashboardSelect
+          options={options}
+          value={value}
+          onChange={handleSelectChange}
+        />{" "}
+        <DashboardSelect
+          options={options}
+          value={value}
+          onChange={handleSelectChange}
+        />
+      </Stack>
       <ResponsiveContainer>
         <BarChart
           data={data}
@@ -40,12 +63,12 @@ const ActivityCharts = () => {
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis
             dataKey="name"
-            tick={{ fontSize: "12px", fill: "#637381", fontWeight: "500" }} // Custom tick styles
+            tick={{ fontSize: "12px", fill: "#637381", fontWeight: "500" }}
           />
-          {/* Configure the YAxis ticks explicitly */}
+
           <YAxis
-            domain={[0, 700]} // Y-axis range from 0 to 700
-            ticks={[0, 100, 200, 300, 400, 500, 600, 700]} // Explicit tick values
+            domain={[0, 700]}
+            ticks={[0, 100, 200, 300, 400, 500, 600, 700]}
           />
           <Tooltip />
           <Bar dataKey="value" fill="#FB923C" radius={[5, 5, 0, 0]} />
