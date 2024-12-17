@@ -87,9 +87,11 @@ const Subscription = ({ id }) => {
                 <Typography variant="h7" color={"#686465"} fontWeight={700}>
                   Expiry Date
                 </Typography>
-                <Typography variant="h8" color="#2C2829">
-                  {formatDate(subscription?.expiryDate)}
-                </Typography>
+                {subscription?.expiryDate && (
+                  <Typography variant="h8" color="#2C2829">
+                    {formatDate(subscription?.expiryDate)}
+                  </Typography>
+                )}
               </Stack>
               <Divider />
             </Grid>
