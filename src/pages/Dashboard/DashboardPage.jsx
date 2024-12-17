@@ -15,6 +15,8 @@ import { ReactComponent as ChapterIcon } from "../../assets/icons/ChapterIcon.sv
 
 import moment from "moment";
 import { DashboardCard } from "../../components/Dashboard/DashboardCard";
+import ActivityCharts from "../../components/Dashboard/ActivityCharts";
+import TopMemberList from "../../components/Dashboard/TopMemberList";
 
 const DashboardPage = () => {
   const [data, setData] = useState({});
@@ -30,7 +32,6 @@ const DashboardPage = () => {
       data?.totalRevenuePercentage ? data?.totalRevenuePercentage : 0
     }`,
   };
-
 
   const activeMember = {
     title: "Business",
@@ -121,40 +122,57 @@ const DashboardPage = () => {
         </Typography>
       </Box>
       <Grid container padding={"15px"} paddingTop={3} spacing={4}>
-        <Grid item md={6} >
-         <Stack direction={"row"} spacing={2}>
+        <Grid item md={6}>
+          <Stack direction={"row"} spacing={2}>
             {" "}
             <Box width={"100%"}>
               {" "}
               <DashboardCard
-                data={totalRevenue}height={"185px"}
+                data={totalRevenue}
+                height={"185px"}
                 // isDate
                 // onDateChange={handleDateChange}
                 // selectedDate={selectedDate}
                 isMobile
               />
             </Box>{" "}
-         
           </Stack>
         </Grid>
-
-        <Grid item md={6} >
+        <Grid item md={6}>
           {" "}
           <Stack direction={"row"} spacing={2}>
             {" "}
             <Box width={"100%"}>
               {" "}
-              <DashboardCard isMobile data={activeMember} height={"185px"}/>{" "}
+              <DashboardCard
+                isMobile
+                data={activeMember}
+                height={"185px"}
+              />{" "}
             </Box>{" "}
             <Box width={"100%"}>
               {" "}
-              <DashboardCard isMobile data={premiumMember}height={"185px"} />{" "}
+              <DashboardCard
+                isMobile
+                data={premiumMember}
+                height={"185px"}
+              />{" "}
             </Box>
             <Box width={"100%"}>
               {" "}
-              <DashboardCard isMobile data={frozenMember} height={"185px"}/>{" "}
+              <DashboardCard
+                isMobile
+                data={frozenMember}
+                height={"185px"}
+              />{" "}
             </Box>
           </Stack>
+        </Grid>{" "}
+        <Grid item md={8}>
+          <ActivityCharts />
+        </Grid>{" "}
+        <Grid item md={4}>
+          <TopMemberList/>
         </Grid>
         <Grid item md={6}>
           <Stack spacing={2}>
@@ -169,6 +187,7 @@ const DashboardPage = () => {
                 <DashboardCard data={zones} height={"160px"} />{" "}
               </Box>
             </Stack>
+
             <Stack direction={"row"} spacing={2}>
               {" "}
               <Box width={"100%"}>
