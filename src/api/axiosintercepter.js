@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:3003/api/v1/",
+  baseURL: process.env.VITE_APP_API_URL || "http://localhost:3003/api/v1/",
 });
 axiosInstance.interceptors.request.use(
   (config) => {
