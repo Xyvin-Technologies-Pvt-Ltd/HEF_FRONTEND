@@ -27,6 +27,7 @@ jobs:
           VITE_APP_AWS_REGION: ${{ secrets.VITE_APP_AWS_REGION }}
           VITE_APP_AWS_ACCESS_KEY_ID: ${{ secrets.VITE_APP_AWS_ACCESS_KEY_ID }}
           VITE_APP_AWS_SECRET_ACCESS_KEY: ${{ secrets.VITE_APP_AWS_SECRET_ACCESS_KEY }}
+          VITE_APP_API_URL: ${{ secrets.VITE_APP_API_URL }}
         run: |
           npm ci
           npm run build
@@ -64,5 +65,3 @@ jobs:
 
             # Restart NGINX to apply changes
             sudo systemctl restart nginx
-
-            
