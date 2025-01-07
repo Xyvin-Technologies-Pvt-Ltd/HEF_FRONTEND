@@ -74,23 +74,23 @@ const MemberList = () => {
             />
             <StyledButton
               name="State PST"
-              variant={selectedTab === "Latest" ? "primary" : "third"}
-              onClick={() => handleTabChange("Latest")}
+              variant={selectedTab === "state" ? "primary" : "third"}
+              onClick={() => handleTabChange("state")}
             />
             <StyledButton
               name="Zone PST"
-              variant={selectedTab === "Trending" ? "primary" : "third"}
-              onClick={() => handleTabChange("Trending")}
+              variant={selectedTab === "zone" ? "primary" : "third"}
+              onClick={() => handleTabChange("zone")}
             />
             <StyledButton
               name="District PST"
-              variant={selectedTab === "Trending" ? "primary" : "third"}
-              onClick={() => handleTabChange("Trending")}
+              variant={selectedTab === "district" ? "primary" : "third"}
+              onClick={() => handleTabChange("district")}
             />{" "}
             <StyledButton
               name="Chapter PST"
-              variant={selectedTab === "Trending" ? "primary" : "third"}
-              onClick={() => handleTabChange("Trending")}
+              variant={selectedTab === "chapter" ? "primary" : "third"}
+              onClick={() => handleTabChange("chapter")}
             />
           </Stack>
           <Stack direction={"row"} spacing={2}>
