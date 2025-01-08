@@ -117,7 +117,7 @@ export default function AddNews({ isUpdate, setSelectedTab }) {
         await updateNews(id, formData);
       } else {
         await addNewses(formData);
-        setSelectedTab(0);
+        // setSelectedTab(0);
       }
       navigate(`/news`);
     } catch (error) {

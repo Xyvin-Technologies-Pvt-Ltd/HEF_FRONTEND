@@ -75,7 +75,10 @@ const Subscription = ({ id }) => {
                 <Typography variant="h7" color={"#686465"} fontWeight={700}>
                   Last Renewed date and time
                 </Typography>
-                <Typography variant="h8" color="#2C2829"></Typography>
+                <Typography variant="h8" color="#2C2829">
+                  {" "}
+                  {formatDate(subscription?.updatedAt)}
+                </Typography>
               </Stack>
               <Divider />{" "}
               <Stack
