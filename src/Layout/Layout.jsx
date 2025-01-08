@@ -80,6 +80,7 @@ const subNavigation = [
 const SimpleDialog = ({ open, onClose }) => {
   const navigate = useNavigate();
   const { singleAdmin, fetchAdminById } = useAdminStore();
+  console.log("singleAdmin", singleAdmin);
   const handleLogout = () => {
     localStorage.removeItem("4ZbQwXtY8uVrN5mP7kL3JhF6");
     navigate("/");

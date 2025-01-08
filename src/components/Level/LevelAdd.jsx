@@ -85,8 +85,13 @@ export default function LevelAdd({ isUpdate }) {
   const onSubmit = async (data) => {
     try {
       setSubmitting(true);
-      const admins = data?.admin?.map((admin) => admin?.value);
-      const formData = { admins, name: data?.name };
+      let admins ;
+      if (data?.admin) {
+       admins = data?.admin?.map((admin) => admin?.value);
+      }
+      const formData = {};
+      if (admins) formData.admins = admins;
+      formData.name = data?.name;
 
       if (type === "state") await addState(formData);
       else if (type === "zone")
