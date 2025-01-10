@@ -52,7 +52,6 @@ const LevelPage = () => {
   const handleChange = (event, newValue) => {
     setSelectedTab(newValue);
   };
-  console.log("selectedTab", selectedTab);
 
   return (
     <>

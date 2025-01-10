@@ -13,7 +13,6 @@ const BulkAddForm = () => {
   const navigate = useNavigate();
   const handleFileUpload = (file) => {
     setFiles([file]);
-    console.log("Parsed Data:", file);
   };
 
   const handleCancel = () => {
@@ -66,7 +65,6 @@ const BulkAddForm = () => {
           // Parse the file and handle the result
           parseFile(file, async (parsedData) => {
             if (parsedData && parsedData.length > 0) {
-              console.log("Parsed Data:", parsedData);
             
               navigate("/colleges");
             } else {

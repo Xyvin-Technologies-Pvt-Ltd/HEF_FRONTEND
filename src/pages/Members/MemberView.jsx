@@ -78,7 +78,7 @@ const MemberView = () => {
       >
         <Tab label="Profile" />
         <Tab label="Subscriptions" />
-        <Tab label="Products" />
+        <Tab label="Business Posts" />
         <Tab label="Activity" />
         <Tab label="Analytics" />
       </Tabs>

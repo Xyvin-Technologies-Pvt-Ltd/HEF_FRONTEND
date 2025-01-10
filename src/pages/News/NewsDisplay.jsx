@@ -78,7 +78,6 @@ export default function NewsDisplay() {
   const handleChange = () => {
     setIsChange(!isChange);
   };
-console.log("anjana",search);
 
   return (
     <>

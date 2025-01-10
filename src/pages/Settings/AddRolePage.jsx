@@ -14,10 +14,7 @@ export default function AddRolePage() {
   const handleCloseFilter = () => {
     setFilterOpen(false);
   };
-  const handleSelectionChange = (newSelectedIds) => {
-    setSelectedRows(newSelectedIds);
-    console.log("Selected items:", newSelectedIds);
-  };
+
 
   return (
     <>

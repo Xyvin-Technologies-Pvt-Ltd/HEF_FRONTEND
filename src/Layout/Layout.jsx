@@ -61,7 +61,7 @@ const subNavigation = [
   },
   { name: "News and Updates", to: "/news", icon: <NewspaperOutlinedIcon /> },
   {
-    name: "Promotions",
+    name: "Advertisements",
     to: "/promotions",
     icon: <CalendarMonthIcon />,
   },
@@ -80,7 +80,6 @@ const subNavigation = [
 const SimpleDialog = ({ open, onClose }) => {
   const navigate = useNavigate();
   const { singleAdmin, fetchAdminById } = useAdminStore();
-  console.log("singleAdmin", singleAdmin);
   const handleLogout = () => {
     localStorage.removeItem("4ZbQwXtY8uVrN5mP7kL3JhF6");
     navigate("/");

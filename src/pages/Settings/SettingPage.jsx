@@ -6,12 +6,8 @@ import AdminActivity from "./AdminActivity.jsx";
 
 const SettingsPage = () => {
   const [selectedTab, setSelectedTab] = useState(0);
-  const [selectedRows, setSelectedRows] = useState([]);
 
-  const handleSelectionChange = (newSelectedIds) => {
-    setSelectedRows(newSelectedIds);
-    console.log("Selected items:", newSelectedIds);
-  };
+
 
   const handleChange = (event, newValue) => {
     setSelectedTab(newValue);

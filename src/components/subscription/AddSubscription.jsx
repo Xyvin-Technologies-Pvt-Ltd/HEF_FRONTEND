@@ -194,16 +194,12 @@ const AddSubscription = ({
               control={control}
               defaultValue={""}
               render={({
-                field: { onChange: fieldOnChange, ...restField },
+                
               }) => (
                 <StyledCalender
                   placeholder={"Select Date"}
                   value={expiryDate}
-                  onChange={(date) => {
-                    const formattedDate = moment(date).format(DATE_FORMAT);
-                    fieldOnChange(formattedDate);
-                    setExpiryDate(formattedDate);
-                  }}
+                  
                   disabled
                   {...restField}
                 />

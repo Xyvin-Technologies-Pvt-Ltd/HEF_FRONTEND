@@ -3,6 +3,7 @@ export const memberColumns = [
   { title: "Member ID", field: "memberId" },
   { title: "Company Name", field: "companyName" },
   { title: "Phone Number", field: "phone" },
+  { title: "Join Date", field: "createdAt" },
   { title: "Status", field: "status" },
 ];
 export const eventHistoryColumns = [
@@ -55,8 +56,8 @@ export const batchColumns = [
 ];
 export const activityColumns = [
   { title: "Date", field: "date", padding: "none" },
-  { title: "Sender", field: "senderName" },
-  { title: "Receiver", field: "memberName" },
+  { title: "Business giver", field: "senderName" },
+  { title: "Business receiver", field: "memberName" },
   { title: "Request Type", field: "type" },
   { title: "Status", field: "status" },
 ];

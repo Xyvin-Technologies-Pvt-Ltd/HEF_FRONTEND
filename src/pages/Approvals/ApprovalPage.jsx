@@ -97,7 +97,7 @@ const ApprovalPage = () => {
         }}
       >
         <Tab label="Requirements" />
-        <Tab label="Products" />
+        <Tab label="Business Posts" />
       </Tabs>
       <Divider />{" "}
       <Box padding={"15px"}>

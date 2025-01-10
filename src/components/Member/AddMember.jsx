@@ -1,4 +1,11 @@
-import { Box, Grid, Typography, Stack, LinearProgress } from "@mui/material";
+import {
+  Box,
+  Grid,
+  Typography,
+  Stack,
+  LinearProgress,
+  FormHelperText,
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import StyledInput from "../../ui/StyledInput";
@@ -220,7 +227,6 @@ const AddMember = () => {
   };
 
   const handleZoneChange = async (zoneId) => {
-    console.log("zoneId", zoneId);
     setSelectedZone(zoneId);
     setDistrictOptions([]);
     setChapterOptions([]);
@@ -330,6 +336,9 @@ const AddMember = () => {
                         }}
                         value={value}
                       />
+                      <FormHelperText style={{ color: "#888" }}>
+                        File size limit: 1 MB
+                      </FormHelperText>
                       {errors.image && (
                         <span style={{ color: "red" }}>
                           {errors.image.message}

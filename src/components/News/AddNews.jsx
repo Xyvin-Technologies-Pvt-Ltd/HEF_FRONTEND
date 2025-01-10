@@ -6,12 +6,12 @@ import {
   Stack,
   Dialog,
   DialogContent,
+  FormHelperText,
 } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import StyledSelectField from "../../ui/StyledSelectField";
 import StyledInput from "../../ui/StyledInput";
-import { StyledEventUpload } from "../../ui/StyledEventUpload";
 import { StyledMultilineTextField } from "../../ui/StyledMultilineTextField";
 import { StyledButton } from "../../ui/StyledButton";
 import { useNewsStore } from "../../store/newsStore";
@@ -210,6 +210,9 @@ export default function AddNews({ isUpdate, setSelectedTab }) {
                     ratio={16 / 9}
                     value={value}
                   />
+                  <FormHelperText style={{ color: "#888" }}>
+                    File size limit: 1 MB
+                  </FormHelperText>
                   {errors.image && (
                     <span style={{ color: "red" }}>{errors.image.message}</span>
                   )}

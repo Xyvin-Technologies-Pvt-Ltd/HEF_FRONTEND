@@ -3,14 +3,10 @@ import StyledTable from "../../ui/StyledTable";
 import { Box, Stack, Typography } from "@mui/material";
 import { StyledButton } from "../../ui/StyledButton";
 import StyledSearchbar from "../../ui/StyledSearchbar";
-
-import { ReactComponent as AddIcon } from "../../assets/icons/AddIcon.svg";
 import { memberColumns, userData } from "../../assets/json/TableData";
 import { useNavigate } from "react-router-dom";
 import DeleteProfile from "../../components/Member/DeleteProfile";
 import { useListStore } from "../../store/listStore";
-import { getMember } from "../../api/memberapi";
-import { generateExcel } from "../../utils/generateExcel";
 import SuspendProfile from "../../components/Member/SuspendProfile";
 
 const MemberList = () => {

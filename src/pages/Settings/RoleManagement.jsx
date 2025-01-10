@@ -29,7 +29,6 @@ export default function RoleManagement() {
   };
   const handleSelectionChange = (newSelectedIds) => {
     setSelectedRows(newSelectedIds);
-    console.log("Selected items:", newSelectedIds);
   };
   const handleDelete = async () => {
     if (selectedRows.length > 0) {

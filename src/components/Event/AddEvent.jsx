@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography, Grid, Stack, LinearProgress } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Grid,
+  Stack,
+  LinearProgress,
+  FormHelperText,
+} from "@mui/material";
 import { StyledButton } from "../../ui/StyledButton.jsx";
 import StyledInput from "../../ui/StyledInput.jsx";
 import { Controller, useForm } from "react-hook-form";
@@ -97,8 +104,6 @@ export default function AddEvent({ isUpdate }) {
       }
     }
   }, [event, isUpdate, setValue]);
-
-  console.log(speakers);
   const [imageFile, setImageFile] = useState(null);
 
   const handleClear = (event) => {
@@ -221,7 +226,6 @@ export default function AddEvent({ isUpdate }) {
   const removeSpeaker = (index) => {
     const newSpeakers = speakers.filter((_, i) => i !== index);
     setSpeakers(newSpeakers);
-    console.log("arrayspeaker", newSpeakers);
     setValue("speakers", newSpeakers);
   };
 
@@ -323,6 +327,9 @@ export default function AddEvent({ isUpdate }) {
                         ratio={16 / 9}
                         value={value}
                       />
+                      <FormHelperText style={{ color: "#888" }}>
+                        File size limit: 1 MB
+                      </FormHelperText>
                       {errors.image && (
                         <span style={{ color: "red" }}>
                           {errors.image.message}
@@ -684,6 +691,9 @@ export default function AddEvent({ isUpdate }) {
                               }}
                               value={field.value}
                             />
+                            <FormHelperText style={{ color: "#888" }}>
+                              File size limit: 1 MB
+                            </FormHelperText>
                           </>
                         )}
                       />

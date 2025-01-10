@@ -8,6 +8,7 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  FormHelperText,
 } from "@mui/material";
 import { StyledButton } from "../../ui/StyledButton.jsx";
 import { Controller, useForm } from "react-hook-form";
@@ -241,7 +242,9 @@ export default function Promotionform({ isUpdate }) {
                       }}
                       ratio={getAspectRatio()}
                       value={value}
-                    />
+                    /><FormHelperText style={{ color: "#888" }}>
+                    File size limit: 1 MB
+                  </FormHelperText>
                   </>
                 )}
               />

@@ -1,4 +1,4 @@
-import { Box, Grid, Stack, Typography } from "@mui/material";
+import { Box, FormHelperText, Grid, Stack, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { StyledButton } from "../../ui/StyledButton";
@@ -153,6 +153,9 @@ const AddProduct = () => {
                     }}
                     value={value}
                   />
+                  <FormHelperText style={{ color: "#888" }}>
+                      File size limit: 1 MB
+                    </FormHelperText>
                   {errors.photo && (
                     <span style={{ color: "red" }}>{errors.photo.message}</span>
                   )}

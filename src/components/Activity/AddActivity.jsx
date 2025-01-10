@@ -136,8 +136,6 @@ const AddActivity = () => {
   };
 
   const handleZoneChange = async (zoneId) => {
-    console.log("zoneId", zoneId);
-
     setDistrictOptions([]);
     setChapterOptions([]);
     setMemberOptions([]);
@@ -202,7 +200,7 @@ const AddActivity = () => {
             </Grid>
             <Grid item xs={12}>
               <Typography variant="h6" color="textSecondary">
-                Sender
+                Business Giver
               </Typography>
             </Grid>
             <Grid item xs={6}>
@@ -304,7 +302,7 @@ const AddActivity = () => {
             <Grid item xs={6}></Grid>
             <Grid item xs={12}>
               <Typography variant="h6" color="textSecondary">
-                Receiver
+                Business Receiver
               </Typography>
             </Grid>
             <Grid item xs={6}>
@@ -423,6 +421,31 @@ const AddActivity = () => {
                     {errors.title && (
                       <span style={{ color: "red" }}>
                         {errors.title.message}
+                      </span>
+                    )}
+                  </>
+                )}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Typography
+                sx={{ marginBottom: 1 }}
+                variant="h6"
+                color="textSecondary"
+              >
+                Amount
+              </Typography>
+              <Controller
+                name="amount"
+                control={control}
+                defaultValue=""
+                rules={{ required: "Amount is required" }}
+                render={({ field }) => (
+                  <>
+                    <StyledInput placeholder="Enter the Amount" {...field} />
+                    {errors.amount && (
+                      <span style={{ color: "red" }}>
+                        {errors.amount.message}
                       </span>
                     )}
                   </>

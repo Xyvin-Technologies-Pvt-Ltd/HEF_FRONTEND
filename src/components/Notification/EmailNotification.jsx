@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Typography, Grid, Stack } from "@mui/material";
+import { Box, Typography, Grid, Stack, FormHelperText } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import StyledSelectField from "../../ui/StyledSelectField";
 import { StyledMultilineTextField } from "../../ui/StyledMultilineTextField";
@@ -204,7 +204,9 @@ export default function EmailNotification({}) {
                       onChange(file);
                     }}
                     value={value}
-                  />
+                  /><FormHelperText style={{ color: "#888" }}>
+                  File size limit: 1 MB
+                </FormHelperText>
                   {errors.media && (
                     <span style={{ color: "red" }}>{errors.media.message}</span>
                   )}
