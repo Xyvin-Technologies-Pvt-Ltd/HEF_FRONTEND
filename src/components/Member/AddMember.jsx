@@ -5,9 +5,10 @@ import {
   Stack,
   LinearProgress,
   FormHelperText,
+  Button,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
 import StyledInput from "../../ui/StyledInput";
 import StyledSelectField from "../../ui/StyledSelectField";
 import { StyledMultilineTextField } from "../../ui/StyledMultilineTextField";
@@ -18,6 +19,7 @@ import { toast } from "react-toastify";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useMemberStore } from "../../store/Memberstore";
 import { getLevels, getAllLevel } from "../../api/hierarchyapi";
+import { Delete } from "@mui/icons-material";
 
 const AddMember = () => {
   const {
@@ -53,48 +55,115 @@ const AddMember = () => {
   const sub = [
     { value: "Software Development", label: "Software Development" },
   ];
-
+  const tagOptions = [
+    { value: "latest", label: "Latest" },
+    { value: "currentAffairs", label: "Current Affairs" },
+    { value: "trending", label: "Trending" },
+    { value: "entertainment", label: "Entertainment" },
+    { value: "history", label: "History" },
+  ];
   useEffect(() => {
-    if (isUpdate && member) {
-      setValue("name", member?.name || "");
-      setValue("email", member?.email || "");
-      setValue("phone", member?.phone || "");
-      setValue("bio", member?.bio || "");
-      setValue("image", member?.image || "");
-      setValue("address", member?.address || "");
-      setValue("whatsapp", member?.secondaryPhone?.whatsapp);
-      setValue("business", member?.secondaryPhone?.business);
-      if (member?.secondaryPhone?.whatsapp) {
-        setAdditionalPhones([{ name: "WhatsApp Number", key: "whatsapp" }]);
-      }
-      if (member?.secondaryPhone?.business) {
-        setAdditionalPhones((prev) => [
-          ...prev,
-          { name: "Business Number", key: "business" },
-        ]);
-      }
-      setValue("company_name", member?.company?.name || "");
-      setValue("company_email", member?.company?.email || "");
-      setValue("company_website", member?.company?.websites || "");
-      setValue("company_phone", member?.company?.phone || "");
+    const setFormValues = async () => {
+      if (isUpdate && member) {
+        setValue("name", member?.name || "");
+        setValue("email", member?.email || "");
+        setValue("phone", member?.phone || "");
+        setValue("bio", member?.bio || "");
+        setValue("image", member?.image || "");
+        setValue("address", member?.address || "");
+        setValue("whatsapp", member?.secondaryPhone?.whatsapp);
+        setValue("business", member?.secondaryPhone?.business);
+        if (member?.secondaryPhone?.whatsapp) {
+          setAdditionalPhones([{ name: "WhatsApp Number", key: "whatsapp" }]);
+        }
+        if (member?.secondaryPhone?.business) {
+          setAdditionalPhones((prev) => [
+            ...prev,
+            { name: "Business Number", key: "business" },
+          ]);
+        }
+        if (Array.isArray(member?.company)) {
+          const companies = member.company.map((company, index) => ({
+            name: company?.name || "",
+            phone: company?.phone || "",
+            email: company?.email || "",
+            websites: company?.websites || "",
+            tags: company?.tags || [],
+          }));
+          setValue("companies", companies);
+        }
 
-      const selectedRole = roleOptions?.find(
-        (item) => item?.value === member?.role
-      );
-      setValue("role", selectedRole || "");
-      const selectedBusinessCatergory = business?.find(
-        (item) => item?.value === member?.businessCatogary
-      );
-      setValue("businessCatogary", selectedBusinessCatergory || "");
-      const selectedSubCatergory = sub?.find(
-        (item) => item?.value === member?.businessSubCatogary
-      );
-      setValue("businessSubCatogary", selectedSubCatergory || "");
-      const selectedStatus = statusOptions?.find(
-        (item) => item?.value === member?.status
-      );
-      setValue("status", selectedStatus || "");
-    }
+        const selectedRole = roleOptions?.find(
+          (item) => item?.value === member?.role
+        );
+        setValue("role", selectedRole || "");
+        const selectedBusinessCatergory = business?.find(
+          (item) => item?.value === member?.businessCatogary
+        );
+        setValue("businessCatogary", selectedBusinessCatergory || "");
+        const selectedSubCatergory = sub?.find(
+          (item) => item?.value === member?.businessSubCatogary
+        );
+        setValue("businessSubCatogary", selectedSubCatergory || "");
+        const selectedStatus = statusOptions?.find(
+          (item) => item?.value === member?.status
+        );
+        setValue("status", selectedStatus || "");
+        const selectedState = stateOptions?.find(
+          (option) => option?.value === member?.state?._id
+        );
+        setValue("state", selectedState || "");
+
+        if (selectedState) {
+          // Fetch and set zone
+          const zones = await fetchData("state", selectedState.value);
+          const formattedZones = zones.map(({ _id, name }) => ({
+            value: _id,
+            label: name,
+          }));
+          setZoneOptions(formattedZones);
+
+          const selectedZone = formattedZones.find(
+            (zone) => zone.value === member?.zone?._id
+          );
+          setValue("zone", selectedZone || "");
+
+          if (selectedZone) {
+            // Fetch and set district
+            const districts = await fetchData("zone", selectedZone.value);
+            const formattedDistricts = districts.map(({ _id, name }) => ({
+              value: _id,
+              label: name,
+            }));
+            setDistrictOptions(formattedDistricts);
+
+            const selectedDistrict = formattedDistricts.find(
+              (district) => district.value === member?.district?._id
+            );
+            setValue("district", selectedDistrict || "");
+
+            if (selectedDistrict) {
+              // Fetch and set chapter
+              const chapters = await fetchData(
+                "district",
+                selectedDistrict.value
+              );
+              const formattedChapters = chapters.map(({ _id, name }) => ({
+                value: _id,
+                label: name,
+              }));
+              setChapterOptions(formattedChapters);
+
+              const selectedChapter = formattedChapters.find(
+                (chapter) => chapter.value === member?.chapter?._id
+              );
+              setValue("chapter", selectedChapter || "");
+            }
+          }
+        }
+      }
+    };
+    setFormValues();
   }, [member, isUpdate, setValue]);
   const addPhoneNumber = () => {
     setAdditionalPhones((prevPhones) => {
@@ -170,12 +239,7 @@ const AddMember = () => {
         bio: data?.bio,
         address: data?.address,
         image: imageUrl ? imageUrl : "",
-        company: {
-          name: data?.company_name,
-          phone: data?.company_phone,
-          email: data?.company_email,
-          websites: data?.company_website,
-        },
+        company: data?.companies || [],
         businessCatogary: data?.businessCatogary?.value,
         businessSubCatogary: data?.businessSubCatogary?.value,
         chapter: data?.chapter?.value,
@@ -243,6 +307,10 @@ const AddMember = () => {
       chapters.map(({ _id, name }) => ({ value: _id, label: name }))
     );
   };
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "companies", // Match the name used in formData
+  });
   return (
     <>
       {loading ? (
@@ -475,93 +543,134 @@ const AddMember = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={6}>
+              {fields.map((company, index) => (
+                <React.Fragment key={company.id}>
+                  <Grid item xs={6}>
+                    <Typography variant="h6" color="textSecondary">
+                      Company Name
+                    </Typography>
+                    <Controller
+                      name={`companies[${index}].name`}
+                      control={control}
+                      defaultValue={company.name}
+                      render={({ field }) => (
+                        <StyledInput
+                          placeholder="Enter company name"
+                          {...field}
+                        />
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Typography variant="h6" color="textSecondary">
+                      Company Phone
+                    </Typography>
+                    <Controller
+                      name={`companies[${index}].phone`}
+                      control={control}
+                      defaultValue={company.phone}
+                      render={({ field }) => (
+                        <StyledInput
+                          placeholder="Enter company phone"
+                          {...field}
+                        />
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Typography variant="h6" color="textSecondary">
+                      Company Email
+                    </Typography>
+                    <Controller
+                      name={`companies[${index}].email`}
+                      control={control}
+                      defaultValue={company.email}
+                      render={({ field }) => (
+                        <StyledInput
+                          placeholder="Enter company email"
+                          {...field}
+                        />
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Typography variant="h6" color="textSecondary">
+                      Website
+                    </Typography>
+                    <Controller
+                      name={`companies[${index}].websites`}
+                      control={control}
+                      defaultValue={company.websites}
+                      render={({ field }) => (
+                        <StyledInput placeholder="Enter website" {...field} />
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Typography variant="h6" color="textSecondary">
+                      Tags
+                    </Typography>
+                    <Controller
+                      name={`companies[${index}].tags`}
+                      control={control}
+                      defaultValue={company.tags?.map((tag) => tag.value) || []}
+                      render={({ field: { onChange, value, ...field } }) => (
+                        <StyledSelectField
+                          placeholder="Select Tag"
+                          options={tagOptions}
+                          isMulti
+                          value={tagOptions?.filter((option) =>
+                            value?.includes(option.value)
+                          )}
+                          onChange={(selectedOptions) =>
+                            onChange(
+                              selectedOptions.map((option) => option.value)
+                            )
+                          }
+                          {...field}
+                        />
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Typography
+                      onClick={() => remove(index)}
+                      sx={{
+                        color: "#004797",
+                        marginTop: 1,
+                        fontSize: "0.9rem",
+                      }}
+                    >
+                      <Delete />
+                    </Typography>
+                  </Grid>
+                </React.Fragment>
+              ))}
+              <Grid
+                item
+                xs={12}
+                display={"flex"}
+                alignItems={"flex-end"}
+                justifyContent={"flex-end"}
+              >
                 <Typography
-                  sx={{ marginBottom: 1 }}
-                  variant="h6"
-                  color="textSecondary"
+                  sx={{
+                    color: "#004797",
+                    marginTop: 1,
+                    fontSize: "0.9rem",
+                  }}
+                  onClick={() =>
+                    append({
+                      name: "",
+                      phone: "",
+                      email: "",
+                      websites: "",
+                      tags: [],
+                    })
+                  }
                 >
-                  Company Name
+                  Add Company
                 </Typography>
-                <Controller
-                  name="company_name"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <>
-                      <StyledInput
-                        placeholder="Enter the name of Company"
-                        {...field}
-                      />
-                    </>
-                  )}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <Typography
-                  sx={{ marginBottom: 1 }}
-                  variant="h6"
-                  color="textSecondary"
-                >
-                  Company Phone
-                </Typography>
-                <Controller
-                  name="company_phone"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <>
-                      <StyledInput
-                        placeholder="Enter the phone number"
-                        {...field}
-                      />
-                    </>
-                  )}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <Typography
-                  sx={{ marginBottom: 1 }}
-                  variant="h6"
-                  color="textSecondary"
-                >
-                  Company Email
-                </Typography>
-                <Controller
-                  name="company_email"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <>
-                      <StyledInput
-                        placeholder="Enter the company email id"
-                        {...field}
-                      />
-                    </>
-                  )}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <Typography
-                  sx={{ marginBottom: 1 }}
-                  variant="h6"
-                  color="textSecondary"
-                >
-                  Website
-                </Typography>
-                <Controller
-                  name="company_website"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <>
-                      <StyledInput
-                        placeholder="Enter the website link"
-                        {...field}
-                      />
-                    </>
-                  )}
-                />
               </Grid>
               <Grid item xs={12}>
                 <Typography

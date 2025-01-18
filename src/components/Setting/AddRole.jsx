@@ -12,7 +12,7 @@ const CircleButton = styled.span`
   display: inline-block;
   width: 20px;
   height: 20px;
-  border: 2px solid #F58220;
+  border: 2px solid #f58220;
   border-radius: 50%;
   cursor: pointer;
   margin-right: 10px;
@@ -25,7 +25,7 @@ const CircleButton = styled.span`
     left: 50%;
     width: ${(props) => (props.selected ? "10px" : "0px")};
     height: ${(props) => (props.selected ? "10px" : "0px")};
-    background-color: #F58220;
+    background-color: #f58220;
     border-radius: 50%;
     transform: translate(-50%, -50%);
     transition: width 0.2s ease, height 0.2s ease;
@@ -44,6 +44,9 @@ const permissionsList = [
   { id: "collegeManagement", name: "College Management" },
   { id: "newsManagement", name: "News Management" },
   { id: "promotionManagement", name: "Promotion Management" },
+  { id: "hierarchyManagement", name: "Hierarchy Management" },
+  { id: "activityManagement", name: " Activity Management" },
+  { id: "productManagement", name: "Product Management" },
 ];
 
 const AddRole = () => {
@@ -64,7 +67,7 @@ const AddRole = () => {
     event.preventDefault();
     reset();
     setPermissions([]);
-    navigate(-1)
+    navigate(-1);
   };
   const onSubmit = async (data) => {
     try {
@@ -250,7 +253,11 @@ const AddRole = () => {
           <Grid item xs={6}></Grid>
           <Grid item xs={6}>
             <Stack direction={"row"} spacing={2} justifyContent={"flex-end"}>
-              <StyledButton name="Cancel" variant="secondary"   onClick={(e) => handleClear(e)}/>
+              <StyledButton
+                name="Cancel"
+                variant="secondary"
+                onClick={(e) => handleClear(e)}
+              />
               <StyledButton
                 name={loading ? "Saving..." : "Save"}
                 variant="primary"

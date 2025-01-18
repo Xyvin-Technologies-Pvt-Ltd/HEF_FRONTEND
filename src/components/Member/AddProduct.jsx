@@ -36,6 +36,13 @@ const AddProduct = () => {
     { value: "Kg", label: "Kg" },
     { value: "Ltr", label: "Ltr" },
   ];
+  const tagOptions = [
+    { value: "latest", label: "Latest" },
+    { value: "currentAffairs", label: "Current Affairs" },
+    { value: "trending", label: "Trending" },
+    { value: "entertainment", label: "Entertainment" },
+    { value: "history", label: "History" },
+  ];
   useEffect(() => {
     if (product && isUpdate) {
       setValue("productname", product.name);
@@ -51,27 +58,33 @@ const AddProduct = () => {
           label: sellerUnit.label,
         });
       }
+      const selectedTags = product?.tags?.map((Id) =>
+        tagOptions.find((option) => option?.value === Id)
+      );
+      console.log("selectedTags", selectedTags);
+      
+      setValue("tags", selectedTags || []);
     }
   }, [product, isUpdate, setValue]);
   const onSubmit = async (data) => {
     try {
       setLoading(true);
-        let imageUrl = data?.image || "";
+      let imageUrl = data?.image || "";
 
-        if (imageFile) {
-          try {
-            imageUrl = await new Promise((resolve, reject) => {
-              uploadFileToS3(
-                imageFile,
-                (location) => resolve(location),
-                (error) => reject(error)
-              );
-            });
-          } catch (error) {
-            console.error("Failed to upload image:", error);
-            return;
-          }
+      if (imageFile) {
+        try {
+          imageUrl = await new Promise((resolve, reject) => {
+            uploadFileToS3(
+              imageFile,
+              (location) => resolve(location),
+              (error) => reject(error)
+            );
+          });
+        } catch (error) {
+          console.error("Failed to upload image:", error);
+          return;
         }
+      }
       const formData = {
         name: data?.productname,
         image: imageUrl ? imageUrl : "",
@@ -79,6 +92,7 @@ const AddProduct = () => {
         description: data?.description,
         offerPrice: data?.offer_price,
         moq: data?.moq,
+        tags: data?.tags.map((i) => i.value),
         units: data?.units?.value,
       };
       if (isUpdate) {
@@ -154,8 +168,8 @@ const AddProduct = () => {
                     value={value}
                   />
                   <FormHelperText style={{ color: "#888" }}>
-                      File size limit: 1 MB
-                    </FormHelperText>
+                    File size limit: 1 MB
+                  </FormHelperText>
                   {errors.photo && (
                     <span style={{ color: "red" }}>{errors.photo.message}</span>
                   )}
@@ -260,6 +274,32 @@ const AddProduct = () => {
                   {errors.moq && (
                     <span style={{ color: "red" }}>{errors.moq.message}</span>
                   )}
+                </>
+              )}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Typography
+              sx={{ marginBottom: 1 }}
+              variant="h6"
+              fontWeight={500}
+              color={"#333333"}
+            >
+              Add Tags
+            </Typography>
+
+            <Controller
+              name="tags"
+              control={control}
+              defaultValue={[]}
+              render={({ field }) => (
+                <>
+                  <StyledSelectField
+                    placeholder="Select Tag"
+                    options={tagOptions}
+                    isMulti
+                    {...field}
+                  />
                 </>
               )}
             />
