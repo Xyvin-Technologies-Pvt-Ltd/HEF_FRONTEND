@@ -38,6 +38,7 @@ const AddSubscription = ({
       }
     }
   }, [currentExpiryDate, setValue]);
+console.log("currentExpiryDate",currentExpiryDate,expiryDate);
 
   const onSubmit = async (formData) => {
     try {
@@ -50,7 +51,8 @@ const AddSubscription = ({
       } else {
         await addSubscription(newData);
       }
-
+      setExpiryDate(null);
+      reset();
       onChange();
       onClose();
     } catch (error) {
@@ -61,6 +63,7 @@ const AddSubscription = ({
   const handleClear = (event) => {
     event.preventDefault();
     onClose();
+    setExpiryDate(null);
     reset();
   };
 
@@ -85,12 +88,12 @@ const AddSubscription = ({
     }
 
     // Use currentExpiryDate if available, else default to the current date
-    const baseDate =
-      currentExpiryDate && !isNaN(new Date(currentExpiryDate))
-        ? new Date(currentExpiryDate)
-        : new Date();
+    const baseDate = currentExpiryDate
+      ? new Date(currentExpiryDate)
+      : new Date();
 
     const numberValue = parseInt(value, 10);
+    console.log("baseDate", baseDate);
 
     switch (metric) {
       case 1: // Year
@@ -112,9 +115,8 @@ const AddSubscription = ({
     if (!isNaN(baseDate)) {
       setExpiryDate(baseDate);
       const formattedDate = baseDate.toISOString().split("T")[0]; // Format as 'YYYY-MM-DD'
-setValue("expiryDate", formattedDate);
-setExpiryDate(formattedDate); // Update expiryDate to formatted string
-
+      setValue("expiryDate", formattedDate);
+      setExpiryDate(formattedDate); // Update expiryDate to formatted string
     } else {
       setExpiryDate(null);
       setValue("expiryDate", null);

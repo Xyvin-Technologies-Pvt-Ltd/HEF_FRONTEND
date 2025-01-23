@@ -140,7 +140,7 @@ const Subscription = ({ id }) => {
         data={id}
         onChange={() => setIsChange(!isChange)}
         id={subscription?._id}
-        currentExpiryDate={formatDate(subscription?.expiryDate)}
+        currentExpiryDate={subscription?.expiryDate}
       />
       <SendNotification
         open={notiOpen}
