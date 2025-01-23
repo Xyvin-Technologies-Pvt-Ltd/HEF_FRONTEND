@@ -38,7 +38,6 @@ const AddSubscription = ({
       }
     }
   }, [currentExpiryDate, setValue]);
-console.log("currentExpiryDate",currentExpiryDate,expiryDate);
 
   const onSubmit = async (formData) => {
     try {
@@ -93,7 +92,6 @@ console.log("currentExpiryDate",currentExpiryDate,expiryDate);
       : new Date();
 
     const numberValue = parseInt(value, 10);
-    console.log("baseDate", baseDate);
 
     switch (metric) {
       case 1: // Year
@@ -186,7 +184,6 @@ console.log("currentExpiryDate",currentExpiryDate,expiryDate);
                 <StyledCalender
                   placeholder={"Select Date"}
                   value={expiryDate}
-                  disabled
                   {...field}
                 />
               )}
