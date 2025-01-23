@@ -92,11 +92,6 @@ const AddMember = () => {
           }));
           setValue("companies", companies);
         }
-
-        const selectedRole = roleOptions?.find(
-          (item) => item?.value === member?.role
-        );
-        setValue("role", selectedRole || "");
         const selectedBusinessCatergory = business?.find(
           (item) => item?.value === member?.businessCatogary
         );
@@ -115,7 +110,6 @@ const AddMember = () => {
         setValue("state", selectedState || "");
 
         if (selectedState) {
-          // Fetch and set zone
           const zones = await fetchData("state", selectedState.value);
           const formattedZones = zones.map(({ _id, name }) => ({
             value: _id,
@@ -129,7 +123,6 @@ const AddMember = () => {
           setValue("zone", selectedZone || "");
 
           if (selectedZone) {
-            // Fetch and set district
             const districts = await fetchData("zone", selectedZone.value);
             const formattedDistricts = districts.map(({ _id, name }) => ({
               value: _id,
@@ -143,7 +136,6 @@ const AddMember = () => {
             setValue("district", selectedDistrict || "");
 
             if (selectedDistrict) {
-              // Fetch and set chapter
               const chapters = await fetchData(
                 "district",
                 selectedDistrict.value
@@ -185,13 +177,6 @@ const AddMember = () => {
       return newPhones;
     });
   };
-  const roleOptions = [
-    { value: "president", label: "President" },
-    { value: "secretary", label: "Secretary" },
-    { value: "treasurer", label: "Treasurer" },
-    { value: "rep", label: "Rep" },
-    { value: "member", label: "Member" },
-  ];
 
   const statusOptions = [
     { value: "active", label: "Active" },
@@ -234,7 +219,6 @@ const AddMember = () => {
           whatsapp: data?.whatsapp ? data.whatsapp : undefined,
           business: data.business ? data.business : undefined,
         },
-        role: data?.role.value,
         status: data?.status.value,
         bio: data?.bio,
         address: data?.address,
@@ -309,7 +293,7 @@ const AddMember = () => {
   };
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "companies", // Match the name used in formData
+    name: "companies",
   });
   return (
     <>
@@ -346,35 +330,6 @@ const AddMember = () => {
                       {errors.name && (
                         <span style={{ color: "red" }}>
                           {errors.name.message}
-                        </span>
-                      )}
-                    </>
-                  )}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <Typography
-                  sx={{ marginBottom: 1 }}
-                  variant="h6"
-                  color="textSecondary"
-                >
-                  Role
-                </Typography>
-                <Controller
-                  name="role"
-                  control={control}
-                  defaultValue=""
-                  rules={{ required: "Role is required" }}
-                  render={({ field }) => (
-                    <>
-                      <StyledSelectField
-                        placeholder="Choose the Role"
-                        options={roleOptions}
-                        {...field}
-                      />
-                      {errors.role && (
-                        <span style={{ color: "red" }}>
-                          {errors.role.message}
                         </span>
                       )}
                     </>

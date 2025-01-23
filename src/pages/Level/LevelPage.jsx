@@ -16,13 +16,18 @@ import { StyledButton } from "../../ui/StyledButton";
 
 import { ReactComponent as AddIcon } from "../../assets/icons/AddIcon.svg";
 import { useNavigate } from "react-router-dom";
+import useHierarchyStore from "../../store/hierarchyStore";
+import { toast } from "react-toastify";
 
 const LevelPage = () => {
   const [selectedTab, setSelectedTab] = useState(0);
   const { fetchLevels } = useListStore();
+  const [selectedRows, setSelectedRows] = useState([]);
   const [search, setSearch] = useState("");
   const [pageNo, setPageNo] = useState(1);
   const [row, setRow] = useState(10);
+  const [isChange, setIsChange] = useState(false);
+  const { deleteLevels } = useHierarchyStore();
   const navigate = useNavigate();
   useEffect(() => {
     let filter = {};
@@ -34,25 +39,78 @@ const LevelPage = () => {
     }
     let type;
     if (selectedTab === 0) {
-      type = "all";
-    } else if (selectedTab === 1) {
       type = "state";
-    } else if (selectedTab === 2) {
+    } else if (selectedTab === 1) {
       type = "zone";
-    } else if (selectedTab === 3) {
+    } else if (selectedTab === 2) {
       type = "district";
-    } else if (selectedTab === 4) {
+    } else if (selectedTab === 3) {
       type = "chapter";
-    } else if (selectedTab === 5) {
-      type = "members";
     }
     fetchLevels(type, filter);
-  }, [, pageNo, search, row, selectedTab]);
+  }, [, pageNo, search, row, selectedTab, isChange]);
 
   const handleChange = (event, newValue) => {
     setSelectedTab(newValue);
   };
+  const handleEdit = (id) => {
+    console.log("level id", id);
 
+    const typeMapping = {
+      0: "state",
+      1: "zone",
+      2: "district",
+      3: "chapter",
+    };
+
+    const type = typeMapping[selectedTab];
+    navigate(`/levels/level`, {
+      state: { levelId: id, category: type, isUpdate: true },
+    });
+  };
+  const handleSelectionChange = (newSelectedIds) => {
+    setSelectedRows(newSelectedIds);
+  };
+  const handleDelete = async () => {
+    if (selectedRows.length > 0) {
+      try {
+        const typeMapping = {
+          0: "state",
+          1: "zone",
+          2: "district",
+          3: "chapter",
+        };
+
+        const type = typeMapping[selectedTab];
+        await Promise.all(
+          selectedRows?.map((id) => deleteLevels(type, { levelId: id }))
+        );
+        toast.success("Deleted successfully");
+        setIsChange(!isChange);
+        setSelectedRows([]);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
+  const handleRowDelete = async (id) => {
+    const typeMapping = {
+      0: "state",
+      1: "zone",
+      2: "district",
+      3: "chapter",
+    };
+
+    const type = typeMapping[selectedTab];
+    try {
+      await deleteLevels(type, { levelId: id });
+      toast.success("Deleted successfully");
+      setIsChange(!isChange);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <>
       {" "}
@@ -109,7 +167,6 @@ const LevelPage = () => {
           },
         }}
       >
-        <Tab label="All" />
         <Tab label="State" />
         <Tab label="Zone" />
         <Tab label="District" />
@@ -139,11 +196,14 @@ const LevelPage = () => {
         >
           <StyledTable
             columns={levelColumns}
+            onSelectionChange={handleSelectionChange}
+            onDelete={handleDelete}
+            onDeleteRow={handleRowDelete}
             pageNo={pageNo}
             setPageNo={setPageNo}
-            menu
             rowPerSize={row}
             setRowPerSize={setRow}
+            onModify={handleEdit}
           />
         </Box>
       </Box>

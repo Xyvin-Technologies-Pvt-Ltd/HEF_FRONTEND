@@ -1,24 +1,27 @@
 import { toast } from "react-toastify";
 import axiosInstance from "./axiosintercepter";
 
-export const createState = async (data) => {
+export const createLevel = async (type, data) => {
   try {
-    const response = await axiosInstance.post("/hierarchy/state", data);
+    const response = await axiosInstance.post(`/hierarchy/level/${type}`, data);
     toast.success(response.data.message);
     return response.data;
   } catch (error) {
     throw error.response.data;
   }
 };
-export const createZone = async (data) => {
+export const getLevelById = async (type, filter) => {
   try {
-    const response = await axiosInstance.post("/hierarchy/zone", data);
-    toast.success(response.data.message);
+    const response = await axiosInstance.get(`/hierarchy/level/${type}`, {
+      params: filter,
+    });
+
     return response.data;
   } catch (error) {
-    throw error.response.data;
+    console.error("Error caught:", error);
   }
 };
+
 export const getAllLevel = async (type, filter) => {
   try {
     const response = await axiosInstance.get(`/hierarchy/list/${type}`, {
@@ -27,25 +30,6 @@ export const getAllLevel = async (type, filter) => {
     return response.data;
   } catch (error) {
     return null;
-  }
-};
-export const createDistrict = async (data) => {
-  try {
-    const response = await axiosInstance.post("/hierarchy/district", data);
-    toast.success(response.data.message);
-    return response.data;
-  } catch (error) {
-    throw error.response.data;
-  }
-};
-
-export const createChapter = async (data) => {
-  try {
-    const response = await axiosInstance.post("/hierarchy/chapter", data);
-    toast.success(response.data.message);
-    return response.data;
-  } catch (error) {
-    throw error.response.data;
   }
 };
 
@@ -60,5 +44,28 @@ export const getLevels = async (id, type, filter) => {
     return response.data;
   } catch (error) {
     return null;
+  }
+};
+export const editLevel = async (type, data, filter) => {
+  console.log("filter", filter);
+
+  try {
+    const response = await axiosInstance.put(`/hierarchy/level/${type}`, data, {
+      params: filter,
+    });
+    toast.success(response.data.message);
+    return response.data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};
+export const deleteLevel = async (type, filter) => {
+  try {
+    const response = await axiosInstance.delete(`/hierarchy/level/${type}`, {
+      params: filter,
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error.response.data.message);
   }
 };

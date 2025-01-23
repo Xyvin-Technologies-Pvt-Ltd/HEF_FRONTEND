@@ -15,9 +15,6 @@ import { StyledCalender } from "../../ui/StyledCalender";
 import StyledInput from "../../ui/StyledInput";
 import useSubscriptionStore from "../../store/subscriptionStore";
 import { toast } from "react-toastify";
-import moment from "moment";
-
-const DATE_FORMAT = "DD-MM-YYYY";
 
 const AddSubscription = ({
   open,
@@ -30,15 +27,16 @@ const AddSubscription = ({
   const { handleSubmit, control, setValue, watch, reset } = useForm();
   const [expiryDate, setExpiryDate] = useState(null);
   const { addSubscription, updateSubscription } = useSubscriptionStore();
-
   useEffect(() => {
+    console.log("currentExpiryDate:", currentExpiryDate);
     if (currentExpiryDate) {
-      const initialDate = moment(currentExpiryDate, DATE_FORMAT).format(
-        DATE_FORMAT
-      );
-      if (moment(initialDate, DATE_FORMAT).isValid()) {
-        setExpiryDate(initialDate);
-        setValue("expiryDate", initialDate);
+      const parsedDate = currentExpiryDate
+        ? new Date(currentExpiryDate)
+        : new Date();
+      console.log("Parsed Date:", parsedDate);
+      if (!isNaN(parsedDate)) {
+        setExpiryDate(parsedDate);
+        setValue("expiryDate", parsedDate.toISOString());
       }
     }
   }, [currentExpiryDate, setValue]);
@@ -54,6 +52,7 @@ const AddSubscription = ({
       } else {
         await addSubscription(newData);
       }
+
       onChange();
       onClose();
     } catch (error) {
@@ -63,73 +62,66 @@ const AddSubscription = ({
 
   const handleClear = (event) => {
     event.preventDefault();
-    setExpiryDate(null);
-    reset();
     onClose();
+    reset();
   };
 
   const handleTimeMetricChange = (selectedOption) => {
     const value = watch("value");
-    if (value) {
-      calculateExpiryDate(selectedOption?.value, value);
-    }
+    calculateExpiryDate(selectedOption?.value, value);
     setValue("timeMetric", selectedOption);
   };
 
   const handleValueChange = (e) => {
     const value = e.target.value;
-    if (!value || isNaN(value) || value < 0) return;
-
     const timeMetric = watch("timeMetric");
-    if (timeMetric?.value) {
-      calculateExpiryDate(timeMetric.value, value);
-    }
+    calculateExpiryDate(timeMetric?.value, value);
     setValue("value", value);
   };
 
   const calculateExpiryDate = (metric, value) => {
     if (!metric || !value || isNaN(parseInt(value, 10))) {
       setExpiryDate(null);
-      setValue("expiryDate", null);
+      setValue("expiryDate", null); // Reset expiry date if inputs are invalid
       return;
     }
-  
-    // Start from either the current expiry date or today
-    let baseDate = currentExpiryDate
-      ? moment(currentExpiryDate, DATE_FORMAT)
-      : moment().startOf("day");
-  
-    if (!baseDate.isValid()) {
-      baseDate = moment().startOf("day");
-    }
-  
+
+    // Use currentExpiryDate if available, else default to the current date
+    const baseDate =
+      currentExpiryDate && !isNaN(new Date(currentExpiryDate))
+        ? new Date(currentExpiryDate)
+        : new Date();
+
     const numberValue = parseInt(value, 10);
-    let newDate = baseDate.clone(); // Clone to avoid mutating the base date
-  
+
     switch (metric) {
       case 1: // Year
-        newDate = newDate.add(numberValue, "year");
+        baseDate.setFullYear(baseDate.getFullYear() + numberValue);
         break;
       case 2: // Month
-        newDate = newDate.add(numberValue, "month");
+        baseDate.setMonth(baseDate.getMonth() + numberValue);
         break;
       case 3: // Week
-        newDate = newDate.add(numberValue, "week"); // Use 'week' for week addition
+        baseDate.setDate(baseDate.getDate() + numberValue * 7);
         break;
       case 4: // Day
-        newDate = newDate.add(numberValue, "day");
+        baseDate.setDate(baseDate.getDate() + numberValue);
         break;
       default:
-        return;
+        break;
     }
-  
-    const formattedDate = newDate.format(DATE_FORMAT);
-    setExpiryDate(formattedDate);
-    setValue("expiryDate", formattedDate);
+
+    if (!isNaN(baseDate)) {
+      setExpiryDate(baseDate);
+      const formattedDate = baseDate.toISOString().split("T")[0]; // Format as 'YYYY-MM-DD'
+setValue("expiryDate", formattedDate);
+setExpiryDate(formattedDate); // Update expiryDate to formatted string
+
+    } else {
+      setExpiryDate(null);
+      setValue("expiryDate", null);
+    }
   };
-  
-  
-  
 
   const option = [
     { value: 1, label: "Year" },
@@ -137,7 +129,7 @@ const AddSubscription = ({
     { value: 3, label: "Week" },
     { value: 4, label: "Day" },
   ];
-
+console.log("expirydata",expiryDate);
   return (
     <Dialog
       open={open}
@@ -183,8 +175,6 @@ const AddSubscription = ({
             <StyledInput
               placeholder={"Enter Value"}
               onChange={handleValueChange}
-              type="number"
-              min="0"
             />
             <Typography variant="h6" color={"#333333"}>
               New Expiry Date
@@ -193,15 +183,12 @@ const AddSubscription = ({
               name="expiryDate"
               control={control}
               defaultValue={""}
-              render={({
-                
-              }) => (
+              render={({ field }) => (
                 <StyledCalender
                   placeholder={"Select Date"}
                   value={expiryDate}
-                  
                   disabled
-                  {...restField}
+                  {...field}
                 />
               )}
             />

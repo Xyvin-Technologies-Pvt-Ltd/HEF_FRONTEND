@@ -16,19 +16,22 @@ export default function AddEventPage() {
               Events / Add event
             </Typography>
           </Grid>
-          <Grid item xs={6} container justifyContent="flex-end" spacing={2} height={"70px"}>
-            <Grid item>
-             
-            </Grid>
-            <Grid item>
-             
-            </Grid>
+          <Grid
+            item
+            xs={6}
+            container
+            justifyContent="flex-end"
+            spacing={2}
+            height={"70px"}
+          >
+            <Grid item></Grid>
+            <Grid item></Grid>
           </Grid>
         </Grid>
       </Box>
       <Grid container item xs={12}>
         <Grid item xs={10} padding={2}>
-          <AddEvent eventId={id} isUpdate={true} />
+          <AddEvent />
         </Grid>
       </Grid>
     </>

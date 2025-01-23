@@ -42,6 +42,8 @@ export default function AddEvent({ isUpdate }) {
   useEffect(() => {
     fetchListofUser();
   }, []);
+  console.log("isUpdate", isUpdate);
+
   const users =
     user && Array.isArray(user)
       ? user.map((i) => ({

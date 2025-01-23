@@ -1,17 +1,28 @@
 import React, { useEffect, useState } from "react";
-import { Box, Typography, Grid, Stack } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Grid,
+  Stack,
+  Dialog,
+  DialogContent,
+  DialogActions,
+  IconButton,
+} from "@mui/material";
 import { StyledButton } from "../../ui/StyledButton.jsx";
 import { Controller, useForm } from "react-hook-form";
 import StyledSelectField from "../../ui/StyledSelectField.jsx";
 import StyledInput from "../../ui/StyledInput.jsx";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { usePromotionStore } from "../../store/promotionstore.js";
+import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { getMember } from "../../api/memberapi.js";
 import useHierarchyStore from "../../store/hierarchyStore.js";
-import { getAllLevel } from "../../api/hierarchyapi.js";
+import { getAllLevel, getLevels } from "../../api/hierarchyapi.js";
 
-export default function LevelAdd({ isUpdate }) {
+import { Delete } from "@mui/icons-material";
+import { set } from "date-fns";
+
+export default function LevelAdd() {
   const {
     control,
     handleSubmit,
@@ -21,28 +32,71 @@ export default function LevelAdd({ isUpdate }) {
     getValues,
   } = useForm();
   const navigate = useNavigate();
-  const { id } = useParams();
 
   const location = useLocation();
-  const { value } = location.state || {};
+  const { levelId, category, isUpdate } = location.state || {};
   const [type, setType] = useState();
   const [submitting, setSubmitting] = useState(false);
-  const { addState, addZone, addDistrict, addChapter } = useHierarchyStore();
-  usePromotionStore();
-  const [adminOptions, setAdminOptions] = useState([]);
-  const [stateOptions, setStateOptions] = useState([]);
-  const [zoneOptions, setZoneOptions] = useState([]);
-  const [districtOptions, setDistrictOptions] = useState([]);
+  const { addLevel, fetchLevelById, level, updateLevel } = useHierarchyStore();
 
+  const [open, setOpen] = useState(false);
+  const [stateOptions, setStateOptions] = useState([]);
+  const [adminStateOptions, setAdminStateOptions] = useState([]);
+  const [adminZoneOptions, setAdminZoneOptions] = useState([]);
+  const [adminDistrictOptions, setAdminDistrictOptions] = useState([]);
+  const [adminChapterOptions, setAdminChapterOptions] = useState([]);
+  const [adminMemberOptions, setAdminMemberOptions] = useState([]);
+  const [zoneOptions, setZoneOptions] = useState([]);
+  const [admins, setAdmins] = useState([]);
+  const [districtOptions, setDistrictOptions] = useState([]);
+  const roleOptions = [
+    { value: "president", label: "President" },
+    { value: "secretary", label: "Secretary" },
+    { value: "treasurer", label: "Treasurer" },
+  ];
   const handleTypeChange = (selectedOption) => {
     setType(selectedOption.value);
   };
+  useEffect(() => {
+    if (isUpdate && levelId && category) {
+      let filter = {};
+      filter.levelId = levelId;
+      fetchLevelById(category, filter);
+    }
+  }, [levelId, isUpdate]);
+
+  useEffect(() => {
+    if (level && isUpdate) {
+      setValue("name", level.name);
+      setValue("type", { value: category, label: category });
+      setType(category);
+      setAdmins(level.admins);
+      if (category === "zone") {
+        const selectedState = stateOptions.find(
+          (option) => option.value === level.stateId
+        );
+        setValue("state", selectedState);
+      } else if (category === "district") {
+        console.log("zoneOptions", zoneOptions);
+
+        const selectedZone = zoneOptions.find(
+          (option) => option.value === level.zoneId
+        );
+        setValue("zone", selectedZone);
+      } else if (category === "chapter") {
+        const selectedDistrict = districtOptions.find(
+          (option) => option.value === level.districtId
+        );
+        setValue("district", selectedDistrict);
+      }
+    }
+  }, [level, isUpdate, setValue]);
   useEffect(() => {
     const fetchData = async (type, setter) => {
       try {
         const data = await getAllLevel(type);
         const formattedOptions = data?.data?.map((item) => ({
-          value: item?.id,
+          value: item?._id,
           label: item?.name,
         }));
         setter(formattedOptions);
@@ -54,21 +108,6 @@ export default function LevelAdd({ isUpdate }) {
     fetchData("state", setStateOptions);
     fetchData("zone", setZoneOptions);
     fetchData("district", setDistrictOptions);
-
-    const fetchAdmins = async () => {
-      try {
-        const adminData = await getMember();
-        const formattedOptions = adminData?.data?.map((admin) => ({
-          value: admin?._id,
-          label: admin?.name,
-        }));
-        setAdminOptions(formattedOptions);
-      } catch (error) {
-        console.error("Error fetching admin data:", error);
-      }
-    };
-
-    fetchAdmins();
   }, []);
   const option = [
     { value: "state", label: "State" },
@@ -85,28 +124,118 @@ export default function LevelAdd({ isUpdate }) {
   const onSubmit = async (data) => {
     try {
       setSubmitting(true);
-      let admins ;
-      if (data?.admin) {
-       admins = data?.admin?.map((admin) => admin?.value);
-      }
+
       const formData = {};
       if (admins) formData.admins = admins;
       formData.name = data?.name;
 
-      if (type === "state") await addState(formData);
-      else if (type === "zone")
-        await addZone({ ...formData, stateId: data?.state?.value });
-      else if (type === "district")
-        await addDistrict({ ...formData, zoneId: data?.zone?.value });
-      else if (type === "chapter")
-        await addChapter({ ...formData, districtId: data?.district?.value });
+      if (type === "zone") {
+        formData.stateId = data?.state?.value;
+      } else if (type === "district") {
+        formData.zoneId = data?.zone?.value;
+      } else if (type === "chapter") {
+        formData.districtId = data?.district?.value;
+      }
+      if (isUpdate) {
+        let filter = {};
+        filter.levelId = levelId;
+        await updateLevel(type,formData, filter);
+      }
+      else{
 
+        await addLevel(type, formData);
+      }
       navigate("/levels");
     } catch (error) {
       toast.error(error.message);
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const handleAddAdmin = (e) => {
+    e.preventDefault(e);
+    const formValues = getValues();
+    const newAdmin = {
+      role: formValues.role?.value,
+      user: formValues.sender?.value,
+    };
+    setAdmins([...admins, newAdmin]);
+    setValue("role", "");
+    setValue("state", "");
+    setValue("zone", "");
+    setValue("district", "");
+    setValue("chapter", "");
+    setValue("sender", "");
+    setOpen(false);
+  };
+
+  const handleRemoveAdmin = (index) => {
+    const updatedAdmins = admins.filter((_, idx) => idx !== index);
+    setAdmins(updatedAdmins);
+  };
+
+  const fetchDialog = async (type, id) => {
+    try {
+      const response = await getLevels(id, type);
+
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+  useEffect(() => {
+    const fetchStates = async () => {
+      try {
+        const stateData = await getAllLevel("state");
+        const formattedOptions = stateData?.data?.map((state) => ({
+          value: state?._id,
+          label: state?.name,
+        }));
+        setAdminStateOptions(formattedOptions);
+      } catch (error) {
+        console.error("Error fetching admin data:", error);
+      }
+    };
+
+    fetchStates();
+  }, []);
+  const handleStateChange = async (stateId) => {
+    console.log("stateId", stateId);
+    
+    setAdminZoneOptions([]);
+    setAdminDistrictOptions([]);
+    setAdminChapterOptions([]);
+    setAdminMemberOptions([]);
+    const zones = await fetchDialog("state", stateId.value);
+    setAdminZoneOptions(
+      zones.map(({ _id, name }) => ({ value: _id, label: name }))
+    );
+  };
+
+  const handleZoneChange = async (zoneId) => {
+    setAdminDistrictOptions([]);
+    setAdminChapterOptions([]);
+    setAdminMemberOptions([]);
+    const districts = await fetchDialog("zone", zoneId);
+    setAdminDistrictOptions(
+      districts.map(({ _id, name }) => ({ value: _id, label: name }))
+    );
+  };
+  const handleDistrictChange = async (districtId) => {
+    setAdminChapterOptions([]);
+    setAdminMemberOptions([]);
+    const chapters = await fetchDialog("district", districtId);
+    setAdminChapterOptions(
+      chapters.map(({ _id, name }) => ({ value: _id, label: name }))
+    );
+  };
+  const handleChapterChange = async (chapterId) => {
+    setAdminMemberOptions([]);
+    const members = await fetchDialog("user", chapterId);
+    setAdminMemberOptions(
+      members.map(({ _id, name }) => ({ value: _id, label: name }))
+    );
   };
 
   return (
@@ -236,29 +365,61 @@ export default function LevelAdd({ isUpdate }) {
             </Grid>
           )}
           <Grid item xs={12}>
+            {admins.length > 0 ? (
+              <Box sx={{ mt: 2 }}>
+                {admins.map((admin, index) => (
+                  <Box
+                    key={index}
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      p: 2,
+                      mb: 1,
+                      border: "1px solid rgba(0, 0, 0, 0.12)",
+                      borderRadius: "8px",
+                    }}
+                  >
+                    <div>
+                      <Typography variant="subtitle2" color="primary">
+                        {admin.role}
+                      </Typography>
+                      <Typography variant="body2" color="textSecondary">
+                        {admin.user}
+                      </Typography>
+                    </div>
+                    <IconButton
+                      onClick={() => handleRemoveAdmin(index)}
+                      size="small"
+                      sx={{ color: "error.main" }}
+                    >
+                      <Delete />
+                    </IconButton>
+                  </Box>
+                ))}
+              </Box>
+            ) : (
+              <Typography
+                color="textSecondary"
+                sx={{ textAlign: "center", py: 4 }}
+              >
+                No admins added yet. Click "Add Admin" to add admins.
+              </Typography>
+            )}
+          </Grid>
+          <Grid item xs={12} display={"flex"} justifyContent={"end"} mb={4}>
+            {" "}
             <Typography
               sx={{ marginBottom: 1 }}
               variant="h6"
-              color="textSecondary"
+              fontWeight={500}
+              color={"#004797"}
+              onClick={() => setOpen(true)}
             >
-              Admins
+              + Add Admin
             </Typography>
-            <Controller
-              name="admin"
-              control={control}
-              defaultValue=""
-              render={({ field }) => (
-                <StyledSelectField
-                  placeholder="Select the admins"
-                  isMulti
-                  options={adminOptions}
-                  {...field}
-                />
-              )}
-            />
           </Grid>
-          <Grid item xs={6}></Grid>
-          <Grid item xs={6} display={"flex"} justifyContent={"end"}>
+          <Grid item xs={12} display={"flex"} justifyContent={"end"}>
             {" "}
             <Stack direction={"row"} spacing={2}>
               <StyledButton
@@ -274,6 +435,185 @@ export default function LevelAdd({ isUpdate }) {
               />
             </Stack>
           </Grid>
+          <Dialog
+            open={open}
+            onClose={() => setOpen(false)}
+            fullWidth
+            maxWidth={"md"}
+            style={{ borderRadius: "12px", padding: "20px" }}
+          >
+            <DialogContent style={{ padding: "20px" }}>
+              <Grid container spacing={2}>
+                <Grid item xs={6}>
+                  <Typography
+                    sx={{ marginBottom: 1 }}
+                    variant="h6"
+                    color="textSecondary"
+                  >
+                    Role
+                  </Typography>
+                  <Controller
+                    name="role"
+                    control={control}
+                    defaultValue=""
+                    rules={{ required: "Role is required" }}
+                    render={({ field }) => (
+                      <>
+                        <StyledSelectField
+                          placeholder="Choose the Role"
+                          options={roleOptions}
+                          {...field}
+                        />
+                        {errors.role && (
+                          <span style={{ color: "red" }}>
+                            {errors.role.message}
+                          </span>
+                        )}
+                      </>
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography
+                    sx={{ marginBottom: 1 }}
+                    variant="h6"
+                    color="textSecondary"
+                  >
+                    State
+                  </Typography>
+                  <Controller
+                    name="state"
+                    control={control}
+                    defaultValue=""
+                    render={({ field }) => (
+                      <>
+                        <StyledSelectField
+                          placeholder="Choose the state"
+                          options={adminStateOptions}
+                          {...field}
+                          onChange={(e) => {
+                            field.onChange(e);
+                            handleStateChange(e);
+                          }}
+                        />{" "}
+                      </>
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography
+                    sx={{ marginBottom: 1 }}
+                    variant="h6"
+                    color="textSecondary"
+                  >
+                    Zone
+                  </Typography>
+                  <Controller
+                    name="zone"
+                    control={control}
+                    defaultValue=""
+                    render={({ field }) => (
+                      <>
+                        <StyledSelectField
+                          placeholder="Choose the zone"
+                          options={adminZoneOptions}
+                          {...field}
+                          onChange={(e) => {
+                            field.onChange(e);
+                            handleZoneChange(e.value);
+                          }}
+                        />
+                      </>
+                    )}
+                  />
+                </Grid>{" "}
+                <Grid item xs={6}>
+                  <Typography
+                    sx={{ marginBottom: 1 }}
+                    variant="h6"
+                    color="textSecondary"
+                  >
+                    District
+                  </Typography>
+                  <Controller
+                    name="district"
+                    control={control}
+                    defaultValue=""
+                    render={({ field }) => (
+                      <>
+                        <StyledSelectField
+                          placeholder="Choose the district"
+                          options={adminDistrictOptions}
+                          {...field}
+                          onChange={(e) => {
+                            field.onChange(e);
+                            handleDistrictChange(e.value);
+                          }}
+                        />
+                      </>
+                    )}
+                  />
+                </Grid>{" "}
+                <Grid item xs={6}>
+                  <Typography
+                    sx={{ marginBottom: 1 }}
+                    variant="h6"
+                    color="textSecondary"
+                  >
+                    Chapter
+                  </Typography>
+                  <Controller
+                    name="chapter"
+                    control={control}
+                    defaultValue=""
+                    render={({ field }) => (
+                      <>
+                        <StyledSelectField
+                          placeholder="Choose the chapter"
+                          options={adminChapterOptions}
+                          {...field}
+                          onChange={(e) => {
+                            field.onChange(e);
+                            handleChapterChange(e.value);
+                          }}
+                        />
+                      </>
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={6} mb={16}>
+                  <Typography
+                    sx={{ marginBottom: 1 }}
+                    variant="h6"
+                    color="textSecondary"
+                  >
+                    Member
+                  </Typography>
+                  <Controller
+                    name="sender"
+                    control={control}
+                    defaultValue=""
+                    render={({ field }) => (
+                      <>
+                        <StyledSelectField
+                          placeholder="Choose the member"
+                          options={adminMemberOptions}
+                          {...field}
+                        />
+                      </>
+                    )}
+                  />
+                </Grid>
+              </Grid>
+            </DialogContent>
+            <DialogActions>
+              <StyledButton
+                name={"Add"}
+                variant="primary"
+                onClick={handleAddAdmin}
+              />
+            </DialogActions>
+          </Dialog>
         </Grid>
       </form>
     </Box>

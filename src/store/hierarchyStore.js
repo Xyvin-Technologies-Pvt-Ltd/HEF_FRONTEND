@@ -1,21 +1,29 @@
 import { create } from "zustand";
-import { createChapter, createDistrict, createState, createZone } from "../api/hierarchyapi";
-
+import {
+  createLevel,
+  deleteLevel,
+  editLevel,
+  getLevelById,
+} from "../api/hierarchyapi";
 
 const useHierarchyStore = create((set) => ({
-  addState: async (data) => {
-    await createState(data);
-  },
-  addZone: async (data) => {
-    await createZone(data);
-  },
-  addDistrict: async (data) => {
-    await createDistrict(data);
-  },
-  addChapter: async (data) => {
-    await createChapter(data);
+  level: [],
+  addLevel: async (type, data) => {
+    await createLevel(type, data);
   },
 
+  fetchLevelById: async (type, filter) => {
+    const allData = await getLevelById(type, filter);
+    console.log("levelData", allData.data);
+
+    set({ level: allData?.data || [] });
+  },
+  updateLevel: async (type, data, filter) => {
+    await editLevel(type, data, filter);
+  },
+  deleteLevels: async (type,filter) => {
+    await deleteLevel(type, filter);
+  },
 }));
 
 export default useHierarchyStore;
