@@ -14,7 +14,6 @@ const useHierarchyStore = create((set) => ({
 
   fetchLevelById: async (type, filter) => {
     const allData = await getLevelById(type, filter);
-    console.log("levelData", allData.data);
 
     set({ level: allData?.data || [] });
   },

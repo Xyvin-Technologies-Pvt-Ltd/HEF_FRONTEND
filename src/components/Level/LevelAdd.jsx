@@ -77,8 +77,6 @@ export default function LevelAdd() {
         );
         setValue("state", selectedState);
       } else if (category === "district") {
-        console.log("zoneOptions", zoneOptions);
-
         const selectedZone = zoneOptions.find(
           (option) => option.value === level.zoneId
         );
@@ -139,10 +137,8 @@ export default function LevelAdd() {
       if (isUpdate) {
         let filter = {};
         filter.levelId = levelId;
-        await updateLevel(type,formData, filter);
-      }
-      else{
-
+        await updateLevel(type, formData, filter);
+      } else {
         await addLevel(type, formData);
       }
       navigate("/levels");
@@ -201,8 +197,6 @@ export default function LevelAdd() {
     fetchStates();
   }, []);
   const handleStateChange = async (stateId) => {
-    console.log("stateId", stateId);
-    
     setAdminZoneOptions([]);
     setAdminDistrictOptions([]);
     setAdminChapterOptions([]);

@@ -61,8 +61,7 @@ const AddProduct = () => {
       const selectedTags = product?.tags?.map((Id) =>
         tagOptions.find((option) => option?.value === Id)
       );
-      console.log("selectedTags", selectedTags);
-      
+
       setValue("tags", selectedTags || []);
     }
   }, [product, isUpdate, setValue]);

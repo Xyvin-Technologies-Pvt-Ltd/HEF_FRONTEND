@@ -47,8 +47,6 @@ export const getLevels = async (id, type, filter) => {
   }
 };
 export const editLevel = async (type, data, filter) => {
-  console.log("filter", filter);
-
   try {
     const response = await axiosInstance.put(`/hierarchy/level/${type}`, data, {
       params: filter,

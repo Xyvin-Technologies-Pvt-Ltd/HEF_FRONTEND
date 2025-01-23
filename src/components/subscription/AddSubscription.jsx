@@ -28,12 +28,10 @@ const AddSubscription = ({
   const [expiryDate, setExpiryDate] = useState(null);
   const { addSubscription, updateSubscription } = useSubscriptionStore();
   useEffect(() => {
-    console.log("currentExpiryDate:", currentExpiryDate);
     if (currentExpiryDate) {
       const parsedDate = currentExpiryDate
         ? new Date(currentExpiryDate)
         : new Date();
-      console.log("Parsed Date:", parsedDate);
       if (!isNaN(parsedDate)) {
         setExpiryDate(parsedDate);
         setValue("expiryDate", parsedDate.toISOString());
@@ -129,7 +127,6 @@ setExpiryDate(formattedDate); // Update expiryDate to formatted string
     { value: 3, label: "Week" },
     { value: 4, label: "Day" },
   ];
-console.log("expirydata",expiryDate);
   return (
     <Dialog
       open={open}

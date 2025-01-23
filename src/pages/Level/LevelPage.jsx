@@ -54,7 +54,6 @@ const LevelPage = () => {
     setSelectedTab(newValue);
   };
   const handleEdit = (id) => {
-    console.log("level id", id);
 
     const typeMapping = {
       0: "state",

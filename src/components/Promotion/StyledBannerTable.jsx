@@ -45,7 +45,6 @@ const StyledBannerTable = () => {
     }
   };
   const handleEdit = (id) => {
-    console.log("level id", id);
     navigate(`/promotions/edit/${id}`);
   };
   const handleRowDelete = async (id) => {
