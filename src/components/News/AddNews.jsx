@@ -40,6 +40,8 @@ export default function AddNews({ isUpdate, setSelectedTab }) {
   const { id } = useParams();
   const [imageFile, setImageFile] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [pdfFile, setPdfFile] = useState(null);
+  const [pdfPreview, setPdfPreview] = useState(null);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImageUrl, setPreviewImageUrl] = useState("");
   const option = [
@@ -66,6 +68,12 @@ export default function AddNews({ isUpdate, setSelectedTab }) {
       setValue("content", singleNews.content);
       setValue("image", singleNews.media);
       setPreviewImageUrl(singleNews.media);
+      setValue("pdf", singleNews.pdf);
+      if (singleNews.pdf) {
+        setPdfPreview(singleNews.pdf);
+      } else {
+        setPdfPreview(null);
+      }
     }
   }, [singleNews, isUpdate, setValue]);
   const handlePreviewOpen = () => {
@@ -86,6 +94,14 @@ export default function AddNews({ isUpdate, setSelectedTab }) {
       return () => URL.revokeObjectURL(objectUrl);
     } else {
       setPreviewImageUrl("");
+    }
+  };
+  const handlePDFChange = (selectedFile) => {
+    setPdfFile(selectedFile);
+    setValue("pdf", selectedFile);
+    if (selectedFile) {
+      const previewURL = URL.createObjectURL(selectedFile);
+      setPdfPreview(previewURL);
     }
   };
   const onSubmit = async (data) => {
@@ -224,6 +240,37 @@ export default function AddNews({ isUpdate, setSelectedTab }) {
             <Typography
               sx={{ marginBottom: 1 }}
               variant="h6"
+              fontWeight={500}
+              color={"#333333"}
+            >
+              Upload Document
+            </Typography>
+            <Controller
+              name="pdf"
+              control={control}
+              defaultValue=""
+              rules={{ required: "File is required" }}
+              render={({ field: { onChange, value } }) => (
+                <>
+                  <StyledCropImage
+                    label="Upload PDF here"
+                    onChange={(selectedFile) => {
+                      handlePDFChange(selectedFile);
+                      onChange(selectedFile); // Pass file to react-hook-form
+                    }}
+                    value={value}
+                  />
+                  {errors.pdf && (
+                    <span style={{ color: "red" }}>{errors.pdf.message}</span>
+                  )}
+                </>
+              )}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Typography
+              sx={{ marginBottom: 1 }}
+              variant="h6"
               color="textSecondary"
             >
               Add content
@@ -317,6 +364,23 @@ export default function AddNews({ isUpdate, setSelectedTab }) {
             />
           ) : (
             <Typography color="textSecondary">No image selected</Typography>
+          )}
+          <Typography variant="h6" fontWeight="bold" mt={2}>
+            PDF File:
+          </Typography>
+          {pdfPreview ? (
+            <Box sx={{ mt: 1 }}>
+            <embed
+              src={pdfPreview}
+              type="application/pdf"
+              width="100%"
+              height="500px"
+              style={{ borderRadius: "8px", border: "1px solid #ccc" }}
+            />
+          </Box>
+          
+          ) : (
+            <Typography>No PDF uploaded</Typography>
           )}
         </DialogContent>
       </Dialog>

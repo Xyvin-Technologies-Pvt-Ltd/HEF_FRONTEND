@@ -7,10 +7,11 @@ import IconButton from "@mui/material/IconButton";
 import Cropper from "react-easy-crop";
 import Modal from "@mui/material/Modal";
 import Slider from "@mui/material/Slider";
-import { getCroppedImg } from "../utils/image"; // Ensure this is correctly imported
+import { getCroppedImg } from "../utils/image";
 import { Button } from "@mui/material";
+import { PictureAsPdfOutlined } from "@mui/icons-material";
 
-// Custom TextField styling
+// Custom TextField styling remains the same
 const CustomTextField = styled(TextField)(({ theme }) => ({
   "& .MuiOutlinedInput-root": {
     "& fieldset": {
@@ -34,14 +35,16 @@ const CustomTextField = styled(TextField)(({ theme }) => ({
     opacity: 1,
   },
 }));
+
 const SaveButton = styled(Button)(({ theme }) => ({
   marginTop: "10px",
-  backgroundColor: "#F58220", // Change to the desired color
+  backgroundColor:  "#f58220",
   color: "#fff",
   fontWeight: "400",
   padding: "8px 16px",
   borderRadius: "4px",
 }));
+
 const ImagePreview = styled("img")({
   width: "100px",
   height: "100px",
@@ -66,10 +69,10 @@ const PdfPreview = styled("div")({
   color: "rgba(0, 0, 0, 0.5)",
 });
 
-// StyledEventUpload Component
 export const StyledCropImage = ({ label, value, onChange, ratio }) => {
   const fileInputRef = useRef(null);
-  const [selectedImage, setSelectedImage] = useState(value || null);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
   const [isPdf, setIsPdf] = useState(false);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
@@ -81,15 +84,28 @@ export const StyledCropImage = ({ label, value, onChange, ratio }) => {
     fileInputRef.current.click();
   };
 
+  const checkIfPdf = (file) => {
+    if (file instanceof File) {
+      return file.type === "application/pdf";
+    }
+    if (typeof file === "string") {
+      return file.toLowerCase().endsWith(".pdf");
+    }
+    return false;
+  };
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      setSelectedFile(file);
       const fileType = file.type;
+
       if (fileType.startsWith("image/")) {
         const imageUrl = URL.createObjectURL(file);
         setImageForCrop(imageUrl);
         setCropModalOpen(true);
         setIsPdf(false);
+        setSelectedImage(imageUrl);
       } else if (fileType === "application/pdf") {
         setSelectedImage(file.name);
         setIsPdf(true);
@@ -115,6 +131,8 @@ export const StyledCropImage = ({ label, value, onChange, ratio }) => {
         const blob = await response.blob();
         const uniqueName = `cropped_image_${Date.now()}.png`;
         const file = new File([blob], uniqueName, { type: blob.type });
+        setSelectedFile(file);
+        setIsPdf(false);
         onChange(file);
       } catch (error) {
         console.error("Error cropping image:", error);
@@ -122,18 +140,43 @@ export const StyledCropImage = ({ label, value, onChange, ratio }) => {
     }
   };
 
+  const handlePdfClick = () => {
+    if (selectedFile && isPdf) {
+      const pdfUrl = URL.createObjectURL(selectedFile);
+      window.open(pdfUrl, "_blank");
+      setTimeout(() => URL.revokeObjectURL(pdfUrl), 100);
+    } else if (typeof selectedImage === "string" && isPdf) {
+      window.open(selectedImage, "_blank");
+    }
+  };
+
   useEffect(() => {
-    if (value && typeof value === "string") {
-      setSelectedImage(value);
-      setIsPdf(value.endsWith(".pdf"));
+    if (value) {
+      const isPdfFile = checkIfPdf(value);
+      setIsPdf(isPdfFile);
+
+      if (value instanceof File) {
+        setSelectedFile(value);
+        // setSelectedImage(value.name);
+      } else if (typeof value === "string") {
+        setSelectedImage(value);
+        if (!isPdfFile) {
+          setSelectedFile(null);
+        }
+      }
+    } else {
+      setSelectedImage(null);
+      setSelectedFile(null);
+      setIsPdf(false);
     }
   }, [value]);
-
+  
   return (
     <>
       <CustomTextField
         fullWidth
         label={label}
+        // value={selectedImage || ""}
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
@@ -154,7 +197,22 @@ export const StyledCropImage = ({ label, value, onChange, ratio }) => {
       />
       {selectedImage &&
         (isPdf ? (
-          <PdfPreview>PDF Preview: {selectedImage}</PdfPreview>
+          <PdfPreview>
+            <IconButton
+              onClick={handlePdfClick}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                color: "#f58220",
+              }}
+            >
+              <PictureAsPdfOutlined style={{ fontSize: "40px" }} />
+              <span style={{ fontSize: "12px", marginTop: "4px" }}>
+                View PDF
+              </span>
+            </IconButton>
+          </PdfPreview>
         ) : (
           <ImagePreview src={selectedImage} alt="Preview" />
         ))}
@@ -168,13 +226,16 @@ export const StyledCropImage = ({ label, value, onChange, ratio }) => {
             margin: "auto",
             top: "50%",
             transform: "translateY(-50%)",
+            backgroundColor: "white",
+            padding: "20px",
+            borderRadius: "8px",
           }}
         >
           <Cropper
             image={imageForCrop}
             crop={crop}
             zoom={zoom}
-            aspect={ratio} // Adjust the aspect ratio as needed
+            aspect={ratio}
             onCropChange={setCrop}
             onZoomChange={setZoom}
             onCropComplete={onCropComplete}
@@ -185,7 +246,7 @@ export const StyledCropImage = ({ label, value, onChange, ratio }) => {
             max={3}
             step={0.1}
             onChange={(e, newZoom) => setZoom(newZoom)}
-            style={{ marginTop: "10px", color: " #F58220" }}
+            style={{ marginTop: "10px", color: "#f58220" }}
           />
           <div
             style={{
