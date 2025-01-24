@@ -497,9 +497,39 @@ const AddMember = () => {
                     </>
                   )}
                 />
+              </Grid>{" "}
+              <Grid item xs={6}>
+                {" "}
+                <Typography
+                  sx={{ marginBottom: 1 }}
+                  variant="h6"
+                  color="textSecondary"
+                >
+                  Company Details
+                </Typography>
               </Grid>
-              {fields.map((company, index) => (
-                <React.Fragment key={company.id}>
+              <Grid item xs={6} display={"flex"} justifyContent={"flex-end"}>
+                <Typography
+                  sx={{
+                    color: "#004797",
+                    marginTop: 1,
+                    fontSize: "0.9rem",
+                  }}
+                  onClick={() =>
+                    append({
+                      name: "",
+                      phone: "",
+                      email: "",
+                      websites: "",
+                      tags: [],
+                    })
+                  }
+                >
+                  +Add Company
+                </Typography>
+              </Grid>
+              {fields?.map((company, index) => (
+                <React.Fragment key={company?.id}>
                   <Grid item xs={6}>
                     <Typography variant="h6" color="textSecondary">
                       Company Name
@@ -607,26 +637,7 @@ const AddMember = () => {
                 display={"flex"}
                 alignItems={"flex-end"}
                 justifyContent={"flex-end"}
-              >
-                <Typography
-                  sx={{
-                    color: "#004797",
-                    marginTop: 1,
-                    fontSize: "0.9rem",
-                  }}
-                  onClick={() =>
-                    append({
-                      name: "",
-                      phone: "",
-                      email: "",
-                      websites: "",
-                      tags: [],
-                    })
-                  }
-                >
-                  Add Company
-                </Typography>
-              </Grid>
+              ></Grid>
               <Grid item xs={12}>
                 <Typography
                   sx={{ marginBottom: 1 }}

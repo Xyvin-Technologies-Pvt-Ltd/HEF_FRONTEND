@@ -48,6 +48,7 @@ export default function LevelAdd() {
   const [adminMemberOptions, setAdminMemberOptions] = useState([]);
   const [zoneOptions, setZoneOptions] = useState([]);
   const [admins, setAdmins] = useState([]);
+  const [viewAdmin, setViewAdmin] = useState([]);
   const [districtOptions, setDistrictOptions] = useState([]);
   const roleOptions = [
     { value: "president", label: "President" },
@@ -71,6 +72,7 @@ export default function LevelAdd() {
       setValue("type", { value: category, label: category });
       setType(category);
       setAdmins(level.admins);
+      setViewAdmin(level.admins);
       if (category === "zone") {
         const selectedState = stateOptions.find(
           (option) => option.value === level.stateId
@@ -152,10 +154,16 @@ export default function LevelAdd() {
   const handleAddAdmin = (e) => {
     e.preventDefault(e);
     const formValues = getValues();
+
     const newAdmin = {
       role: formValues.role?.value,
       user: formValues.sender?.value,
     };
+    const viewAdminData = {
+      role: formValues.role?.label,
+      user: formValues.sender?.label,
+    };
+    setViewAdmin([...viewAdmin, viewAdminData]);
     setAdmins([...admins, newAdmin]);
     setValue("role", "");
     setValue("state", "");
@@ -165,6 +173,7 @@ export default function LevelAdd() {
     setValue("sender", "");
     setOpen(false);
   };
+  console.log("setView", viewAdmin);
 
   const handleRemoveAdmin = (index) => {
     const updatedAdmins = admins.filter((_, idx) => idx !== index);
@@ -272,23 +281,7 @@ export default function LevelAdd() {
               )}
             />
           </Grid>{" "}
-          <Grid item xs={12}>
-            <Typography
-              sx={{ marginBottom: 1 }}
-              variant="h6"
-              color="textSecondary"
-            >
-              Name
-            </Typography>
-            <Controller
-              name="name"
-              control={control}
-              defaultValue=""
-              render={({ field }) => (
-                <StyledInput placeholder={"Enter the name"} {...field} />
-              )}
-            />
-          </Grid>
+      
           {type === "zone" && (
             <Grid item xs={12}>
               <Typography
@@ -358,10 +351,27 @@ export default function LevelAdd() {
               />
             </Grid>
           )}
+              <Grid item xs={12}>
+            <Typography
+              sx={{ marginBottom: 1 }}
+              variant="h6"
+              color="textSecondary"
+            >
+              Name
+            </Typography>
+            <Controller
+              name="name"
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <StyledInput placeholder={"Enter the name"} {...field} />
+              )}
+            />
+          </Grid>
           <Grid item xs={12}>
-            {admins.length > 0 ? (
+            {viewAdmin?.length > 0 ? (
               <Box sx={{ mt: 2 }}>
-                {admins.map((admin, index) => (
+                {viewAdmin?.map((admin, index) => (
                   <Box
                     key={index}
                     sx={{
@@ -376,10 +386,10 @@ export default function LevelAdd() {
                   >
                     <div>
                       <Typography variant="subtitle2" color="primary">
-                        {admin.role}
+                        {admin?.role}
                       </Typography>
                       <Typography variant="body2" color="textSecondary">
-                        {admin.user}
+                        {admin?.user}
                       </Typography>
                     </div>
                     <IconButton
