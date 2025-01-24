@@ -255,7 +255,7 @@ const AddMember = () => {
       try {
         const stateData = await getAllLevel("state");
         const formattedOptions = stateData?.data?.map((state) => ({
-          value: state?.id,
+          value: state?._id,
           label: state?.name,
         }));
         setStateOptions(formattedOptions);
