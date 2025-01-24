@@ -173,7 +173,6 @@ export default function LevelAdd() {
     setValue("sender", "");
     setOpen(false);
   };
-  console.log("setView", viewAdmin);
 
   const handleRemoveAdmin = (index) => {
     const updatedAdmins = admins.filter((_, idx) => idx !== index);
@@ -281,7 +280,6 @@ export default function LevelAdd() {
               )}
             />
           </Grid>{" "}
-      
           {type === "zone" && (
             <Grid item xs={12}>
               <Typography
@@ -351,7 +349,7 @@ export default function LevelAdd() {
               />
             </Grid>
           )}
-              <Grid item xs={12}>
+          <Grid item xs={12}>
             <Typography
               sx={{ marginBottom: 1 }}
               variant="h6"
@@ -388,9 +386,15 @@ export default function LevelAdd() {
                       <Typography variant="subtitle2" color="primary">
                         {admin?.role}
                       </Typography>
-                      <Typography variant="body2" color="textSecondary">
-                        {admin?.user}
+                      {!isUpdate ? (
+                        <Typography variant="body2" color="textSecondary">
+                          {admin?.user}
+                        </Typography>
+                      ) : (
+                        <Typography variant="body2" color="textSecondary">
+                        {admin?.user?.name}
                       </Typography>
+                      )}
                     </div>
                     <IconButton
                       onClick={() => handleRemoveAdmin(index)}
