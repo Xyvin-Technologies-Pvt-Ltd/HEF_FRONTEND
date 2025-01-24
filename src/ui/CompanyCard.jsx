@@ -20,40 +20,40 @@ const CompanyCard = ({ companies }) => {
         <Grid
           item
           xs={12}
-          key={company._id}
+          key={company?._id}
           borderBottom="1px solid #E0E0E0"
           paddingBottom="12px"
           marginBottom="12px"
         >
           <Box>
             <Typography variant="h5" color="#000000" mt={1}>
-              {company.name}
+              {company?.name}
             </Typography>
-            {company.designation && (
+            {company?.designation && (
               <Typography variant="h5" color="#000000" mt={0.5}>
-                {company.designation}
+                {company?.designation}
               </Typography>
             )}
           </Box>
           <Stack spacing={1} mt={2}>
             <Link
-              to={company.websites}
+              to={company?.websites}
               target="_blank"
               rel="noopener noreferrer"
               style={{ color: "#1E88E5", textDecoration: "none" }}
             >
-              {company.websites}
+              {company?.websites}
             </Link>
             <Stack direction="row" alignItems="center" spacing={1}>
               <PhoneIcon />
               <Typography variant="body2" color="textSecondary">
-                {company.phone}
+                {company?.phone}
               </Typography>
             </Stack>
             <Stack direction="row" alignItems="center" spacing={1}>
               <EmailIcon />
               <Typography variant="body2" color="textSecondary">
-                {company.email}
+                {company?.email}
               </Typography>
             </Stack>
           </Stack>
