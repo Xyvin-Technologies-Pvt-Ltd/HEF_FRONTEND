@@ -1,7 +1,7 @@
 export const memberColumns = [
   { title: "Name", field: "name", padding: "none" },
   { title: "Member ID", field: "memberId" },
-  { title: "Company Name", field: "companyName" },
+  { title: "Chapter Name", field: "chapterName" },
   { title: "Phone Number", field: "phone" },
   { title: "Join Date", field: "createdAt" },
   { title: "Status", field: "status" },

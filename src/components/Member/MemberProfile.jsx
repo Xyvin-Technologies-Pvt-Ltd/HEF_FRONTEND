@@ -74,11 +74,9 @@ const MemberProfile = ({ data, loading }) => {
           <Grid item md={7}>
             <UserCard user={data} />
           </Grid>
-          {data?.company && (
-            <Grid item md={5}>
-              <CompanyCard company={data} />
-            </Grid>
-          )}
+          <Grid item md={5}>
+        <CompanyCard companies={data?.company} />
+      </Grid>
           {data?.social && data?.social?.length > 0 && (
             <>
               <Grid item md={12}>
