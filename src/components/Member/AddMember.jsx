@@ -87,6 +87,7 @@ const AddMember = () => {
             name: company?.name || "",
             phone: company?.phone || "",
             email: company?.email || "",
+            designation: company?.designation || "",
             websites: company?.websites || "",
             tags: company?.tags || [],
           }));
@@ -557,6 +558,22 @@ const AddMember = () => {
                       render={({ field }) => (
                         <StyledInput
                           placeholder="Enter company phone"
+                          {...field}
+                        />
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Typography variant="h6" color="textSecondary">
+                      Company Designation
+                    </Typography>
+                    <Controller
+                      name={`companies[${index}].designation`}
+                      control={control}
+                      defaultValue={company.designation}
+                      render={({ field }) => (
+                        <StyledInput
+                          placeholder="Enter company designation"
                           {...field}
                         />
                       )}

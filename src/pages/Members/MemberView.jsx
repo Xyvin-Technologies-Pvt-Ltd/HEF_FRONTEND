@@ -80,7 +80,7 @@ const MemberView = () => {
         <Tab label="Subscriptions" />
         <Tab label="Business Posts" />
         <Tab label="Activity" />
-        <Tab label="Analytics" />
+        {/* <Tab label="Analytics" /> */}
       </Tabs>
       <Box padding="15px" marginBottom={4}>
         {selectedTab === 0 && (

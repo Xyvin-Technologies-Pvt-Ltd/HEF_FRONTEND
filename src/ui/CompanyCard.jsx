@@ -30,7 +30,7 @@ const CompanyCard = ({ companies }) => {
               {company?.name}
             </Typography>
             {company?.designation && (
-              <Typography variant="h5" color="#000000" mt={0.5}>
+              <Typography variant="h6" color="#000000" mt={0.5}>
                 {company?.designation}
               </Typography>
             )}

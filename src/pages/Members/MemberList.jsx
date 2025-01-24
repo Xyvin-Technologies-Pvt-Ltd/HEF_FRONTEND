@@ -58,38 +58,11 @@ const MemberList = () => {
       <Box padding={"15px"}>
         <Stack
           direction={"row"}
-          justifyContent={"space-between"}
+          justifyContent={"end"}
           paddingBottom={"15px"}
           alignItems={"center"}
         >
-          <Stack direction={"row"} spacing={1}>
-            <StyledButton
-              name="All"
-              variant={selectedTab === "All" ? "primary" : "third"}
-              onClick={() => handleTabChange("All")}
-            />
-            <StyledButton
-              name="State PST"
-              variant={selectedTab === "state" ? "primary" : "third"}
-              onClick={() => handleTabChange("state")}
-            />
-            <StyledButton
-              name="Zone PST"
-              variant={selectedTab === "zone" ? "primary" : "third"}
-              onClick={() => handleTabChange("zone")}
-            />
-            <StyledButton
-              name="District PST"
-              variant={selectedTab === "district" ? "primary" : "third"}
-              onClick={() => handleTabChange("district")}
-            />{" "}
-            <StyledButton
-              name="Chapter PST"
-              variant={selectedTab === "chapter" ? "primary" : "third"}
-              onClick={() => handleTabChange("chapter")}
-            />
-          </Stack>
-          <Stack direction={"row"} spacing={2}>
+          <Stack direction={"row"} spacing={2} >
             <StyledSearchbar
               placeholder={"Search"}
               onchange={(e) => setSearch(e.target.value)}
