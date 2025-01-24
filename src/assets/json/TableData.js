@@ -71,7 +71,7 @@ export const feedColumns = [
 ];
 export const levelColumns = [
   { title: "Name", field: "name" },
-  { title: "No of pst", field: "pstCount" },
+  { title: "No of PST", field: "pstCount" },
   { title: "Created on", field: "createdAt", padding: "none" },
 ];
 export const postColumns = [
