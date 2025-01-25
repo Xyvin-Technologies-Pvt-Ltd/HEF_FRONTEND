@@ -59,6 +59,7 @@ const Subscription = ({ id }) => {
                       padding: "0px 6px",
                       borderRadius: "12px",
                       border: "1px solid #FF9500",
+                      textTransform: "capitalize",
                     }}
                   >
                     {subscription?.status}

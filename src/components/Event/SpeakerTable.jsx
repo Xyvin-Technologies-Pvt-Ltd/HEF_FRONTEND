@@ -17,9 +17,9 @@ const SpeakerTable = ({ data }) => {
         paddingBottom={'15px'}
         alignItems={"center"}
       >
-        <Stack direction={"row"} spacing={2}>
+        {/* <Stack direction={"row"} spacing={2}>
           <StyledSearchbar />
-        </Stack>
+        </Stack> */}
       </Stack>{" "}
       <Box
         borderRadius={"16px"}

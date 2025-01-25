@@ -32,9 +32,8 @@ const StyledTableCell = styled(TableCell)`
     color: rgba(0, 0, 0, 0.87);
     font-size: 14px;
     padding: 16px;
-
     text-align: center;
-
+    text-transform: capitalize;
     font-weight: 600;
   }
   &.${tableCellClasses.body} {
@@ -42,6 +41,7 @@ const StyledTableCell = styled(TableCell)`
     background-color: #fff;
     padding: 14px;
     font-weight: 400;
+    text-transform: capitalize;
     color: rgba(0, 0, 0, 0.87);
     text-align: center;
   }
@@ -157,9 +157,9 @@ const StyledTable = ({
         return "#9C27B0";
       case "created":
         return "#FFC107";
-        case "success":
+      case "success":
         return "#4CAF50";
-        case "failure":
+      case "failure":
         return "red";
       case "live":
         return "#03A9F4";
@@ -277,7 +277,7 @@ const StyledTable = ({
                         "createdAt",
                         "startDate",
                         "endDate",
-                        "expiryDate"
+                        "expiryDate",
                       ].includes(column.field) ? (
                         formatIndianDate(row[column.field])
                       ) : [

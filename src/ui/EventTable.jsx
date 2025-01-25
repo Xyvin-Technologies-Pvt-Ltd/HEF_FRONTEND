@@ -31,7 +31,7 @@ const StyledTableCell = styled(TableCell)`
     color: rgba(0, 0, 0, 0.87);
     font-size: 14px;
     padding: 16px;
-
+text-transform: capitalize;
     text-align: center;
     font-weight: 600;
   }
@@ -40,6 +40,7 @@ const StyledTableCell = styled(TableCell)`
     background-color: #fff;
     padding: 16px;
     font-weight: 400;
+    text-transform: capitalize;
     color: rgba(0, 0, 0, 0.87);
     text-align: center;
   }

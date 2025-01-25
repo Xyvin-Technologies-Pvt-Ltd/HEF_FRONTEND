@@ -100,6 +100,7 @@ const EventCard = ({ user }) => {
               borderColor: getStatusColor(user?.status),
               color: getStatusColor(user?.status),
               width: "fit-content",
+              textTransform: "capitalize",
             }}
           >
             {user?.status}

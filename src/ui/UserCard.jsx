@@ -62,6 +62,7 @@ const UserCard = ({ user }) => {
               padding: "0px 6px",
               borderRadius: "12px",
               width: "fit-content",
+              textTransform: "capitalize",
             }}
           >
             {user?.subscription}
