@@ -213,19 +213,23 @@ const Layout = (props) => {
             key={item.name}
             disablePadding
           >
-        <ListItemButton
-  component={Link}
-  to={item.to}
-  sx={{
-    fontWeight: location.pathname.startsWith(item.to) ? "bold" : "normal",
-    color: location.pathname.startsWith(item.to) ? "#000000" : "#6F7782",
-    backgroundColor: location.pathname.startsWith(item.to)
-      ? "#FFDEC2"
-      : "transparent",
-    "&:hover": { color: "#000000", backgroundColor: "#FFDEC2" },
-    "&:hover .MuiListItemIcon-root": { color: "#000000" },
-  }}
->
+            <ListItemButton
+              component={Link}
+              to={item.to}
+              sx={{
+                fontWeight: location.pathname.startsWith(item.to)
+                  ? "bold"
+                  : "normal",
+                color: location.pathname.startsWith(item.to)
+                  ? "#000000"
+                  : "#6F7782",
+                backgroundColor: location.pathname.startsWith(item.to)
+                  ? "#FFDEC2"
+                  : "transparent",
+                "&:hover": { color: "#000000", backgroundColor: "#FFDEC2" },
+                "&:hover .MuiListItemIcon-root": { color: "#000000" },
+              }}
+            >
               <ListItemIcon
                 sx={{
                   minWidth: 24,
