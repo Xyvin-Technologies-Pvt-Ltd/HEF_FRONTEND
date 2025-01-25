@@ -41,7 +41,7 @@ const OrganinserCard = ({ data }) => {
                 }}
               />
               <Typography variant="h7" color="textSecondary">
-                {speaker?.name} ({speaker?.role})
+                {speaker?.name}
               </Typography>
             </Stack>
             <Typography

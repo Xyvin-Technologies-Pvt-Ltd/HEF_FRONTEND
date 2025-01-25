@@ -96,7 +96,6 @@ const EventView = () => {
   };
   return (
     <>
-     
       <Box padding={"60px"} paddingTop={"20px"}>
         <Box display="flex" alignItems="center" marginBottom={2}>
           <Typography variant="h5" fontWeight="bold" marginRight={2}>
@@ -166,6 +165,9 @@ const EventView = () => {
                       variant="h7"
                       color="#333333"
                       key={index}
+                      sx={{
+                        cursor: "pointer",
+                      }}
                       onClick={() => handleEventClick(event)}
                     >
                       {event?.eventName}
@@ -173,13 +175,17 @@ const EventView = () => {
                   ))
                 ) : (
                   <Box display="flex" alignItems="center" gap={1}>
-                    <Typography variant="h7" color="#333333" sx={{
-                textDecoration: "underline",
-                cursor: "pointer",
-              }}
-              onClick={() => {
-                navigate(`/events/add`);
-              }}>
+                    <Typography
+                      variant="h7"
+                      color="#333333"
+                      sx={{
+                        textDecoration: "underline",
+                        cursor: "pointer",
+                      }}
+                      onClick={() => {
+                        navigate(`/events/add`);
+                      }}
+                    >
                       Add Event
                     </Typography>
                     <AddCircleOutlineIcon sx={{ marginLeft: "2px" }} />
@@ -365,7 +371,7 @@ const EventView = () => {
                         }}
                       />
                       <Typography variant="h7" color="textSecondary">
-                        {speaker?.name} ({speaker?.role})
+                        {speaker?.name} 
                       </Typography>
                     </li>
                   ))}
