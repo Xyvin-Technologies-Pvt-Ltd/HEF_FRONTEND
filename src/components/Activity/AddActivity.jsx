@@ -26,7 +26,7 @@ const AddActivity = () => {
     control,
     handleSubmit,
     reset,
-    setValue,
+    setValue,watch,
     formState: { errors },
   } = useForm();
   const navigate = useNavigate();
@@ -126,6 +126,8 @@ const AddActivity = () => {
 
     fetchStates();
   }, []);
+  const selectedSender = watch("sender");
+  
   const handleStateChange = async (stateId) => {
     setZoneOptions([]);
     setDistrictOptions([]);
@@ -159,6 +161,9 @@ const AddActivity = () => {
       members.map(({ _id, name }) => ({ value: _id, label: name }))
     );
   };
+  const filteredReceiverOptions = memberOptions?.filter(
+    (option) => option.value !== selectedSender?.value
+  );
   return (
     <>
       <Box
@@ -394,7 +399,7 @@ const AddActivity = () => {
                   <>
                     <StyledSelectField
                       placeholder="Choose the member"
-                      options={memberOptions}
+                      options={filteredReceiverOptions}
                       {...field}
                     />
                   </>

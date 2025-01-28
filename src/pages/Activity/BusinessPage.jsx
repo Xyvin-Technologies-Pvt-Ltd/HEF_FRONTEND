@@ -69,6 +69,9 @@ const BusinessPage = () => {
     } else if (selectedTab === 2) {
       filter.type = "One v One Meeting";
     }
+    else if (selectedTab === 3) {
+      filter.type = "Referrals";
+    }
     filter.pageNo = pageNo;
     filter.limit = row;
     fetchActivity(filter);
