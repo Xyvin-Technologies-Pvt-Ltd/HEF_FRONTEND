@@ -34,12 +34,17 @@ import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
 import logo from "../assets/images/logo.png";
 import ApprovalIcon from "@mui/icons-material/Approval";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
-import { GridView, LogoutOutlined, PaymentOutlined } from "@mui/icons-material";
+import {
+  AccountTree,
+  GridView,
+  LogoutOutlined,
+  OutlinedFlag,
+} from "@mui/icons-material";
 import { useAdminStore } from "../store/adminStore";
 const drawerWidth = 250;
 const subNavigation = [
   { name: "Dashboard", to: "/dashboard", icon: <GridView /> },
-  { name: "Levels", to: "/levels", icon: <PeopleAltOutlinedIcon /> },
+  { name: "Levels", to: "/levels", icon: <AccountTree/> },
   { name: "Users", to: "/members", icon: <PeopleAltOutlinedIcon /> },
 
   { name: "Activity", to: "/activity", icon: <SchoolOutlinedIcon /> },
@@ -64,6 +69,11 @@ const subNavigation = [
     name: "Advertisements",
     to: "/promotions",
     icon: <CalendarMonthIcon />,
+  },
+  {
+    name: "Reports",
+    to: "/reports",
+    icon: <OutlinedFlag />,
   },
   {
     name: "Notifications",
