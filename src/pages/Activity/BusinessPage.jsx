@@ -76,6 +76,14 @@ const BusinessPage = () => {
     filter.limit = row;
     fetchActivity(filter);
   }, [isChange, pageNo, search, row, selectedTab]);
+  const activityColumns = [
+    { title: "Date", field: "date", padding: "none" },
+    { title: "Business giver", field: "senderName" },
+    { title: "Business receiver", field: "memberName" },
+    { title: "Request Type", field: "type" },
+    { title: "Status", field: "status" },
+    ...(selectedTab === 3 ? [{ title: "Referral", field: "referralName" }] : []),
+  ];
   return (
     <>
       {" "}
