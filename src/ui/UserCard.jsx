@@ -141,7 +141,7 @@ const UserCard = ({ user }) => {
         display={"flex"}
         alignItems={"flex-start"}
         flexDirection={"column"}
-      >
+      > 
         {user?.bio && (
           <>
             <Typography variant="h7" color={"textPrimary"} fontWeight={700}>
@@ -152,7 +152,59 @@ const UserCard = ({ user }) => {
             </Typography>
           </>
         )}
+
+       
       </Grid>
+      {user?.company?.length > 0 && (
+          <Grid item md={12} xs={12} display="flex" flexDirection="column">
+            <Typography
+              variant="h7"
+              color="textTertiary"
+              fontWeight={700}
+              marginTop="10px"
+            >
+              Company Details
+            </Typography>
+            <Grid container spacing={2} marginTop="10px" >
+              {user.company.map((company, index) => (
+                <Grid
+                  key={company._id}
+                  item
+                  md={3}
+                  xs={12}
+                  borderRadius="8px"
+                  padding="12px"
+                >
+                  <Stack spacing={2}>
+                    <Typography variant="h7" color="textTertiary">
+                      <strong>Company Name:</strong> {company.name}
+                    </Typography>
+                    <Typography variant="h7" color="textTertiary">
+                      <strong>Designation:</strong> {company.designation}
+                    </Typography>
+                    <Typography variant="h7" color="textTertiary">
+                      <strong>Email:</strong> {company.email}
+                    </Typography>
+                    <Typography variant="h7" color="textTertiary">
+                      <strong>Phone:</strong> {company.phone}
+                    </Typography>
+                    <Typography variant="h7" color="textTertiary">
+                      <strong>Website:</strong>{" "}
+                      <a
+                        href={`https://${company.websites}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ color: "#1976d2", textDecoration: "none" }}
+                      >
+                        {company.websites}
+                      </a>
+                    </Typography>
+                  </Stack>
+                </Grid>
+              ))}
+            </Grid>
+          </Grid>
+        )}
       <BlockProfile open={open} onClose={handleClose} id={id} />
       <UnBlockProfile open={unopen} onClose={handleUnClose} id={id} />
     </Grid>

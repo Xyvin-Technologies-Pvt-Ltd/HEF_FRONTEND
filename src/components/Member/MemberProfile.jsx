@@ -71,14 +71,14 @@ const MemberProfile = ({ data, loading }) => {
         </>
       ) : (
         <Grid container spacing={4} padding={2}>
-          <Grid item md={7}>
+          <Grid item md={12}>
             <UserCard user={data} />
           </Grid>
-          {data?.company && data?.company?.length > 0 && (
+          {/* {data?.company && data?.company?.length > 0 && (
              <Grid item md={5}>
              <CompanyCard companies={data?.company} />
            </Grid>
-          )}
+          )} */}
          
           {data?.social && data?.social?.length > 0 && (
             <>
