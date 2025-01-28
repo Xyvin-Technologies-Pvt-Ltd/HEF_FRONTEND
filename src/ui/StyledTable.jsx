@@ -163,6 +163,12 @@ const StyledTable = ({
         return "red";
       case "live":
         return "#03A9F4";
+      case "accepted":
+        return "#8BC34A";
+      case "meeting_scheduled":
+        return "#00BCD4";
+      case "completed":
+        return "#673AB7";
       default:
         return "#607D8B";
     }
