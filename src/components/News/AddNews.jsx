@@ -108,6 +108,7 @@ export default function AddNews({ isUpdate, setSelectedTab }) {
     try {
       setLoading(true);
       let imageUrl = data?.image || "";
+      let pdfUrl = data?.pdf || "";
 
       if (imageFile) {
         try {
@@ -123,11 +124,26 @@ export default function AddNews({ isUpdate, setSelectedTab }) {
           return;
         }
       }
+      if (pdfFile) {
+        try {
+          pdfUrl = await new Promise((resolve, reject) => {
+            uploadFileToS3(
+              pdfFile,
+              (location) => resolve(location),
+              (error) => reject(error)
+            );
+          });
+        } catch (error) {
+          console.error("Failed to upload pdf:", error);
+          return;
+        }
+      }
       const formData = {
         category: data.category.value,
         title: data.title,
         media: imageUrl ? imageUrl : "",
         content: data.content,
+        pdf: pdfUrl ? pdfUrl : "",
       };
       if (isUpdate && id) {
         await updateNews(id, formData);
