@@ -9,6 +9,7 @@ import { StyledButton } from "../../ui/StyledButton";
 import EventCard from "../../ui/EventCard";
 import { useEventStore } from "../../store/eventStore";
 import OrganinserCard from "../../components/Event/OrganinserCard";
+
 const EventSinglePage = () => {
   const [selectedTab, setSelectedTab] = useState(0);
   const [postponeOpen, setPostponeOpen] = useState(false);
