@@ -20,7 +20,7 @@ const OrganinserCard = ({ data }) => {
       {data?.coordinator?.map((speaker, index) => (
         <Grid item xs={12} key={index}>
           <Stack justifyContent={"space-between"} direction={"row"}>
-            <Stack direction={"row"}>
+            <Stack direction={"row"} alignItems={"center"}>
               {" "}
               <Typography
                 variant="h7"
