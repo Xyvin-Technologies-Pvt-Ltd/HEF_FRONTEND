@@ -26,8 +26,9 @@ function LoginPage() {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const [showOTP, setShowOTP] = useState(false);
+  const [showOTP, setShowOTP] = useState(true);
   const [loginError, setLoginError] = useState(false);
+
 
   const onSubmit = async (data) => {
     try {
