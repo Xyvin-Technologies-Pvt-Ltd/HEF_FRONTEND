@@ -94,7 +94,7 @@ const MemberPage = () => {
         }}
       >
         <Tab label="User Details" />
-        <Tab label="Accessess" />
+        <Tab label="Accesses" />
       </Tabs>
       <Box padding="15px" marginBottom={4}>
         {selectedTab === 0 && <MemberList />}
