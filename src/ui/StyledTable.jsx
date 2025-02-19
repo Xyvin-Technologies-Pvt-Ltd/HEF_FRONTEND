@@ -405,15 +405,19 @@ const StyledTable = ({
                           ? [
                               <>
                                 <MenuItem onClick={handleModify}>Edit</MenuItem>
-                                <MenuItem
-                                  onClick={() => handleRowDelete(row._id)}
-                                  style={{ color: "red" }}
-                                >
-                                  Delete
-                                </MenuItem>{" "}
-                                <MenuItem onClick={handleAction}>
-                                  Suspend
-                                </MenuItem>
+                                {row.status !== "deleted" && (
+                                  <>
+                                    <MenuItem
+                                      onClick={() => handleRowDelete(row._id)}
+                                      style={{ color: "red" }}
+                                    >
+                                      Delete
+                                    </MenuItem>
+                                    <MenuItem onClick={handleAction}>
+                                      Suspend
+                                    </MenuItem>
+                                  </>
+                                )}
                               </>,
                             ]
                           : payment
