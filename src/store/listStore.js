@@ -11,6 +11,7 @@ import { getReport } from "../api/reportapi";
 import { getAllLevel } from "../api/hierarchyapi";
 import { getAllSubscription } from "../api/subscriptionapi";
 import { getActivities } from "../api/activityapi";
+import { getParentSub, getPayment } from "../api/paymentapi";
 
 const useListStore = create((set, get) => ({
   lists: [],
@@ -105,7 +106,7 @@ const useListStore = create((set, get) => ({
   },
   fetchPayment: async (filter) => {
     set({ loading: true });
-    const allData = await getAllSubscription(filter);
+    const allData = await getPayment(filter);
     set({ lists: allData?.data || [] });
     set({ totalCount: allData?.totalCount || 0 });
     set({ loading: false });
@@ -135,6 +136,13 @@ const useListStore = create((set, get) => ({
   fetchReport: async (filter) => {
     set({ loading: true });
     const allData = await getReport(filter);
+    set({ lists: allData?.data || [] });
+    set({ totalCount: allData?.totalCount || 0 });
+    set({ loading: false });
+  },
+  fetchParentSub: async () => {
+    set({ loading: true });
+    const allData = await getParentSub();
     set({ lists: allData?.data || [] });
     set({ totalCount: allData?.totalCount || 0 });
     set({ loading: false });

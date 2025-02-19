@@ -35,7 +35,7 @@ export const groupColumns = [
   { title: "No of members", field: "memberCount" },
 ];
 export const paymentColumns = [
-  { title: "Member name", field: "userName", padding: "none" },
+  { title: "Member name", field: "user", padding: "none" },
   { title: " Expiry Date", field: "expiryDate" },
   { title: "Created on", field: "createdAt", padding: "none" },
   { title: "Status", field: "status" },
