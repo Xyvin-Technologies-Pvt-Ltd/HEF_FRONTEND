@@ -80,6 +80,7 @@ const AddActivity = () => {
         member: data?.member?.value,
         date: data?.date,
         time: data?.time,
+        amount:data?.amount,
         status: "accepted",
       };
       if (type === "online") {
