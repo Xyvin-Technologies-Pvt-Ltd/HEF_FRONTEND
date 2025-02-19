@@ -177,6 +177,8 @@ export default function LevelAdd() {
   const handleRemoveAdmin = (index) => {
     const updatedAdmins = admins.filter((_, idx) => idx !== index);
     setAdmins(updatedAdmins);
+    setViewAdmin(updatedAdmins)
+    
   };
 
   const fetchDialog = async (type, id) => {
