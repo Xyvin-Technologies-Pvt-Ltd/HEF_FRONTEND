@@ -20,6 +20,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useMemberStore } from "../../store/Memberstore";
 import { getLevels, getAllLevel } from "../../api/hierarchyapi";
 import { Delete } from "@mui/icons-material";
+import { da } from "date-fns/locale";
 
 const AddMember = () => {
   const {
@@ -213,9 +214,8 @@ const AddMember = () => {
 
       const formData = {
         name: data?.name,
-
-        email: data?.email,
-        phone: data?.phone,
+        ...(data?.email && { email: data?.email }),
+        phone: data?.phone?.startsWith("+") ? data.phone : `+${data.phone}`,
         secondaryPhone: {
           whatsapp: data?.whatsapp ? data.whatsapp : undefined,
           business: data.business ? data.business : undefined,
@@ -384,23 +384,17 @@ const AddMember = () => {
                   name="email"
                   control={control}
                   defaultValue=""
-                  rules={{ required: "Email is required" }}
                   render={({ field }) => (
                     <>
                       <StyledInput
                         placeholder="Enter the email id "
                         {...field}
                       />
-                      {errors.email && (
-                        <span style={{ color: "red" }}>
-                          {errors.email.message}
-                        </span>
-                      )}
                     </>
                   )}
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={12}>
                 <Typography
                   sx={{ marginBottom: 1 }}
                   variant="h6"
@@ -416,7 +410,8 @@ const AddMember = () => {
                   render={({ field }) => (
                     <>
                       <StyledInput
-                        placeholder="Enter the phone number"
+                      type={"mobile"}
+                        placeholder="Enter number with country code & without space in between the numbers"
                         {...field}
                       />
                       {errors.phone && (
