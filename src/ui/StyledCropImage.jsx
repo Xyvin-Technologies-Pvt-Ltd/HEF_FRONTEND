@@ -3,6 +3,7 @@ import TextField from "@mui/material/TextField";
 import { styled } from "@mui/material/styles";
 import InputAdornment from "@mui/material/InputAdornment";
 import BackupOutlinedIcon from "@mui/icons-material/BackupOutlined";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import IconButton from "@mui/material/IconButton";
 import Cropper from "react-easy-crop";
 import Modal from "@mui/material/Modal";
@@ -11,7 +12,6 @@ import { getCroppedImg } from "../utils/image";
 import { Button } from "@mui/material";
 import { PictureAsPdfOutlined } from "@mui/icons-material";
 
-// Custom TextField styling remains the same
 const CustomTextField = styled(TextField)(({ theme }) => ({
   "& .MuiOutlinedInput-root": {
     "& fieldset": {
@@ -38,12 +38,28 @@ const CustomTextField = styled(TextField)(({ theme }) => ({
 
 const SaveButton = styled(Button)(({ theme }) => ({
   marginTop: "10px",
-  backgroundColor:  "#f58220",
+  backgroundColor: "#f58220",
   color: "#fff",
   fontWeight: "400",
   padding: "8px 16px",
   borderRadius: "4px",
 }));
+
+const PreviewContainer = styled("div")({
+  position: "relative",
+  display: "inline-block",
+});
+
+const DeleteButton = styled(IconButton)({
+  position: "absolute",
+  top: "5px",
+  right: "5px",
+  backgroundColor: "rgba(255, 255, 255, 0.8)",
+  padding: "4px",
+  "&:hover": {
+    backgroundColor: "rgba(255, 255, 255, 0.9)",
+  },
+});
 
 const ImagePreview = styled("img")({
   width: "100px",
@@ -84,6 +100,19 @@ export const StyledCropImage = ({ label, value, onChange, ratio }) => {
     fileInputRef.current.click();
   };
 
+  const handleDelete = () => {
+    setSelectedImage(null);
+    setSelectedFile(null);
+    setIsPdf(false);
+    if (onChange) {
+      onChange(null);
+    }
+    // Reset the file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
   const checkIfPdf = (file) => {
     if (file instanceof File) {
       return file.type === "application/pdf";
@@ -121,10 +150,7 @@ export const StyledCropImage = ({ label, value, onChange, ratio }) => {
   const handleCropSave = async () => {
     if (imageForCrop && croppedAreaPixels) {
       try {
-        const croppedImage = await getCroppedImg(
-          imageForCrop,
-          croppedAreaPixels
-        );
+        const croppedImage = await getCroppedImg(imageForCrop, croppedAreaPixels);
         setSelectedImage(croppedImage);
         setCropModalOpen(false);
         const response = await fetch(croppedImage);
@@ -157,7 +183,6 @@ export const StyledCropImage = ({ label, value, onChange, ratio }) => {
 
       if (value instanceof File) {
         setSelectedFile(value);
-        // setSelectedImage(value.name);
       } else if (typeof value === "string") {
         setSelectedImage(value);
         if (!isPdfFile) {
@@ -170,13 +195,12 @@ export const StyledCropImage = ({ label, value, onChange, ratio }) => {
       setIsPdf(false);
     }
   }, [value]);
-  
+
   return (
     <>
       <CustomTextField
         fullWidth
         label={label}
-        // value={selectedImage || ""}
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
@@ -195,27 +219,38 @@ export const StyledCropImage = ({ label, value, onChange, ratio }) => {
         style={{ display: "none" }}
         accept="image/*,application/pdf"
       />
-      {selectedImage &&
-        (isPdf ? (
-          <PdfPreview>
-            <IconButton
-              onClick={handlePdfClick}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                color: "#f58220",
-              }}
-            >
-              <PictureAsPdfOutlined style={{ fontSize: "40px" }} />
-              <span style={{ fontSize: "12px", marginTop: "4px" }}>
-                View PDF
-              </span>
-            </IconButton>
-          </PdfPreview>
-        ) : (
-          <ImagePreview src={selectedImage} alt="Preview" />
-        ))}
+      {selectedImage && (
+        <PreviewContainer>
+          {isPdf ? (
+            <PdfPreview>
+              <IconButton
+                onClick={handlePdfClick}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  color: "#f58220",
+                }}
+              >
+                <PictureAsPdfOutlined style={{ fontSize: "40px" }} />
+                <span style={{ fontSize: "12px", marginTop: "4px" }}>
+                  View PDF
+                </span>
+              </IconButton>
+              <DeleteButton onClick={handleDelete}>
+                <DeleteOutlineIcon style={{ fontSize: "20px", color: "#f44336" }} />
+              </DeleteButton>
+            </PdfPreview>
+          ) : (
+            <>
+              <ImagePreview src={selectedImage} alt="Preview" />
+              <DeleteButton onClick={handleDelete}>
+                <DeleteOutlineIcon style={{ fontSize: "20px", color: "#f44336" }} />
+              </DeleteButton>
+            </>
+          )}
+        </PreviewContainer>
+      )}
 
       <Modal open={cropModalOpen} onClose={() => setCropModalOpen(false)}>
         <div

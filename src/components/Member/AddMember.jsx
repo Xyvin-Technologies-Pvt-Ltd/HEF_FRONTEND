@@ -20,7 +20,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useMemberStore } from "../../store/Memberstore";
 import { getLevels, getAllLevel } from "../../api/hierarchyapi";
 import { Delete } from "@mui/icons-material";
-import { da } from "date-fns/locale";
 
 const AddMember = () => {
   const {
