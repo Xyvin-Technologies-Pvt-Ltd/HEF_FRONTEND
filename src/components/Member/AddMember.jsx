@@ -215,15 +215,19 @@ const AddMember = () => {
         name: data?.name,
         ...(data?.email && { email: data?.email }),
         phone: data?.phone?.startsWith("+") ? data.phone : `+${data.phone}`,
-        secondaryPhone: {
-          whatsapp: data?.whatsapp ? data.whatsapp : undefined,
-          business: data.business ? data.business : undefined,
-        },
+        ...(data?.whatsapp || data?.business
+          ? {
+              secondaryPhone: {
+                whatsapp: data?.whatsapp,
+                business: data?.business,
+              },
+            }
+          : {}),
         status: data?.status.value,
-        bio: data?.bio,
-        address: data?.address,
-        image: imageUrl ? imageUrl : "",
-        company: data?.companies || [],
+        ...(data?.bio && { bio: data?.bio }),
+        ...(data?.address && { address: data?.address }),
+        ...(imageUrl && { image: imageUrl }),
+        ...(data?.companies?.length ? { company: data.companies } : {}),
         businessCatogary: data?.businessCatogary?.value,
         businessSubCatogary: data?.businessSubCatogary?.value,
         chapter: data?.chapter?.value,
@@ -348,7 +352,6 @@ const AddMember = () => {
                   name="image"
                   control={control}
                   defaultValue=""
-                  rules={{ required: "Photo is required" }}
                   render={({ field: { onChange, value } }) => (
                     <>
                       <StyledEventUpload
@@ -362,11 +365,6 @@ const AddMember = () => {
                       <FormHelperText style={{ color: "#888" }}>
                         File size limit: 1 MB
                       </FormHelperText>
-                      {errors.image && (
-                        <span style={{ color: "red" }}>
-                          {errors.image.message}
-                        </span>
-                      )}
                     </>
                   )}
                 />
@@ -409,7 +407,7 @@ const AddMember = () => {
                   render={({ field }) => (
                     <>
                       <StyledInput
-                      type={"mobile"}
+                        type={"mobile"}
                         placeholder="Enter number with country code & without space in between the numbers"
                         {...field}
                       />
@@ -765,6 +763,7 @@ const AddMember = () => {
                   name="chapter"
                   control={control}
                   defaultValue=""
+                  rules={{ required: "Chapter is required" }}
                   render={({ field }) => (
                     <>
                       <StyledSelectField
@@ -772,6 +771,11 @@ const AddMember = () => {
                         options={chapterOptions}
                         {...field}
                       />
+                      {errors.chapter && (
+                        <span style={{ color: "red" }}>
+                          {errors.chapter.message}
+                        </span>
+                      )}
                     </>
                   )}
                 />
