@@ -19,6 +19,7 @@ import ActivityCharts from "../../components/Dashboard/ActivityCharts";
 import TopMemberList from "../../components/Dashboard/TopMemberList";
 import { getDashboard } from "../../api/adminapi";
 import { useNavigate } from "react-router-dom";
+import { useMemberStore } from "../../store/Memberstore";
 
 const DashboardPage = () => {
   const [data, setData] = useState({});
@@ -26,7 +27,7 @@ const DashboardPage = () => {
   const [month, setMonth] = useState(new Date().getMonth() + 1);
   const [year, setYear] = useState(new Date().getFullYear());
   const [selectedDate, setSelectedDate] = useState(new Date());
-
+  const { setMemStatus, setMemInstalled } = useMemberStore();
   const totalRevenue = {
     title: "MemberShip Revenue",
     amount: `₹ ${data?.memberShipRevenue ? data?.memberShipRevenue : 0}`,
@@ -111,14 +112,11 @@ const DashboardPage = () => {
   const fetchData = async () => {
     try {
       const response = await getDashboard();
-      console.log("response", response);
-
       setData(response.data);
     } catch (error) {
       console.error("Error fetching dashboard data:", error);
     }
   };
-  console.log("data", data);
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -130,7 +128,16 @@ const DashboardPage = () => {
   useEffect(() => {
     fetchData();
   }, []);
-
+  const fetchInstalled = async () => {
+    setMemStatus(null);
+    setMemInstalled(true);
+    navigate(`/members`);
+  };
+  const fetchStatus = async (status) => {
+    setMemStatus(status);
+    setMemInstalled(null);
+    navigate(`/members`);
+  };
   return (
     <>
       <Box
@@ -252,7 +259,11 @@ const DashboardPage = () => {
                 {" "}
                 <DashboardCard data={totalCount} height={"160px"} />{" "}
               </Box>{" "}
-              <Box width={"100%"}>
+              <Box
+                width={"100%"}
+                sx={{ cursor: "pointer" }}
+                onClick={fetchInstalled}
+              >
                 {" "}
                 <DashboardCard data={installedUsers} height={"160px"} />{" "}
               </Box>
@@ -309,11 +320,19 @@ const DashboardPage = () => {
             </Stack>
             <Stack direction={"row"} spacing={2}>
               {" "}
-              <Box width={"100%"}>
+              <Box
+                width={"100%"}
+                sx={{ cursor: "pointer" }}
+                onClick={() => fetchStatus("active")}
+              >
                 {" "}
                 <DashboardCard data={inactiveUsers} height={"160px"} />{" "}
               </Box>{" "}
-              <Box width={"100%"}>
+              <Box
+                width={"100%"}
+                sx={{ cursor: "pointer" }}
+                onClick={() => fetchStatus("inactive")}
+              >
                 {" "}
                 <DashboardCard data={activeUsers} height={"160px"} />{" "}
               </Box>

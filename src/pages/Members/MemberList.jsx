@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import StyledTable from "../../ui/StyledTable";
-import { Box, Stack, Typography } from "@mui/material";
+import { Badge, Box, Stack, Typography } from "@mui/material";
 import { StyledButton } from "../../ui/StyledButton";
 import StyledSearchbar from "../../ui/StyledSearchbar";
 import { memberColumns, userData } from "../../assets/json/TableData";
@@ -8,7 +8,8 @@ import { useNavigate } from "react-router-dom";
 import DeleteProfile from "../../components/Member/DeleteProfile";
 import { useListStore } from "../../store/listStore";
 import SuspendProfile from "../../components/Member/SuspendProfile";
-
+import { ReactComponent as FilterIcon } from "../../assets/icons/FilterIcon.svg";
+import MemberFilter from "../../components/Member/MemberFilter";
 const MemberList = () => {
   const navigate = useNavigate();
   const { fetchMember } = useListStore();
@@ -16,10 +17,17 @@ const MemberList = () => {
   const [isChange, setIschange] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [suspendOpen, setSuspendOpen] = useState(false);
+  const [filterOpen, setFilterOpen] = useState(false);
   const [memberId, setMemberId] = useState(null);
   const [pageNo, setPageNo] = useState(1);
   const [selectedTab, setSelectedTab] = useState("All");
   const [row, setRow] = useState(10);
+  const [filters, setFilters] = useState({
+    name: "",
+    membershipId: "",
+    status: "",
+    installed: "",
+  });
   useEffect(() => {
     let filter = {};
     filter.pageNo = pageNo;
@@ -28,8 +36,12 @@ const MemberList = () => {
       setPageNo(1);
     }
     filter.limit = row;
+    if (filters.name) filter.name = filters.name;
+    if (filters.membershipId) filter.membershipId = filters.membershipId;
+    if (filters.status) filter.status = filters.status;
+    if (filters.installed) filter.installed = filters.installed;
     fetchMember(filter);
-  }, [isChange, pageNo, search, row]);
+  }, [isChange, pageNo, search, row, filters]);
 
   const handleRowDelete = (id) => {
     setMemberId(id);
@@ -62,11 +74,51 @@ const MemberList = () => {
           paddingBottom={"15px"}
           alignItems={"center"}
         >
-          <Stack direction={"row"} spacing={2} >
+          <Stack direction={"row"} spacing={2}>
             <StyledSearchbar
               placeholder={"Search"}
               onchange={(e) => setSearch(e.target.value)}
             />
+            <Badge
+              color="error"
+              variant="dot"
+              invisible={
+                !(
+                  filters.name ||
+                  filters.membershipId ||
+                  filters.status ||
+                  filters.installed
+                )
+              }
+              sx={{
+                "& .MuiBadge-dot": {
+                  width: "15px",
+                  height: "15px",
+                  borderRadius: "50%",
+                },
+              }}
+              overlap="circular"
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+            >
+              <Box
+                bgcolor={"#FFFFFF"}
+                borderRadius={"50%"}
+                width={"48px"}
+                height={"48px"}
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                border="1px solid rgba(0, 0, 0, 0.12)"
+                onClick={() => setFilterOpen(true)}
+                style={{ cursor: "pointer" }}
+              >
+                {" "}
+                <FilterIcon />
+              </Box>
+            </Badge>
           </Stack>
         </Stack>
         <Box
@@ -106,6 +158,11 @@ const MemberList = () => {
             id={memberId}
           />
         </Box>
+        <MemberFilter
+          open={filterOpen}
+          onClose={() => setFilterOpen(false)}
+          onApply={(filters) => setFilters(filters)}
+        />
       </Box>
     </>
   );

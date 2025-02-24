@@ -14,7 +14,10 @@ const useMemberStore = create((set) => ({
   member: [],
   loading: false,
   refreshMember: false,
-
+  memberStatus: "",
+  memberInstalled: "",
+  setMemStatus: (newStatus) => set({ memberStatus: newStatus }),
+  setMemInstalled: (newIns) => set({ memberInstalled: newIns }),
   fetchMember: async (filter) => {
     const allData = await getMember(filter);
     set({ members: allData?.data || [] });
