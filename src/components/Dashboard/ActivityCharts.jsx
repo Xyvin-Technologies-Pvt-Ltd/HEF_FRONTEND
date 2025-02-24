@@ -11,7 +11,7 @@ import {
 } from "recharts";
 import DashboardSelect from "../../ui/DashboardSelect";
 
-const ActivityCharts = () => {
+const ActivityCharts = ({data}) => {
   const [value, setValue] = useState("Monthly");
   const handleSelectChange = (event) => {
     setValue(event.target.value);
@@ -22,15 +22,7 @@ const ActivityCharts = () => {
     { value: "Monthly", label: "Monthly" },
     { value: "Yearly", label: "Yearly" },
   ];
-  const data = [
-    { name: "Zone 1", value: 450 },
-    { name: "Zone 2", value: 550 },
-    { name: "Zone 3", value: 340 },
-    { name: "Zone 4", value: 300 },
-    { name: "Zone 5", value: 430 },
-    { name: "Zone 6", value: 320 },
-    { name: "Zone 7", value: 150 },
-  ];
+
 
   return (
     <Box
@@ -43,7 +35,7 @@ const ActivityCharts = () => {
     >
       <Stack direction={"row"} justifyContent={"space-between"}>
         <Typography variant="h7">Activity Chart</Typography>
-        <DashboardSelect
+        {/* <DashboardSelect
           options={options}
           value={value}
           onChange={handleSelectChange}
@@ -52,7 +44,7 @@ const ActivityCharts = () => {
           options={options}
           value={value}
           onChange={handleSelectChange}
-        />
+        /> */}
       </Stack>
       <ResponsiveContainer>
         <BarChart

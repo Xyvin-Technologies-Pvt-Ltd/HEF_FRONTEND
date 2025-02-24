@@ -17,35 +17,35 @@ import moment from "moment";
 import { DashboardCard } from "../../components/Dashboard/DashboardCard";
 import ActivityCharts from "../../components/Dashboard/ActivityCharts";
 import TopMemberList from "../../components/Dashboard/TopMemberList";
+import { getDashboard } from "../../api/adminapi";
+import { useNavigate } from "react-router-dom";
 
 const DashboardPage = () => {
   const [data, setData] = useState({});
+  const navigate = useNavigate();
   const [month, setMonth] = useState(new Date().getMonth() + 1);
   const [year, setYear] = useState(new Date().getFullYear());
   const [selectedDate, setSelectedDate] = useState(new Date());
 
   const totalRevenue = {
     title: "MemberShip Revenue",
-    amount: `₹ ${data?.totalRevenue ? data?.totalRevenue : 0}`,
+    amount: `₹ ${data?.memberShipRevenue ? data?.memberShipRevenue : 0}`,
     icon: RevenueIcon,
-    percentage: `${
-      data?.totalRevenuePercentage ? data?.totalRevenuePercentage : 0
-    }`,
   };
 
   const activeMember = {
     title: "Business",
-    amount: data?.activeUserCount,
+    amount: data?.businessCount,
     icon: ActiveMemberIcon,
   };
   const premiumMember = {
     title: "1 on 1 meetings",
-    amount: data?.activePremiumUserCount,
+    amount: data?.oneVOneMeetingCount,
     icon: PremiumIcon,
   };
   const frozenMember = {
     title: "Referrals",
-    amount: data?.suspendedUserCount,
+    amount: data?.referralsCount,
     icon: FrozenIcon,
   };
   const events = {
@@ -58,9 +58,26 @@ const DashboardPage = () => {
     amount: data?.newsCount,
     icon: NewsIcon,
   };
+  const totalCount = {
+    title: "Member Count",
+    amount: data?.totalUsers,
+    icon: NewsIcon,
+  }; const activeUsers = {
+    title: "Active Users",
+    amount: data?.activeUsers,
+    icon: NewsIcon,
+  }; const inactiveUsers = {
+    title: "Inactive Users",
+    amount: data?.inactiveUsers,
+    icon: NewsIcon,
+  }; const installedUsers = {
+    title: "Installed Users",
+    amount: data?.installed,
+    icon: NewsIcon,
+  };
   const notifications = {
     title: "Notifications",
-    amount: 0,
+    amount: data?.notificationCount,
     icon: NotificationIcon,
   };
   const promotions = {
@@ -70,32 +87,35 @@ const DashboardPage = () => {
   };
   const states = {
     title: "State PST Users",
-    amount: data?.eventCount,
+    amount: data?.statePST,
     icon: StateIcon,
   };
   const zones = {
     title: "Zone PST Users",
-    amount: data?.newsCount,
+    amount: data?.zonePST,
     icon: ZoneIcon,
   };
   const districts = {
     title: "District PST Users",
-    amount: 0,
+    amount: data?.districtPST,
     icon: DistrictIcon,
   };
   const chapters = {
     title: "Chapter PST Users",
-    amount: data?.promotionCount,
+    amount: data?.chapterPST,
     icon: ChapterIcon,
   };
-  // const fetchData = async () => {
-  //   try {
-  //     const response = await getDashboard(year, month);
-  //     setData(response.data);
-  //   } catch (error) {
-  //     console.error("Error fetching dashboard data:", error);
-  //   }
-  // };
+  const fetchData = async () => {
+    try {
+      const response = await getDashboard();
+      console.log("response", response);
+
+      setData(response.data);
+    } catch (error) {
+      console.error("Error fetching dashboard data:", error);
+    }
+  };
+  console.log("data", data);
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -104,9 +124,9 @@ const DashboardPage = () => {
     setMonth(Number(selectedMonth));
     setYear(Number(selectedYear));
   };
-  // useEffect(() => {
-  //   fetchData();
-  // }, [month, year]);
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <>
@@ -142,7 +162,13 @@ const DashboardPage = () => {
           {" "}
           <Stack direction={"row"} spacing={2}>
             {" "}
-            <Box width={"100%"}>
+            <Box
+              width={"100%"}
+              sx={{ cursor: "pointer" }}
+              onClick={() => {
+                navigate("/activity", { state: { tab: 1 } });
+              }}
+            >
               {" "}
               <DashboardCard
                 isMobile
@@ -150,7 +176,13 @@ const DashboardPage = () => {
                 height={"185px"}
               />{" "}
             </Box>{" "}
-            <Box width={"100%"}>
+            <Box
+              width={"100%"}
+              sx={{ cursor: "pointer" }}
+              onClick={() => {
+                navigate("/activity", { state: { tab: 2 } });
+              }}
+            >
               {" "}
               <DashboardCard
                 isMobile
@@ -158,7 +190,13 @@ const DashboardPage = () => {
                 height={"185px"}
               />{" "}
             </Box>
-            <Box width={"100%"}>
+            <Box
+              width={"100%"}
+              sx={{ cursor: "pointer" }}
+              onClick={() => {
+                navigate("/activity", { state: { tab: 3 } });
+              }}
+            >
               {" "}
               <DashboardCard
                 isMobile
@@ -169,10 +207,10 @@ const DashboardPage = () => {
           </Stack>
         </Grid>{" "}
         <Grid item md={8}>
-          <ActivityCharts />
+          <ActivityCharts  data={data?.graph}/>
         </Grid>{" "}
         <Grid item md={4}>
-          <TopMemberList/>
+          <TopMemberList userData={data?.topPerformers} />
         </Grid>
         <Grid item md={6}>
           <Stack spacing={2}>
@@ -199,6 +237,17 @@ const DashboardPage = () => {
                 <DashboardCard data={chapters} height={"160px"} />{" "}
               </Box>
             </Stack>
+            <Stack direction={"row"} spacing={2}>
+              {" "}
+              <Box width={"100%"}>
+                {" "}
+                <DashboardCard data={totalCount} height={"160px"} />{" "}
+              </Box>{" "}
+              <Box width={"100%"}>
+                {" "}
+                <DashboardCard data={installedUsers} height={"160px"} />{" "}
+              </Box>
+            </Stack>
           </Stack>
         </Grid>
         <Grid item md={6}>
@@ -223,6 +272,17 @@ const DashboardPage = () => {
               <Box width={"100%"}>
                 {" "}
                 <DashboardCard data={promotions} height={"160px"} />{" "}
+              </Box>
+            </Stack>
+            <Stack direction={"row"} spacing={2}>
+              {" "}
+              <Box width={"100%"}>
+                {" "}
+                <DashboardCard data={inactiveUsers} height={"160px"} />{" "}
+              </Box>{" "}
+              <Box width={"100%"}>
+                {" "}
+                <DashboardCard data={activeUsers} height={"160px"} />{" "}
               </Box>
             </Stack>
           </Stack>

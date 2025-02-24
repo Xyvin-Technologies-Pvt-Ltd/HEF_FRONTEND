@@ -84,3 +84,11 @@ export const getAdminActivity = async (filter) => {
     console.error(error.response.data.message);
   }
 };
+export const getDashboard=async()=>{
+  try {
+    const response = await axiosInstance.get(`/admin/dashboard`);
+    return response.data;
+  } catch (error) {
+    console.error(error.response.data.message);
+  }
+}

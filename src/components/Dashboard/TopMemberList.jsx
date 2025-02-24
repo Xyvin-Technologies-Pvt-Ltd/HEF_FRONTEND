@@ -2,7 +2,7 @@ import { Avatar, Box, Select, Stack, Typography } from "@mui/material";
 import DashboardSelect from "../../ui/DashboardSelect";
 import { useState } from "react";
 
-const TopMemberList = () => {
+const TopMemberList = ({userData}) => {
   const [value, setValue] = useState("Monthly");
   const handleSelectChange = (event) => {
     setValue(event.target.value);
@@ -62,17 +62,17 @@ const TopMemberList = () => {
           Top Performer Members
         </Typography>
         <Stack>
-          <DashboardSelect
+          {/* <DashboardSelect
             options={options}
             value={value}
             onChange={handleSelectChange}
-          />
+          /> */}
         </Stack>
       </Stack>
 
-      {data?.map((member, index) => (
+      {userData?.map((member, index) => (
         <Stack
-          key={member?.id}
+          key={member?._id}
           spacing={2}
           direction={"row"}
           display={"flex"}
@@ -82,13 +82,13 @@ const TopMemberList = () => {
           <Typography color="#333333" variant="body1" fontWeight={700}>
             {index + 1}.
           </Typography>
-          <Avatar alt={member.name} src={member.avatar} />
+          <Avatar alt={member?.name} src={member?.avatar} />
           <Stack>
             <Typography color="#333333" variant="body1" fontWeight={700}>
-              {member.name}
+              {member?.name}
             </Typography>
             <Typography color="#333333" variant="body2" fontWeight={300}>
-              {member.location}
+              {member?.state}, {member?.zone}, {member?.district},{member?.chapter}
             </Typography>
           </Stack>
         </Stack>

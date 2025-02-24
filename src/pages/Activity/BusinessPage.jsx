@@ -19,7 +19,7 @@ import { useListStore } from "../../store/listStore";
 import { StyledButton } from "../../ui/StyledButton";
 
 import { ReactComponent as AddIcon } from "../../assets/icons/AddIcon.svg";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import useActivityStore from "../../store/activityStore";
 import ActivityFilter from "../../components/Activity/ActivityFilter";
@@ -40,6 +40,14 @@ const BusinessPage = () => {
     status: "",
     date: "",
   });
+  const location = useLocation();
+  const { tab } = location.state || {};
+  useEffect(() => {
+    if (tab !== undefined) {
+      setSelectedTab(tab);
+    }
+  }, [tab]);
+
   const handleApplyFilter = (newFilters) => {
     setFilters(newFilters);
   };
@@ -68,8 +76,7 @@ const BusinessPage = () => {
       filter.type = "Business";
     } else if (selectedTab === 2) {
       filter.type = "One v One Meeting";
-    }
-    else if (selectedTab === 3) {
+    } else if (selectedTab === 3) {
       filter.type = "referrals";
     }
     filter.pageNo = pageNo;
@@ -82,7 +89,9 @@ const BusinessPage = () => {
     { title: "Business receiver", field: "memberName" },
     { title: "Request Type", field: "type" },
     { title: "Status", field: "status" },
-    ...(selectedTab === 3 ? [{ title: "Referral", field: "referralName" }] : []),
+    ...(selectedTab === 3
+      ? [{ title: "Referral", field: "referralName" }]
+      : []),
   ];
   return (
     <>
