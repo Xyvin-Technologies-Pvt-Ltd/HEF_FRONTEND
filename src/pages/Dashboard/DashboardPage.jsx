@@ -62,15 +62,18 @@ const DashboardPage = () => {
     title: "Member Count",
     amount: data?.totalUsers,
     icon: NewsIcon,
-  }; const activeUsers = {
+  };
+  const activeUsers = {
     title: "Active Users",
     amount: data?.activeUsers,
     icon: NewsIcon,
-  }; const inactiveUsers = {
+  };
+  const inactiveUsers = {
     title: "Inactive Users",
     amount: data?.inactiveUsers,
     icon: NewsIcon,
-  }; const installedUsers = {
+  };
+  const installedUsers = {
     title: "Installed Users",
     amount: data?.installed,
     icon: NewsIcon,
@@ -207,7 +210,7 @@ const DashboardPage = () => {
           </Stack>
         </Grid>{" "}
         <Grid item md={8}>
-          <ActivityCharts  data={data?.graph}/>
+          <ActivityCharts data={data?.graph} />
         </Grid>{" "}
         <Grid item md={4}>
           <TopMemberList userData={data?.topPerformers} />
@@ -239,7 +242,13 @@ const DashboardPage = () => {
             </Stack>
             <Stack direction={"row"} spacing={2}>
               {" "}
-              <Box width={"100%"}>
+              <Box
+                width={"100%"}
+                sx={{ cursor: "pointer" }}
+                onClick={() => {
+                  navigate("/members");
+                }}
+              >
                 {" "}
                 <DashboardCard data={totalCount} height={"160px"} />{" "}
               </Box>{" "}
@@ -254,22 +263,46 @@ const DashboardPage = () => {
           <Stack spacing={2}>
             <Stack direction={"row"} spacing={2}>
               {" "}
-              <Box width={"100%"}>
+              <Box
+                width={"100%"}
+                sx={{ cursor: "pointer" }}
+                onClick={() => {
+                  navigate("/events/list");
+                }}
+              >
                 {" "}
                 <DashboardCard data={events} height={"160px"} />{" "}
               </Box>{" "}
-              <Box width={"100%"}>
+              <Box
+                width={"100%"}
+                sx={{ cursor: "pointer" }}
+                onClick={() => {
+                  navigate("/news");
+                }}
+              >
                 {" "}
                 <DashboardCard data={news} height={"160px"} />{" "}
               </Box>
             </Stack>
             <Stack direction={"row"} spacing={2}>
               {" "}
-              <Box width={"100%"}>
+              <Box
+                width={"100%"}
+                sx={{ cursor: "pointer" }}
+                onClick={() => {
+                  navigate("/notifications");
+                }}
+              >
                 {" "}
                 <DashboardCard data={notifications} height={"160px"} />{" "}
               </Box>{" "}
-              <Box width={"100%"}>
+              <Box
+                width={"100%"}
+                sx={{ cursor: "pointer" }}
+                onClick={() => {
+                  navigate("/promotions");
+                }}
+              >
                 {" "}
                 <DashboardCard data={promotions} height={"160px"} />{" "}
               </Box>
