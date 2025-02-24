@@ -76,7 +76,7 @@ const DashboardPage = () => {
   };
   const installedUsers = {
     title: "Installed Users",
-    amount: data?.installed,
+    amount: data?.installedUsers,
     icon: NewsIcon,
   };
   const notifications = {
