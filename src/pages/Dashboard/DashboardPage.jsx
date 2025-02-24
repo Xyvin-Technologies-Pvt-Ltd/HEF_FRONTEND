@@ -323,7 +323,7 @@ const DashboardPage = () => {
               <Box
                 width={"100%"}
                 sx={{ cursor: "pointer" }}
-                onClick={() => fetchStatus("active")}
+                onClick={() => fetchStatus("inactive")}
               >
                 {" "}
                 <DashboardCard data={inactiveUsers} height={"160px"} />{" "}
@@ -331,7 +331,7 @@ const DashboardPage = () => {
               <Box
                 width={"100%"}
                 sx={{ cursor: "pointer" }}
-                onClick={() => fetchStatus("inactive")}
+                onClick={() => fetchStatus("active")}
               >
                 {" "}
                 <DashboardCard data={activeUsers} height={"160px"} />{" "}
