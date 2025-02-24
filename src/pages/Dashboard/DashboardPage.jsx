@@ -325,6 +325,7 @@ const DashboardPage = () => {
                 sx={{ cursor: "pointer" }}
                 onClick={() => fetchStatus("inactive")}
               >
+                
                 {" "}
                 <DashboardCard data={inactiveUsers} height={"160px"} />{" "}
               </Box>{" "}
