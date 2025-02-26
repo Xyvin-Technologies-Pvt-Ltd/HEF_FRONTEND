@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box, Grid,  Stack, Typography } from "@mui/material";
 import AddMember from "../../components/Member/AddMember";
+import { StyledButton } from "../../ui/StyledButton";
+import BulkAdd from "../../components/Member/BulkAdd";
 
 const AddMemberPage = () => {
+  const [bulk, setBulk] = useState(false);
   return (
     <>
       <Stack
@@ -13,15 +16,20 @@ const AddMemberPage = () => {
         alignItems={"center"}
         justifyContent={"space-between"}
       >
-        <Stack>
+        <Stack direction={"row"}justifyContent={"space-between"} width={"100%"}>
           <Typography variant="h4" color="textSecondary">
              Member
           </Typography>
+          <StyledButton
+            name={bulk ? "Single Add " : "Bulk Upload"}
+            variant={"primary"}
+            onClick={() => setBulk(!bulk)}
+          />
         </Stack>
       </Stack>
       <Grid container padding={"15px"}>
         <Grid item xs={12} md={8}>
-          <AddMember />
+        {bulk ? <BulkAdd/>: <AddMember />}
         </Grid>
       </Grid>
     </>

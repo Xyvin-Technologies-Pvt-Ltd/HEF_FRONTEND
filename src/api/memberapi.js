@@ -73,3 +73,12 @@ export const userUnBlock = async (id) => {
     toast.error(error.response.data.message);
   }
 };
+export const addMembersBulk = async (data) => {
+  try {
+    const response = await axiosInstance.post("/admin/user-bulk", data);
+    toast.success(response.data.message);
+    return response.data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};

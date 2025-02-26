@@ -95,19 +95,14 @@ export default function DropZone({files = [], onFileUpload }) {
     multiple: false
   });
   const handleDownload = () => {
-    if (files.length > 0) {
-      const lastFile = files[files.length - 1].file;
-      const href = URL.createObjectURL(lastFile);
-      const link = document.createElement('a');
-      link.href = href;
-      link.download = lastFile.name;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(href);
-    } else {
-      alert("No file uploaded yet!");
-    }
+    const sampleFileUrl = "/Member.csv"
+
+    const link = document.createElement('a');
+    link.href = sampleFileUrl;
+    link.download = 'Member.csv';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
