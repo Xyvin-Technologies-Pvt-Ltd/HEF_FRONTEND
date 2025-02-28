@@ -13,7 +13,6 @@ const BulkAdd = () => {
   const navigate = useNavigate();
   const handleFileUpload = (file) => {
     setFiles([file]);
-    console.log("Parsed Data:", file);
   };
 
   const handleCancel = () => {
