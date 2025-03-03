@@ -141,9 +141,9 @@ export default function AddNews({ isUpdate, setSelectedTab }) {
       const formData = {
         category: data.category.value,
         title: data.title,
-        media: imageUrl ? imageUrl : "",
-        content: data.content,
-        pdf: pdfUrl ? pdfUrl : "",
+        ...(imageUrl && { media: imageUrl }),
+        ...(pdfUrl && { pdf: pdfUrl }),
+        ...(data?.content && { content: data.content }),
       };
       if (isUpdate && id) {
         await updateNews(id, formData);
@@ -230,7 +230,6 @@ export default function AddNews({ isUpdate, setSelectedTab }) {
               name="image"
               control={control}
               defaultValue=""
-              rules={{ required: "File is required" }}
               render={({ field: { onChange, value } }) => (
                 <>
                   <StyledCropImage
@@ -245,9 +244,6 @@ export default function AddNews({ isUpdate, setSelectedTab }) {
                   <FormHelperText style={{ color: "#888" }}>
                     File size limit: 1 MB
                   </FormHelperText>
-                  {errors.image && (
-                    <span style={{ color: "red" }}>{errors.image.message}</span>
-                  )}
                 </>
               )}
             />
@@ -265,7 +261,6 @@ export default function AddNews({ isUpdate, setSelectedTab }) {
               name="pdf"
               control={control}
               defaultValue=""
-              rules={{ required: "File is required" }}
               render={({ field: { onChange, value } }) => (
                 <>
                   <StyledCropImage
@@ -276,9 +271,6 @@ export default function AddNews({ isUpdate, setSelectedTab }) {
                     }}
                     value={value}
                   />
-                  {errors.pdf && (
-                    <span style={{ color: "red" }}>{errors.pdf.message}</span>
-                  )}
                 </>
               )}
             />
@@ -294,18 +286,12 @@ export default function AddNews({ isUpdate, setSelectedTab }) {
             <Controller
               name="content"
               control={control}
-              rules={{ required: "Content is required" }}
               render={({ field }) => (
                 <>
                   <StyledMultilineTextField
                     placeholder="Add Description in less than 500 words"
                     {...field}
                   />
-                  {errors.content && (
-                    <span style={{ color: "red" }}>
-                      {errors.content.message}
-                    </span>
-                  )}
                 </>
               )}
             />
@@ -386,15 +372,14 @@ export default function AddNews({ isUpdate, setSelectedTab }) {
           </Typography>
           {pdfPreview ? (
             <Box sx={{ mt: 1 }}>
-            <embed
-              src={pdfPreview}
-              type="application/pdf"
-              width="100%"
-              height="500px"
-              style={{ borderRadius: "8px", border: "1px solid #ccc" }}
-            />
-          </Box>
-          
+              <embed
+                src={pdfPreview}
+                type="application/pdf"
+                width="100%"
+                height="500px"
+                style={{ borderRadius: "8px", border: "1px solid #ccc" }}
+              />
+            </Box>
           ) : (
             <Typography>No PDF uploaded</Typography>
           )}
