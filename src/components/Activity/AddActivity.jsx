@@ -84,7 +84,7 @@ const AddActivity = () => {
           phone: data?.phone,
           email: data?.email,
           address: data?.address,
-          info: data?.info,
+          ...(data?.info && { info: data?.info }),
         };
       }
 
@@ -666,7 +666,7 @@ const AddActivity = () => {
                     defaultValue=""
                     render={({ field }) => (
                       <>
-                        <StyledInput placeholder="Enter the info" {...field} />
+                        <StyledMultilineTextField placeholder="Add any extra details (optional)" {...field} />
                       </>
                     )}
                   />
