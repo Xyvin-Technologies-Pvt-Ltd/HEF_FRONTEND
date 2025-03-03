@@ -16,7 +16,6 @@ import { StyledButton } from "../../ui/StyledButton";
 import { toast } from "react-toastify";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getLevels, getAllLevel } from "../../api/hierarchyapi";
-import { useDropDownStore } from "../../store/dropDownStore";
 import useActivityStore from "../../store/activityStore";
 import { StyledCalender } from "../../ui/StyledCalender";
 import { StyledTime } from "../../ui/StyledTime";
@@ -26,14 +25,13 @@ const AddActivity = () => {
     control,
     handleSubmit,
     reset,
-    setValue,watch,
+    setValue,
+    watch,
     formState: { errors },
   } = useForm();
   const navigate = useNavigate();
-  const { user, fetchListofUser } = useDropDownStore();
   const { addActivity } = useActivityStore();
   const [type, setType] = useState();
-  const [showReferralField, setShowReferralField] = useState(false);
   const [loadings, setLoadings] = useState(false);
   const [stateOptions, setStateOptions] = useState([]);
   const [zoneOptions, setZoneOptions] = useState([]);
@@ -48,17 +46,8 @@ const AddActivity = () => {
   const activityOptions = [
     { value: "Business", label: "Business" },
     { value: "One v One Meeting", label: "One v One Meeting" },
+    { value: "Referral", label: "Referral" },
   ];
-  useEffect(() => {
-    fetchListofUser();
-  }, []);
-  const userOptions =
-    user && Array.isArray(user)
-      ? user.map((i) => ({
-          value: i._id,
-          label: i.name,
-        }))
-      : [];
 
   const handleClear = (event) => {
     event.preventDefault();
@@ -68,6 +57,7 @@ const AddActivity = () => {
   const handleTypeChange = (selectedOption) => {
     setType(selectedOption?.value);
   };
+  const businessType = watch("type");
   const onSubmit = async (data) => {
     try {
       setLoadings(true);
@@ -80,7 +70,7 @@ const AddActivity = () => {
         member: data?.member?.value,
         date: data?.date,
         time: data?.time,
-        amount:data?.amount,
+        amount: data?.amount,
         status: "accepted",
       };
       if (type === "online") {
@@ -88,8 +78,14 @@ const AddActivity = () => {
       } else {
         formData.location = data?.location;
       }
-      if (showReferralField) {
-        formData.referral = data?.referral?.value;
+      if (businessType?.value === "Referral") {
+        formData.referral = {
+          name: data?.name,
+          phone: data?.phone,
+          email: data?.email,
+          address: data?.address,
+          info: data?.info,
+        };
       }
 
       await addActivity(formData);
@@ -128,7 +124,6 @@ const AddActivity = () => {
     fetchStates();
   }, []);
   const selectedSender = watch("sender");
-  
   const handleStateChange = async (stateId) => {
     setZoneOptions([]);
     setDistrictOptions([]);
@@ -593,44 +588,115 @@ const AddActivity = () => {
                 )}
               />
             </Grid>
-            <Grid item xs={12}>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={showReferralField}
-                    onChange={(e) => setShowReferralField(e.target.checked)}
-                    name="showReferral"
-                    color="primary"
+            {businessType?.value === "Referral" && (
+              <>
+                <Grid item xs={12}>
+                  <Typography variant="h6" color="textSecondary">
+                    Referral Details
+                  </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography
+                    sx={{ marginBottom: 1 }}
+                    variant="h6"
+                    color="textSecondary"
+                  >
+                    Name
+                  </Typography>
+                  <Controller
+                    name="name"
+                    control={control}
+                    defaultValue=""
+                    render={({ field }) => (
+                      <>
+                        <StyledInput placeholder="Enter the name" {...field} />
+                      </>
+                    )}
                   />
-                }
-                label="Referral"
-              />
-            </Grid>
-            {showReferralField && (
-              <Grid item xs={12}>
-                <Typography
-                  sx={{ marginBottom: 1 }}
-                  variant="h6"
-                  color="textSecondary"
-                >
-                  Referral
-                </Typography>
-                <Controller
-                  name="referral"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <StyledSelectField
-                      placeholder="Choose the referral"
-                      options={userOptions}
-                      {...field}
-                    />
-                  )}
-                />
-              </Grid>
+                </Grid>{" "}
+                <Grid item xs={6}>
+                  <Typography
+                    sx={{ marginBottom: 1 }}
+                    variant="h6"
+                    color="textSecondary"
+                  >
+                    Email
+                  </Typography>
+                  <Controller
+                    name="email"
+                    control={control}
+                    defaultValue=""
+                    render={({ field }) => (
+                      <>
+                        <StyledInput placeholder="Enter the email" {...field} />
+                      </>
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography
+                    sx={{ marginBottom: 1 }}
+                    variant="h6"
+                    color="textSecondary"
+                  >
+                    Phone
+                  </Typography>
+                  <Controller
+                    name="phone"
+                    control={control}
+                    defaultValue=""
+                    render={({ field }) => (
+                      <>
+                        <StyledInput placeholder="Enter the phone" {...field} />
+                      </>
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography
+                    sx={{ marginBottom: 1 }}
+                    variant="h6"
+                    color="textSecondary"
+                  >
+                    Info
+                  </Typography>
+                  <Controller
+                    name="info"
+                    control={control}
+                    defaultValue=""
+                    render={({ field }) => (
+                      <>
+                        <StyledInput placeholder="Enter the info" {...field} />
+                      </>
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography
+                    sx={{ marginBottom: 1 }}
+                    variant="h6"
+                    color="textSecondary"
+                  >
+                    Address
+                  </Typography>
+                  <Controller
+                    name="address"
+                    control={control}
+                    defaultValue=""
+                    render={({ field }) => (
+                      <>
+                        <StyledMultilineTextField
+                          placeholder="Enter the address"
+                          {...field}
+                        />
+                      </>
+                    )}
+                  />
+                </Grid>
+              </>
             )}
             <Grid item xs={6}></Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12}>
               <Stack direction={"row"} spacing={2} justifyContent={"flex-end"}>
                 <StyledButton
                   name="Cancel"
