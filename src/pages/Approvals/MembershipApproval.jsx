@@ -19,7 +19,7 @@ const MembershipApproval = () => {
   const [search, setSearch] = useState("");
   const [pageNo, setPageNo] = useState(1);
   const [row, setRow] = useState(10);
-const {deleteProduct} = useProductStore();
+  const { deleteProduct } = useProductStore();
   const handleChange = () => {
     setIsChange((prev) => !prev);
   };
