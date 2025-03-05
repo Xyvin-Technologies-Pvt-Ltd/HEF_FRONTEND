@@ -68,8 +68,8 @@ const AddActivity = () => {
         title: data?.title,
         description: data?.description,
         member: data?.member?.value,
-        date: data?.date,
-        time: data?.time,
+        ...(data?.date && { date: data?.date }),
+        ...(data?.time && { time: data?.time }),
         amount: data?.amount,
         status: "accepted",
       };
@@ -475,119 +475,123 @@ const AddActivity = () => {
                 )}
               />
             </Grid>
-            <Grid item xs={6}>
-              <Typography
-                sx={{ marginBottom: 1 }}
-                variant="h6"
-                color="textSecondary"
-              >
-                Choose Meeting Type
-              </Typography>
-              <Controller
-                name="mode"
-                control={control}
-                defaultValue=""
-                render={({ field }) => (
-                  <>
-                    <StyledSelectField
-                      placeholder="Select type"
-                      options={mode}
-                      {...field}
-                      onChange={(e) => {
-                        field.onChange(e);
-                        handleTypeChange(e);
-                      }}
+            {businessType?.value === "One v One Meeting" && (
+              <>
+                <Grid item xs={6}>
+                  <Typography
+                    sx={{ marginBottom: 1 }}
+                    variant="h6"
+                    color="textSecondary"
+                  >
+                    Choose Meeting Type
+                  </Typography>
+                  <Controller
+                    name="mode"
+                    control={control}
+                    defaultValue=""
+                    render={({ field }) => (
+                      <>
+                        <StyledSelectField
+                          placeholder="Select type"
+                          options={mode}
+                          {...field}
+                          onChange={(e) => {
+                            field.onChange(e);
+                            handleTypeChange(e);
+                          }}
+                        />
+                      </>
+                    )}
+                  />
+                </Grid>
+                {type === "offline" && (
+                  <Grid item xs={6}>
+                    <Typography
+                      sx={{ marginBottom: 1 }}
+                      variant="h6"
+                      color="textSecondary"
+                    >
+                      Location
+                    </Typography>
+                    <Controller
+                      name="location"
+                      control={control}
+                      defaultValue=""
+                      render={({ field }) => (
+                        <>
+                          <StyledInput
+                            placeholder="Enter the Location"
+                            {...field}
+                          />
+                        </>
+                      )}
                     />
-                  </>
+                  </Grid>
                 )}
-              />
-            </Grid>
-            {type === "offline" && (
-              <Grid item xs={6}>
-                <Typography
-                  sx={{ marginBottom: 1 }}
-                  variant="h6"
-                  color="textSecondary"
-                >
-                  Location
-                </Typography>
-                <Controller
-                  name="location"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <>
-                      <StyledInput
-                        placeholder="Enter the Location"
-                        {...field}
-                      />
-                    </>
-                  )}
-                />
-              </Grid>
+                {type === "online" && (
+                  <Grid item xs={6}>
+                    <Typography
+                      sx={{ marginBottom: 1 }}
+                      variant="h6"
+                      color="textSecondary"
+                    >
+                      Meeting Link
+                    </Typography>
+                    <Controller
+                      name="link"
+                      control={control}
+                      defaultValue=""
+                      render={({ field }) => (
+                        <>
+                          <StyledInput
+                            placeholder="Enter the Meeting Link"
+                            {...field}
+                          />
+                        </>
+                      )}
+                    />
+                  </Grid>
+                )}
+                <Grid item xs={6}>
+                  <Typography
+                    sx={{ marginBottom: 1 }}
+                    variant="h6"
+                    color="textSecondary"
+                  >
+                    Date
+                  </Typography>
+                  <Controller
+                    name="date"
+                    control={control}
+                    defaultValue={null}
+                    render={({ field }) => (
+                      <>
+                        <StyledCalender {...field} />
+                      </>
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography
+                    sx={{ marginBottom: 1 }}
+                    variant="h6"
+                    color="textSecondary"
+                  >
+                    Time
+                  </Typography>
+                  <Controller
+                    name="time"
+                    control={control}
+                    defaultValue={null}
+                    render={({ field }) => (
+                      <>
+                        <StyledTime {...field} />
+                      </>
+                    )}
+                  />
+                </Grid>
+              </>
             )}
-            {type === "online" && (
-              <Grid item xs={6}>
-                <Typography
-                  sx={{ marginBottom: 1 }}
-                  variant="h6"
-                  color="textSecondary"
-                >
-                  Meeting Link
-                </Typography>
-                <Controller
-                  name="link"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <>
-                      <StyledInput
-                        placeholder="Enter the Meeting Link"
-                        {...field}
-                      />
-                    </>
-                  )}
-                />
-              </Grid>
-            )}
-            <Grid item xs={6}>
-              <Typography
-                sx={{ marginBottom: 1 }}
-                variant="h6"
-                color="textSecondary"
-              >
-                Date
-              </Typography>
-              <Controller
-                name="date"
-                control={control}
-                defaultValue={null}
-                render={({ field }) => (
-                  <>
-                    <StyledCalender {...field} />
-                  </>
-                )}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <Typography
-                sx={{ marginBottom: 1 }}
-                variant="h6"
-                color="textSecondary"
-              >
-                Time
-              </Typography>
-              <Controller
-                name="time"
-                control={control}
-                defaultValue={null}
-                render={({ field }) => (
-                  <>
-                    <StyledTime {...field} />
-                  </>
-                )}
-              />
-            </Grid>
             {businessType?.value === "Referral" && (
               <>
                 <Grid item xs={12}>
@@ -666,7 +670,10 @@ const AddActivity = () => {
                     defaultValue=""
                     render={({ field }) => (
                       <>
-                        <StyledMultilineTextField placeholder="Add any extra details (optional)" {...field} />
+                        <StyledMultilineTextField
+                          placeholder="Add any extra details (optional)"
+                          {...field}
+                        />
                       </>
                     )}
                   />

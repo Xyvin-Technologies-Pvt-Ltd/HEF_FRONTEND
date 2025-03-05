@@ -114,6 +114,7 @@ export const newsColumns = [
   { title: "Category", field: "category", padding: "none" },
 
   { title: "Title", field: "title" },
+  {title:"Status",field:"status"},
 ];
 export const userData = [
   {
