@@ -36,7 +36,7 @@ export const groupColumns = [
 ];
 export const paymentColumns = [
   { title: "Member name", field: "user", padding: "none" },
-  {title:"Category",field:"category"},
+  { title: "Category", field: "category" },
   { title: " Expiry Date", field: "expiryDate" },
   { title: "Created on", field: "createdAt", padding: "none" },
   { title: "Status", field: "status" },
@@ -104,17 +104,16 @@ export const roleColumns = [
 ];
 export const eventList = [
   { title: "Event name", field: "eventName", padding: "none" },
-  { title: "Date", field: "startDate" },
-  { title: "Time", field: "startTime" },
+  { title: "Start Date", field: "startDate" },
+  { title: "End Date", field: "endDate" },
   { title: "Organiser name", field: "organiserName" },
   { title: "Status", field: "status" },
   { title: "Type", field: "type" },
 ];
 export const newsColumns = [
   { title: "Category", field: "category", padding: "none" },
-
   { title: "Title", field: "title" },
-  {title:"Status",field:"status"},
+  { title: "Status", field: "status" },
 ];
 export const userData = [
   {
