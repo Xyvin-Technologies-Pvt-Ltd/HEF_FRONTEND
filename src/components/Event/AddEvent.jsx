@@ -22,6 +22,7 @@ import { toast } from "react-toastify";
 import { StyledMultilineTextField } from "../../ui/StyledMultilineTextField.jsx";
 import StyledCropImage from "../../ui/StyledCropImage.jsx";
 import { useDropDownStore } from "../../store/dropDownStore.js";
+import moment from "moment";
 
 export default function AddEvent({ isUpdate }) {
   const {
@@ -191,7 +192,18 @@ export default function AddEvent({ isUpdate }) {
           };
         })
       );
+      const currentDate = moment().startOf("day");
+      const startDate = moment(data?.startDate).startOf("day");
+      const endDate = moment(data?.endDate).startOf("day");
 
+      let status;
+      if (currentDate.isAfter(endDate)) {
+        status = "upcoming";
+      } else if (currentDate.isSameOrAfter(startDate)) {
+        status = "live";
+      } else {
+        status = "upcoming";
+      }
       const formData = {
         type: data?.type?.value,
         eventName: data?.eventName,
@@ -203,6 +215,7 @@ export default function AddEvent({ isUpdate }) {
         speakers: speakersData,
         description: data?.description,
         organiserName: data?.organiserName,
+        status:status,
         coordinator: data?.coordinator?.map((coordinator) => coordinator.value),
       };
 
