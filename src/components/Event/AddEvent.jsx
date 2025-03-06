@@ -683,6 +683,7 @@ export default function AddEvent({ isUpdate }) {
                   color="textSecondary"
                 >
                   Organiser Name
+                  
                 </Typography>
                 <Controller
                   name="organiserName"
