@@ -13,7 +13,7 @@ const VideoCard = ({ url }) => {
 
   const opts = {
     height: '202',
-    width: '388',
+    width: '320',
     playerVars: {
       autoplay: 1,
     },

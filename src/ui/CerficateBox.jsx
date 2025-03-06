@@ -6,7 +6,7 @@ const CertificateBox = ({ certificate }) => {
     <Box
       borderRadius={"8px"}
       bgcolor={"white"}
-      width={"390px"}
+      width={"320px"}
       border={"1px solid rgba(0, 0, 0, 0.12)"}
     >
       <Box
@@ -15,8 +15,8 @@ const CertificateBox = ({ certificate }) => {
         sx={{
           borderTopLeftRadius: "12px",
           borderTopRightRadius: "12px",
-          width: "390px",
-          height: "260px",objectFit:"cover"
+          width: "320px",
+          height: "240px",objectFit:"cover"
         }}
         alt={certificate?.name}
       />
