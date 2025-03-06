@@ -15,7 +15,6 @@ import StyledSelectField from "../../ui/StyledSelectField.jsx";
 import StyledInput from "../../ui/StyledInput.jsx";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { getMember } from "../../api/memberapi.js";
 import useHierarchyStore from "../../store/hierarchyStore.js";
 import { getAllLevel, getLevels } from "../../api/hierarchyapi.js";
 
@@ -453,7 +452,7 @@ export default function LevelAdd() {
             maxWidth={"md"}
             style={{ borderRadius: "12px", padding: "20px" }}
           >
-            <DialogContent style={{ padding: "20px" }}>
+            <DialogContent style={{ padding: "20px" ,paddingBottom:"40px"}}>
               <Grid container spacing={2}>
                 <Grid item xs={6}>
                   <Typography

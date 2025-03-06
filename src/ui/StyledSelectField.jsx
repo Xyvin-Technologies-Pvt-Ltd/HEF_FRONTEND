@@ -50,6 +50,11 @@ const StyledSelectField = ({
       color: "#B5B8C5",
       zIndex: 1000,
     }),
+    menuList: (provided) => ({
+      ...provided,
+      maxHeight: "150px", // Set the max height of the dropdown
+      overflowY: "auto", // Enable vertical scrolling
+    }),
     singleValue: (provided) => ({
       ...provided,
       color: isDisabled ? "#a0a0a0" : "#000000",
@@ -59,6 +64,7 @@ const StyledSelectField = ({
       color: "#79747E",
     }),
   };
+  
 
   return (
     <SelectContainer>
