@@ -257,11 +257,13 @@ const AddRole = () => {
                 name="Cancel"
                 variant="secondary"
                 onClick={(e) => handleClear(e)}
+                disabled={loading}
               />
               <StyledButton
                 name={loading ? "Saving..." : "Save"}
                 variant="primary"
                 type="submit"
+                disabled={loading}
               />
             </Stack>
           </Grid>

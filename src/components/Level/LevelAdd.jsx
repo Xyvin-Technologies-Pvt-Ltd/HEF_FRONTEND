@@ -442,6 +442,7 @@ export default function LevelAdd() {
                 name={submitting ? "Submitting" : "Submit"}
                 variant="primary"
                 type="submit"
+                disabled={submitting}
               />
             </Stack>
           </Grid>

@@ -709,6 +709,7 @@ const AddActivity = () => {
                   name="Cancel"
                   variant="secondary"
                   onClick={(event) => handleClear(event)}
+                  disabled={loadings}
                 />
                 <StyledButton
                   name={loadings ? "Saving..." : "Save"}

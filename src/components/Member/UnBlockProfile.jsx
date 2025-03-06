@@ -2,17 +2,21 @@ import { Typography, Dialog, DialogContent, Stack } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { StyledButton } from "../../ui/StyledButton";
 import { useMemberStore } from "../../store/Memberstore";
+import { useState } from "react";
 
 const UnBlockProfile = ({ open, onClose, id }) => {
   const { handleSubmit } = useForm();
   const { unBlockUser, setRefreshMember } = useMemberStore();
+  const [loading, setLoading] = useState(false);
   const onSubmit = async () => {
+    setLoading(true);
     try {
       await unBlockUser(id);
       setRefreshMember();
     } catch (error) {
       console.error("Error :", error);
     } finally {
+      setLoading(false);
       onClose();
     }
   };
@@ -67,8 +71,14 @@ const UnBlockProfile = ({ open, onClose, id }) => {
             variant="secondary"
             name="Cancel"
             onClick={(event) => handleClear(event)}
+            disabled={loading}
           />
-          <StyledButton variant="primary" name="Confirm" type="submit" />
+          <StyledButton
+            variant="primary"
+            name={loading ? "Unblocking..." : "Unblock "}
+            type="submit"
+            disabled={loading}
+          />
         </Stack>
       </form>
     </Dialog>

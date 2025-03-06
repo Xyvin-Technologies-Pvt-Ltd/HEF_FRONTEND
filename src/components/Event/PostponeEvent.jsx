@@ -11,7 +11,7 @@ import { StyledButton } from "../../ui/StyledButton";
 import { ReactComponent as CloseIcon } from "../../assets/icons/CloseIcon.svg";
 import { StyledCalender } from "../../ui/StyledCalender";
 import { StyledTime } from "../../ui/StyledTime";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useEventStore } from "../../store/eventStore";
 
 const PostponeEvent = ({ open, onClose, onChange, data }) => {
@@ -22,6 +22,7 @@ const PostponeEvent = ({ open, onClose, onChange, data }) => {
     setValue,
   } = useForm();
   const { updateEvent } = useEventStore();
+  const[loading, setLoading] = useState(false);
   useEffect(() => {
     if (data) {
       setValue("startDate", data.startDate);
@@ -31,6 +32,7 @@ const PostponeEvent = ({ open, onClose, onChange, data }) => {
     }
   }, [data, setValue]);
   const onSubmit = async (updateData) => {
+    setLoading(true);
     try {
       const formData = {
         ...updateData,
@@ -40,6 +42,7 @@ const PostponeEvent = ({ open, onClose, onChange, data }) => {
     } catch (error) {
       console.error("Error updating event:", error);
     } finally {
+      setLoading(false);
       onClose();
     }
   };
@@ -187,8 +190,9 @@ const PostponeEvent = ({ open, onClose, onChange, data }) => {
               variant="secondary"
               name="Cancel"
               onClick={(event) => handleClear(event)}
+              disabled={loading}
             />
-            <StyledButton variant="primary" name="Apply" type="submit" />
+            <StyledButton variant="primary" name={loading ? "Postponing" : "Postpone"} type="submit" disabled={loading} />
           </Stack>
         </form>
       </Dialog>{" "}

@@ -418,6 +418,7 @@ export default function Promotionform({ isUpdate }) {
                 name={submitting ? "Publishing" : "Publish"}
                 variant="primary"
                 type="submit"
+                disabled={submitting}
               >
                 Publish
               </StyledButton>

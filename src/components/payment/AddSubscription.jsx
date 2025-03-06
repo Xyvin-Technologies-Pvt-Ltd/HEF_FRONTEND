@@ -18,6 +18,7 @@ import { usePaymentStore } from "../../store/paymentStore";
 
 const AddSubscription = ({ open, onClose, payment, category, isUpdate }) => {
   const { handleSubmit, control, reset } = useForm();
+  const [loading, setLoading] = useState(false);
   const {
     addPayments,
     setRefreshMember,
@@ -30,6 +31,7 @@ const AddSubscription = ({ open, onClose, payment, category, isUpdate }) => {
     fetchParentSub();
   }, []);
   const onSubmit = async (data) => {
+    setLoading(true);
     try {
       const formData = {
         user: id,
@@ -48,6 +50,8 @@ const AddSubscription = ({ open, onClose, payment, category, isUpdate }) => {
       onClose();
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -129,8 +133,14 @@ const AddSubscription = ({ open, onClose, payment, category, isUpdate }) => {
             variant="secondary"
             name="Cancel"
             onClick={(event) => handleClear(event)}
+            disabled={loading}
           />
-          <StyledButton variant="primary" name="Confirm" type="submit" />
+          <StyledButton
+            variant="primary"
+            name={loading ? "Saving..." : "Save"}
+            type="submit"
+            disabled={loading}
+          />
         </Stack>
       </form>
     </Dialog>

@@ -2,17 +2,21 @@ import { Typography, Dialog, DialogContent, Stack } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { StyledButton } from "../../ui/StyledButton";
 import { useFeedStore } from "../../store/feedStore";
+import { useState } from "react";
 
 const FeedApproval = ({ open, onClose, setIsChange, id }) => {
   const { handleSubmit } = useForm();
   const { updateFeed } = useFeedStore();
+  const [loading, setLoading] = useState(false);
   const onSubmit = async () => {
+    setLoading(true);
     try {
       await updateFeed("accept", id);
       setIsChange((prev) => !prev);
     } catch (error) {
       console.error("Error approving feed:", error);
     } finally {
+      setLoading(false);
       onClose();
     }
   };
@@ -67,8 +71,14 @@ const FeedApproval = ({ open, onClose, setIsChange, id }) => {
             variant="secondary"
             name="Cancel"
             onClick={(event) => handleClear(event)}
+            disabled={loading}
           />
-          <StyledButton variant="primary" name="Confirm" type="submit" />
+          <StyledButton
+            variant="primary"
+            name={loading ? "Approving..." : "Approve"}
+            disabled={loading}
+            type="submit"
+          />
         </Stack>
       </form>
     </Dialog>

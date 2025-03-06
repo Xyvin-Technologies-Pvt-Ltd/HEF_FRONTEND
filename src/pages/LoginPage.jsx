@@ -28,9 +28,10 @@ function LoginPage() {
   } = useForm();
   const [showOTP, setShowOTP] = useState(true);
   const [loginError, setLoginError] = useState(false);
-
+  const [loading, setLoading] = useState(false);
 
   const onSubmit = async (data) => {
+    setLoading(true);
     try {
       const formData = {
         email: data.phone,
@@ -42,6 +43,8 @@ function LoginPage() {
     } catch (error) {
       setLoginError(true);
       console.error("Login error", error);
+    } finally {
+      setLoading(false);
     }
   };
   useEffect(() => {
@@ -177,7 +180,12 @@ function LoginPage() {
               )}
 
               {/* Submit Button */}
-              <StyledButton name="Sign in" variant="primary" type="submit">
+              <StyledButton
+                name={loading ? "Signing In..." : "Sign In"}
+                variant="primary"
+                type="submit"
+                disabled={loading}
+              >
                 Sign In
               </StyledButton>
             </Stack>

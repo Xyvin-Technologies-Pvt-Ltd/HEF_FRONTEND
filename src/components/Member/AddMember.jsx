@@ -820,11 +820,13 @@ const AddMember = () => {
                     name="Cancel"
                     variant="secondary"
                     onClick={(event) => handleClear(event)}
+                    disabled={loadings}
                   />
                   <StyledButton
                     name={loadings ? "Saving..." : "Save"}
                     variant="primary"
                     type="submit"
+                    disabled={loadings}
                   />
                 </Stack>
               </Grid>

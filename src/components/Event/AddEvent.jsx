@@ -48,6 +48,7 @@ export default function AddEvent({ isUpdate }) {
   const [loadings, setLoadings] = useState(false);
   const { user, fetchListofUser } = useDropDownStore();
   const [type, setType] = useState();
+
   const navigate = useNavigate();
   const handleTypeChange = (selectedOption) => {
     setType(selectedOption?.value);
@@ -90,6 +91,7 @@ export default function AddEvent({ isUpdate }) {
       setValue("endTime", event.endTime);
       setValue("description", event.description);
       setValue("organiserName", event.organiserName);
+      setValue("limit", event.limit);
       const selectedplatform = option.find(
         (item) => item.value === event.platform
       );
@@ -215,7 +217,8 @@ export default function AddEvent({ isUpdate }) {
         speakers: speakersData,
         description: data?.description,
         organiserName: data?.organiserName,
-        status:status,
+        limit: data?.limit,
+        status: status,
         coordinator: data?.coordinator?.map((coordinator) => coordinator.value),
       };
 
@@ -347,7 +350,7 @@ export default function AddEvent({ isUpdate }) {
               cursor: "pointer",
               padding: "8px",
               mt: 2,
-              pb:2
+              pb: 2,
             }}
           >
             <Delete />
@@ -701,7 +704,34 @@ export default function AddEvent({ isUpdate }) {
                   )}
                 />
               </Grid>
-
+              <Grid item xs={12}>
+                <Typography
+                  sx={{ marginBottom: 1 }}
+                  variant="h6"
+                  color="textSecondary"
+                >
+                 Members Limit
+                </Typography>
+                <Controller
+                  name="limit"
+                  control={control}
+                  defaultValue=""
+                  rules={{ required: "Limit is required" }}
+                  render={({ field }) => (
+                    <>
+                      <StyledInput
+                        placeholder="Enter members limit"
+                        {...field}
+                      />
+                      {errors.limit && (
+                        <span style={{ color: "red" }}>
+                          {errors.limit.message}
+                        </span>
+                      )}
+                    </>
+                  )}
+                />
+              </Grid>
               <Grid item xs={12}>
                 <Typography
                   sx={{ marginBottom: 1 }}
@@ -740,12 +770,13 @@ export default function AddEvent({ isUpdate }) {
                     onClick={handleClear}
                     variant={"secondary"}
                     name={"Clear"}
+                    disabled={loadings}
                   />
 
                   <StyledButton
                     name={loadings ? "Saving..." : "Save"}
                     type="submit"
-                    loading={loadings}
+                    disabled={loadings}
                     variant={"primary"}
                   />
                 </Stack>

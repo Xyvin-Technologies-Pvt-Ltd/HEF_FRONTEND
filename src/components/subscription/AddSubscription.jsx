@@ -27,6 +27,7 @@ const AddSubscription = ({
   const { handleSubmit, control, setValue, watch, reset } = useForm();
   const [expiryDate, setExpiryDate] = useState(null);
   const { addSubscription, updateSubscription } = useSubscriptionStore();
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     if (currentExpiryDate) {
       const parsedDate = currentExpiryDate
@@ -40,6 +41,7 @@ const AddSubscription = ({
   }, [currentExpiryDate, setValue]);
 
   const onSubmit = async (formData) => {
+    setLoading(true);
     try {
       const newData = {
         expiryDate: formData.expiryDate,
@@ -56,6 +58,8 @@ const AddSubscription = ({
       onClose();
     } catch (error) {
       toast.error(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -195,8 +199,9 @@ const AddSubscription = ({
             variant="secondary"
             name="Cancel"
             onClick={(event) => handleClear(event)}
+            disabled={loading}
           />
-          <StyledButton variant="primary" name="Confirm" type="submit" />
+          <StyledButton variant="primary" name={loading ? "Saving..." : "Save"} type="submit"disabled={loading} />
         </Stack>
       </form>
     </Dialog>

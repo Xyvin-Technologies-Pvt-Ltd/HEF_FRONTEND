@@ -311,6 +311,7 @@ export default function AddNews({ isUpdate, setSelectedTab }) {
                 name={loading ? "Publishing" : "Publish"}
                 variant="primary"
                 type="submit"
+                disabled={loading}
               />
             </Stack>
           </Grid>

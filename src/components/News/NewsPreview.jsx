@@ -11,26 +11,35 @@ import { useForm } from "react-hook-form";
 import { ReactComponent as CloseIcon } from "../../assets/icons/CloseIcon.svg";
 import { StyledButton } from "../../ui/StyledButton";
 import { useNewsStore } from "../../store/newsStore";
+import { useState } from "react";
 
 const NewsPreview = ({ open, onClose, onChange, data, onEdit }) => {
   const { handleSubmit } = useForm();
   const { updateNews } = useNewsStore();
+  const [loading, setLoading] = useState(false);
 
   const onSubmit = async () => {
-    const formData = {
-      category: data.category,
-      title: data.title,
-      media: data.media,
-      content: data.content,
-    };
-    if (data.status === "published") {
-      formData.status = "unpublished";
-    } else {
-      formData.status = "published";
+    setLoading(true);
+    try {
+      const formData = {
+        category: data.category,
+        title: data.title,
+        media: data.media,
+        content: data.content,
+      };
+      if (data.status === "published") {
+        formData.status = "unpublished";
+      } else {
+        formData.status = "published";
+      }
+      await updateNews(data?._id, formData);
+      onChange();
+    } catch (error) {
+      console.error("Error updating news:", error);
+    } finally {
+      setLoading(false);
+      onClose();
     }
-    await updateNews(data?._id, formData);
-    onChange();
-    onClose();
   };
 
   const handleClear = (event) => {
@@ -88,11 +97,13 @@ const NewsPreview = ({ open, onClose, onChange, data, onEdit }) => {
             variant="secondary"
             name="Edit"
             onClick={(event) => handleEdit(event)}
+            disabled={loading}
           />
           <StyledButton
             variant="primary"
             name={data?.status === "published" ? "Unpublish" : "Publish"}
             type="submit"
+            disabled={loading}
           />
         </Stack>
       </form>

@@ -41,14 +41,14 @@ export default function InAppNotification({}) {
             })),
           ]
       : [];
-const handleClear = (event) => {
-  event.preventDefault();
-  reset();
-  setSelectedOptions([]);
-  setImageFile(null);
-  setSelectedOptions([]);
-  navigate(-1)
-}
+  const handleClear = (event) => {
+    event.preventDefault();
+    reset();
+    setSelectedOptions([]);
+    setImageFile(null);
+    setSelectedOptions([]);
+    navigate(-1);
+  };
   const onSubmit = async (data) => {
     try {
       setLoading(true);
@@ -83,7 +83,6 @@ const handleClear = (event) => {
       reset();
       setImageFile(null);
       setSelectedOptions([]);
-
     } catch (error) {
       toast.error(error.message);
     } finally {
@@ -208,9 +207,10 @@ const handleClear = (event) => {
                       onChange(file);
                     }}
                     value={value}
-                  /><FormHelperText style={{ color: "#888" }}>
-                  File size limit: 1 MB
-                </FormHelperText>
+                  />
+                  <FormHelperText style={{ color: "#888" }}>
+                    File size limit: 1 MB
+                  </FormHelperText>
                   {errors.media_url && (
                     <span style={{ color: "red" }}>
                       {errors.media_url.message}
@@ -225,11 +225,17 @@ const handleClear = (event) => {
           <Grid item xs={6} display={"flex"} justifyContent={"end"}>
             {" "}
             <Stack direction={"row"} spacing={2}>
-              <StyledButton name="Cancel" variant="secondary" onClick={(e) =>handleClear (e)} />
+              <StyledButton
+                name="Cancel"
+                variant="secondary"
+                onClick={(e) => handleClear(e)}
+                disabled={loading}
+              />
               <StyledButton
                 name={loading ? "Saving..." : "Save"}
                 variant="primary"
                 type="submit"
+                disabled={loading}
               />
             </Stack>
           </Grid>

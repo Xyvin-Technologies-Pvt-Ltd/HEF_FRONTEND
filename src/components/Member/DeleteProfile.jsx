@@ -3,11 +3,14 @@ import { useForm } from "react-hook-form";
 import { StyledButton } from "../../ui/StyledButton";
 import { useMemberStore } from "../../store/Memberstore";
 import { toast } from "react-toastify";
+import { useState } from "react";
 
 const DeleteProfile = ({ open, onClose, onChange, id }) => {
   const { handleSubmit } = useForm();
   const { deleteMembers } = useMemberStore();
+  const [loading, setLoading] = useState(false);
   const onSubmit = async () => {
+    setLoading(true);
     try {
       await deleteMembers(id);
       toast.success("Profile deleted successfully");
@@ -15,6 +18,7 @@ const DeleteProfile = ({ open, onClose, onChange, id }) => {
     } catch (error) {
       toast.error(error.message);
     } finally {
+      setLoading(false);
       onClose();
     }
   };
@@ -69,8 +73,14 @@ const DeleteProfile = ({ open, onClose, onChange, id }) => {
             variant="secondary"
             name="Cancel"
             onClick={(event) => handleClear(event)}
+            disabled={loading}
           />
-          <StyledButton variant="primary" name="Confirm" type="submit" />
+          <StyledButton
+            variant="primary"
+            name={loading ? "Deleting..." : "Delete"}
+            disabled={loading}
+            type="submit"
+          />
         </Stack>
       </form>
     </Dialog>

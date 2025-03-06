@@ -12,6 +12,7 @@ import { ReactComponent as CloseIcon } from "../../assets/icons/CloseIcon.svg";
 import { StyledButton } from "../../ui/StyledButton";
 import { StyledMultilineTextField } from "../../ui/StyledMultilineTextField";
 import { useFeedStore } from "../../store/feedStore";
+import { useState } from "react";
 
 const FeedReject = ({ open, onClose, id, setIsChange }) => {
   const {
@@ -21,7 +22,10 @@ const FeedReject = ({ open, onClose, id, setIsChange }) => {
     getValues,
   } = useForm();
   const { updateFeed } = useFeedStore();
+  const [loading, setLoading] = useState(false);
+
   const onSubmit = async (formData) => {
+    setLoading(true);
     try {
       const updateData = {
         reason: formData?.reason,
@@ -31,6 +35,7 @@ const FeedReject = ({ open, onClose, id, setIsChange }) => {
     } catch (error) {
       console.error("Error rejecting feed:", error);
     } finally {
+      setLoading(false);
       onClose();
     }
   };
@@ -104,8 +109,14 @@ const FeedReject = ({ open, onClose, id, setIsChange }) => {
               variant="secondary"
               name="Cancel"
               onClick={(event) => handleClear(event)}
+              disabled={loading}
             />
-            <StyledButton variant="primary" name="Send" type="submit" />
+            <StyledButton
+              variant="primary"
+              name={loading ? "Submitting..." : "Submit"}
+              type="submit"
+              disabled={loading}
+            />
           </Stack>
         </form>
       </Dialog>

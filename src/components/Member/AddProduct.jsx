@@ -341,6 +341,7 @@ const AddProduct = () => {
                 variant="secondary"
                 onClick={(event) => handleClear(event)}
                 style={{ width: "auto" }}
+                disabled={loading}
               >
                 Cancel
               </StyledButton>
@@ -348,6 +349,7 @@ const AddProduct = () => {
                 name={loading ? "Saving..." : "Save"}
                 variant="primary"
                 type="submit"
+                disabled={loading}
               >
                 Save
               </StyledButton>

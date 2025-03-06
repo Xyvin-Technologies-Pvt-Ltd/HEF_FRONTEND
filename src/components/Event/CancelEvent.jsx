@@ -2,17 +2,21 @@ import { Typography, Dialog, DialogContent, Stack } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { StyledButton } from "../../ui/StyledButton";
 import { useEventStore } from "../../store/eventStore";
+import { useState } from "react";
 
 const CancelEvent = ({ open, onClose, onChange, data }) => {
   const { handleSubmit } = useForm();
   const { updateEvent } = useEventStore();
+  const [loading, setLoading] = useState(false);
   const onSubmit = async () => {
+    setLoading(true);
     try {
       await updateEvent(data?._id, { status: "cancelled" });
       onChange();
     } catch (error) {
       console.error("Error updating event:", error);
     } finally {
+      setLoading(false);
       onClose();
     }
   };
@@ -67,8 +71,14 @@ const CancelEvent = ({ open, onClose, onChange, data }) => {
             variant="secondary"
             name="Cancel"
             onClick={(event) => handleClear(event)}
+            disabled={loading}
           />
-          <StyledButton variant="primary" name="Confirm" type="submit" />
+          <StyledButton
+            variant="primary"
+            name={loading ? "Canceling..." : "Cancel"}
+            type="submit"
+            disabled={loading}
+          />
         </Stack>
       </form>
     </Dialog>
