@@ -144,7 +144,11 @@ const MemberProfile = ({ data, loading }) => {
                       ml={1}
                     >
                       <a
-                        href={website?.link}
+                        href={
+                          website?.link?.startsWith("http")
+                            ? website.link
+                            : `https://${website.link}`
+                        }
                         target="_blank"
                         rel="noopener noreferrer"
                       >
