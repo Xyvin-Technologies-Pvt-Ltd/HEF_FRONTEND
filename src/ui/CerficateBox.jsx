@@ -13,8 +13,8 @@ const CertificateBox = ({ certificate }) => {
         component="img"
         src={certificate?.link}
         sx={{
-          borderTopLeftRadius: "12px",
-          borderTopRightRadius: "12px",
+          borderTopLeftRadius: "8px",
+          borderTopRightRadius: "8px",
           width: "320px",
           height: "240px",objectFit:"cover"
         }}

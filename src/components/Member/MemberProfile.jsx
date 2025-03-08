@@ -1,28 +1,24 @@
 import { Box, Grid, Skeleton, Typography } from "@mui/material";
 import React, { useState } from "react";
 import UserCard from "../../ui/UserCard";
-import CompanyCard from "../../ui/CompanyCard";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 import { ReactComponent as WebsiteIcon } from "../../assets/icons/AppWebsiteIcon.svg";
-import { ReactComponent as InstagramIcon } from "../../assets/icons/AppInstagramIcon.svg";
-import { ReactComponent as TwitterIcon } from "../../assets/icons/AppTwitterIcon.svg";
-import { ReactComponent as LinkedInIcon } from "../../assets/icons/AppLinkedInIcon.svg";
-import { ReactComponent as FacebookIcon } from "../../assets/icons/AppFacebookIcon.svg";
 import CertificateBox from "../../ui/CerficateBox";
 import AwardBox from "../../ui/AwardBox";
 import VideoCard from "../../ui/VideoCard";
+import { Facebook, Instagram, Language, LinkedIn, Twitter } from "@mui/icons-material";
 
 const MemberProfile = ({ data, loading }) => {
   const renderSocialIcon = (platform) => {
     switch (platform) {
-      case "instagram":
-        return <InstagramIcon />;
-      case "twitter":
-        return <TwitterIcon />;
-      case "linkedin":
-        return <LinkedInIcon />;
-      case "facebook":
-        return <FacebookIcon />;
+      case "Instagram":
+        return <Instagram sx={{ color: "#f58220" }}/>;
+      case "Twitter":
+        return <Twitter sx={{ color: "#f58220" }} />;
+      case "Linkedin":
+        return <LinkedIn sx={{ color: "#f58220" }}/>;
+      case "Facebook":
+        return <Facebook sx={{ color: "#f58220" }}/>;
       default:
         return null;
     }
@@ -136,7 +132,7 @@ const MemberProfile = ({ data, loading }) => {
                     borderRadius={"12px"}
                     p={2}
                   >
-                    <WebsiteIcon />
+                    <Language sx={{ color: "#f58220" }} />
                     <Typography
                       variant="h5"
                       color="#6D6D6D"

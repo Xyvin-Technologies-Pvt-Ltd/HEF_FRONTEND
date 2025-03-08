@@ -13,8 +13,8 @@ const AwardBox = ({ award, ismobile }) => {
         component="img"
         src={award?.image}
         sx={{
-          borderTopLeftRadius: "12px",
-          borderTopRightRadius: "12px",
+          borderTopLeftRadius: "8px",
+          borderTopRightRadius: "8px",
           width: ismobile ? "198px" : "302px",
           height: ismobile ? "131px" : "168px",
           objectFit: "cover",
