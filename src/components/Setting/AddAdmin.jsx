@@ -33,6 +33,7 @@ const AddAdmin = () => {
         role: data?.role.value,
         phone: data?.phone,
         password: "admin@akcaf",
+        ...(data?.status && { status: data?.status?.value }),
       };
       if (isUpdate) {
         await updateAdmin(adminId, formData);
@@ -72,6 +73,8 @@ const AddAdmin = () => {
       setValue("role", selectedRole);
       setValue("email", single.email);
       setValue("phone", single.phone);
+      const selectedStatus = single.status ? { value: true, label: "Active" } : { value: false, label: "Inactive" };
+      setValue("status", selectedStatus);
     }
   }, [single, isUpdate, setValue]);
 
@@ -181,6 +184,32 @@ const AddAdmin = () => {
                   {errors.phone && (
                     <span style={{ color: "red" }}>{errors.phone.message}</span>
                   )}
+                </>
+              )}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <Typography
+              sx={{ marginBottom: 1 }}
+              variant="h6"
+              color="textSecondary"
+            >
+              Status
+            </Typography>
+            <Controller
+              name="status"
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <>
+                  <StyledSelectField
+                    options={[
+                      { value: true, label: "Active" },
+                      { value: false, label: "Inactive" },
+                    ]}
+                    placeholder="Choose the Status"
+                    {...field}
+                  />
                 </>
               )}
             />

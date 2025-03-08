@@ -36,14 +36,18 @@ const StyledTableCell = styled(TableCell)`
     text-transform: capitalize;
     font-weight: 600;
   }
-  &.${tableCellClasses.body} {
+&.${tableCellClasses.body} {
     font-size: 14px;
     background-color: #fff;
     padding: 14px;
     font-weight: 400;
-    text-transform: capitalize;
     color: rgba(0, 0, 0, 0.87);
     text-align: center;
+
+    ${({ $isEmail }) =>
+      $isEmail
+        ? "text-transform: none;"
+        : "text-transform: capitalize;"}
   }
 `;
 
@@ -276,6 +280,7 @@ const StyledTable = ({
                       padding={column.padding || "normal"}
                       sx={{ cursor: "pointer" }}
                       onClick={() => handleRowClick(row._id)}
+                      $isEmail={column.field === "email"}
                     >
                       {[
                         "renewal",
