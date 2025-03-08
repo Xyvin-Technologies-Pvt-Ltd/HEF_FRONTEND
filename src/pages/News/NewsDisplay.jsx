@@ -16,7 +16,7 @@ export default function NewsDisplay() {
   const [selectedRows, setSelectedRows] = useState([]);
   const [filterOpen, setFilterOpen] = useState(false);
   const [isChange, setIsChange] = useState(false);
-
+const[view,setView]=useState(false)
   const { deleteNews, fetchNewsById, singleNews } = useNewsStore();
   const { fetchNews } = useListStore();
   const [pageNo, setPageNo] = useState(1);
@@ -78,7 +78,10 @@ export default function NewsDisplay() {
   const handleChange = () => {
     setIsChange(!isChange);
   };
-
+const handleView=async(id)=>{
+  await fetchNewsById(id);
+  setView(true);
+}
   return (
     <>
       <Stack
@@ -132,6 +135,7 @@ export default function NewsDisplay() {
           onSelectionChange={handleSelectionChange}
           onModify={handleEdit}
           pageNo={pageNo}
+          onView={handleView}
           setPageNo={setPageNo}
           onAction={handlePreview}
           rowPerSize={row}
@@ -140,6 +144,13 @@ export default function NewsDisplay() {
         <NewsPreview
           open={previewOpen}
           onClose={handleClosePreview}
+          onChange={handleChange}
+          data={singleNews}
+          onEdit={() => handleEdit(singleNews._id)}
+        />
+        <NewsPreview
+          open={view}
+          onClose={() => setView(false)}
           onChange={handleChange}
           data={singleNews}
           onEdit={() => handleEdit(singleNews._id)}

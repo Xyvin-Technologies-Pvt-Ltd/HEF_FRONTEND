@@ -7,16 +7,29 @@ import {
   Tabs,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import StyledPosterTable from "../../components/Promotion/StyledPosterTable";
 import StyledBannerTable from "../../components/Promotion/StyledBannerTable";
 import StyledVideoTable from "../../components/Promotion/StyledVideoTable";
 import StyledNoticeTable from "../../components/Promotion/StyledNoticeTable";
-
+import { useLocation } from "react-router-dom";
+const tabMapping = {
+  banner: 0,
+  video: 1,
+  poster: 2,
+  notice: 3,
+};
 const PromotionItem = () => {
-  const [selectedTab, setSelectedTab] = useState(0);
-  
+  const location = useLocation();
+  const { type } = location?.state || {};
 
+  const [selectedTab, setSelectedTab] = useState(tabMapping[type] ?? 0);
+
+  useEffect(() => {
+    if (type && tabMapping.hasOwnProperty(type)) {
+      setSelectedTab(tabMapping[type]);
+    }
+  }, [type]);
   const handleChange = (event, newValue) => {
     setSelectedTab(newValue);
   };

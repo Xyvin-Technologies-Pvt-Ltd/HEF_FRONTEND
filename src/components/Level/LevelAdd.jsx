@@ -91,6 +91,7 @@ export default function LevelAdd() {
           (option) => option.value === level.districtId
         );
         setValue("district", selectedDistrict);
+        setValue("shortCode", level?.shortCode);
       }
     }
   }, [level, isUpdate, setValue]);
@@ -138,6 +139,7 @@ export default function LevelAdd() {
         formData.zoneId = data?.zone?.value;
       } else if (type === "chapter") {
         formData.districtId = data?.district?.value;
+        formData.shortCode=data?.shortCode
       }
       if (isUpdate) {
         let filter = {};
@@ -331,7 +333,7 @@ export default function LevelAdd() {
               />
             </Grid>
           )}
-          {type === "chapter" && (
+          {type === "chapter" && (<>
             <Grid item xs={12}>
               <Typography
                 sx={{ marginBottom: 1 }}
@@ -353,6 +355,23 @@ export default function LevelAdd() {
                 )}
               />
             </Grid>
+            <Grid item xs={12}>
+              <Typography
+                sx={{ marginBottom: 1 }}
+                variant="h6"
+                color="textSecondary"
+              >
+              Chapter  Short Code
+              </Typography>
+              <Controller
+                name="shortCode"
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <StyledInput placeholder={"Enter the chapter short code"} {...field} />
+                )}
+              />
+            </Grid></>
           )}
           <Grid item xs={12}>
             <Typography

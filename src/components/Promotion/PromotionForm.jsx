@@ -171,7 +171,7 @@ export default function Promotionform({ isUpdate }) {
       } else {
         await addPromotions(formData);
       }
-      navigate("/promotions");
+      navigate("/promotions",{ state: { type: type } });
     } catch (error) {
       toast.error(error.message);
     } finally {
