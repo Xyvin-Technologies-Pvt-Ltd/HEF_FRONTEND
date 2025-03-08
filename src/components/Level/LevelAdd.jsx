@@ -54,6 +54,10 @@ export default function LevelAdd() {
     { value: "secretary", label: "Secretary" },
     { value: "treasurer", label: "Treasurer" },
   ];
+  const availableRoleOptions = roleOptions?.filter(
+    (role) => !admins?.some((admin) => admin.role === role.value)
+  );
+  
   const handleTypeChange = (selectedOption) => {
     setType(selectedOption.value);
   };
@@ -180,9 +184,9 @@ export default function LevelAdd() {
     
   };
 
-  const fetchDialog = async (type, id) => {
+  const fetchDialog = async (type, id,filter) => {
     try {
-      const response = await getLevels(id, type);
+      const response = await getLevels(id, type,filter);
 
       return response.data;
     } catch (error) {
@@ -235,7 +239,7 @@ export default function LevelAdd() {
   };
   const handleChapterChange = async (chapterId) => {
     setAdminMemberOptions([]);
-    const members = await fetchDialog("user", chapterId);
+    const members = await fetchDialog("user", chapterId,{chooseAdmin: true});
     setAdminMemberOptions(
       members.map(({ _id, name }) => ({ value: _id, label: name }))
     );
@@ -471,7 +475,7 @@ export default function LevelAdd() {
                       <>
                         <StyledSelectField
                           placeholder="Choose the Role"
-                          options={roleOptions}
+                          options={availableRoleOptions}
                           {...field}
                         />
                         {errors.role && (
