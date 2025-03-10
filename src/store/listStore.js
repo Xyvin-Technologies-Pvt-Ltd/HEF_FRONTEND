@@ -84,9 +84,9 @@ const useListStore = create((set, get) => ({
     set({ totalCount: allData?.totalCount || 0 });
     set({ loading: false });
   },
-  fetchNotification : async () => {
+  fetchNotification : async (filter) => {
     set({ loading: true });
-    const allData = await getNotification();
+    const allData = await getNotification(filter);
     set({ lists: allData?.data || [] });
     set({ totalCount: allData?.totalCount || 0 });
     set({ loading: false });
