@@ -6,6 +6,7 @@ import BulkAdd from "../../components/Member/BulkAdd";
 
 const AddMemberPage = () => {
   const [bulk, setBulk] = useState(false);
+  
   return (
     <>
       <Stack
