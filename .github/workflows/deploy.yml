@@ -1,4 +1,4 @@
-name: Deploy React App to AWS Lightsail
+name: Deploy React App to EC2
 
 on:
   push:
@@ -22,7 +22,7 @@ jobs:
 
       # Step 3: Install dependencies and build the project
       - name: Install Dependencies and Build
-        env: # Inject environment variables from GitHub Secrets
+        env:
           VITE_APP_AWS_S3_BUCKET: ${{ secrets.VITE_APP_AWS_S3_BUCKET }}
           VITE_APP_AWS_REGION: ${{ secrets.VITE_APP_AWS_REGION }}
           VITE_APP_AWS_ACCESS_KEY_ID: ${{ secrets.VITE_APP_AWS_ACCESS_KEY_ID }}
@@ -32,36 +32,52 @@ jobs:
           npm ci
           npm run build
 
-      # Step 4: Rename the build output directory (if required)
+      # Step 4: Rename dist folder for deployment
       - name: Rename dist to hef-frontend
         run: mv ./dist ./hef-frontend
 
-      # Step 5: Copy files to Lightsail
-      - name: Copy Files to Lightsail
+      # Step 5: SSH into EC2 and prepare for deployment
+      - name: Clean Temporary Directory on EC2
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ec2-user
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            # Remove old temp directory if it exists
+            rm -rf ~/deploy-temp
+            mkdir ~/deploy-temp
+
+      # Step 6: Copy built files to EC2
+      - name: Copy Files to EC2
         uses: appleboy/scp-action@v0.1.3
         with:
-          host: ${{ secrets.LIGHTSAIL_HOST }}
-          username: ${{ secrets.LIGHTSAIL_USER }}
-          key: ${{ secrets.LIGHTSAIL_KEY }}
+          host: ${{ secrets.EC2_HOST }}
+          username: ec2-user
+          key: ${{ secrets.EC2_SSH_KEY }}
           source: ./hef-frontend/
           target: ~/deploy-temp/
 
-      # Step 6: Deploy and configure on Lightsail
-      - name: Deploy on Lightsail
+      # Step 7: Deploy files and restart Nginx
+      - name: Deploy on EC2
         uses: appleboy/ssh-action@v0.1.6
         with:
-          host: ${{ secrets.LIGHTSAIL_HOST }}
-          username: ${{ secrets.LIGHTSAIL_USER }}
-          key: ${{ secrets.LIGHTSAIL_KEY }}
+          host: ${{ secrets.EC2_HOST }}
+          username: ec2-user
+          key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             # Remove old deployment
-            sudo rm -rf /var/www/html/hef-frontend
+            sudo rm -rf /usr/share/nginx/html/hef-frontend
 
             # Move new files to the deployment directory
-            sudo mv ~/deploy-temp/* /var/www/html/
+            sudo mv ~/deploy-temp/* /usr/share/nginx/html/hef-frontend
 
             # Remove temporary deployment folder
             sudo rm -rf ~/deploy-temp
+
+            # Set proper permissions
+            sudo chown -R www-data:www-data /usr/share/nginx/html/hef-frontend
+            sudo chmod -R 755 /usr/share/nginx/html/hef-frontend
 
             # Restart NGINX to apply changes
             sudo systemctl restart nginx
