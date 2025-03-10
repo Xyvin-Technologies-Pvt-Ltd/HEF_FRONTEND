@@ -13,8 +13,8 @@ const AwardCard = ({ award, ismobile }) => {
         component="img"
         src={award?.image}
         sx={{
-          borderTopLeftRadius: "12px",objectFit:"cover",
-          borderTopRightRadius: "12px",
+          borderTopLeftRadius: "8px",objectFit:"cover",
+          borderTopRightRadius: "8px",
           width: ismobile ? "100%" : "460px",
           height: ismobile ? "131px" : "178px",
         }}

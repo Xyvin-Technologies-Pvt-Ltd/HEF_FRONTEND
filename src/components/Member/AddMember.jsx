@@ -234,8 +234,8 @@ const AddMember = () => {
         businessSubCatogary: data?.businessSubCatogary,
         chapter: data?.chapter?.value,
         ...(Array.isArray(data?.businessTags) && data?.businessTags.length
-        ? { businessTags: data.businessTags.map((tag) => tag?.value || tag) }
-        : {}),
+          ? { businessTags: data.businessTags.map((tag) => tag?.value || tag) }
+          : {}),
       };
       if (isUpdate) {
         await updateMember(memberId, formData);
@@ -716,7 +716,7 @@ const AddMember = () => {
                   variant="h6"
                   color="textSecondary"
                 >
-                  Tags
+                  Business Tags
                 </Typography>
                 <Controller
                   name="businessTags"
@@ -727,8 +727,32 @@ const AddMember = () => {
                       {...field}
                       isMulti
                       placeholder="Enter tags"
-                      options={options}
+                      options={
+                        inputValue &&
+                        !options.some((option) => option?.label === inputValue)
+                          ? [
+                              ...options,
+                              { label: inputValue, value: inputValue },
+                            ]
+                          : options
+                      }
                       onInputChange={(value) => setInputValue(value)}
+                      onChange={(selected) => {
+                        if (selected?.length > 0) {
+                          const lastTag = selected[selected.length - 1];
+                          if (
+                            !options.some(
+                              (option) => option.value === lastTag.value
+                            )
+                          ) {
+                            setOptions((prevOptions) => [
+                              ...prevOptions,
+                              { label: lastTag.value, value: lastTag.value },
+                            ]);
+                          }
+                        }
+                        field.onChange(selected);
+                      }}
                     />
                   )}
                 />

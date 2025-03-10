@@ -458,7 +458,7 @@ export default function AddEvent({ isUpdate }) {
                         value={value}
                       />
                       <FormHelperText style={{ color: "#888" }}>
-                        File size limit: 1 MB
+                        File size limit: 1 MB  | Recommended aspect ratio: 16:9
                       </FormHelperText>
                     </>
                   )}

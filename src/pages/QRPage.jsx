@@ -9,14 +9,6 @@ import {
 import React, { useEffect, useState } from "react";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
-import { ReactComponent as AppInstagramIcon } from "../assets/icons/AppInstagramIcon.svg";
-import { ReactComponent as AppPhoneIcon } from "../assets/icons/AppPhoneIcon.svg";
-import { ReactComponent as AppEmailIcon } from "../assets/icons/AppEmailIcon.svg";
-import { ReactComponent as AppLocationIcon } from "../assets/icons/AppLocationIcon.svg";
-import { ReactComponent as AppLinkedInIcon } from "../assets/icons/AppLinkedInIcon.svg";
-import { ReactComponent as AppWebsiteIcon } from "../assets/icons/AppWebsiteIcon.svg";
-import { ReactComponent as AppTwitterIcon } from "../assets/icons/AppTwitterIcon.svg";
-import { ReactComponent as AppFacebookIcon } from "../assets/icons/AppFacebookIcon.svg";
 import { ReactComponent as AppBioIcon } from "../assets/icons/AppBioIcon.svg";
 import { ReactComponent as WhatsappIcon } from "../assets/icons/WhatsappIcon.svg";
 import Video from "../components/Member/Video";
@@ -25,8 +17,20 @@ import AwardCard from "../ui/AwardCard";
 import image from "../assets/images/image.png";
 import companylogo from "../assets/images/companylogo.png";
 import { StyledButton } from "../ui/StyledButton";
-import { getSingleUser } from "../api/memberapi";
+import { getMemberById, getSingleUser } from "../api/memberapi";
 import { useParams } from "react-router-dom";
+import {
+  Email,
+  Facebook,
+  Group,
+  Instagram,
+  Language,
+  LinkedIn,
+  Person,
+  Phone,
+  Place,
+  Web,
+} from "@mui/icons-material";
 const responsive = {
   superLargeDesktop: {
     breakpoint: { max: 4000, min: 3000 },
@@ -55,7 +59,7 @@ const QRPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await getSingleUser(formattedId);
+        const response = await getMemberById(formattedId);
         setUserData(response.data);
         setLoading(false);
       } catch (error) {
@@ -66,36 +70,48 @@ const QRPage = () => {
 
     fetchData();
   }, []);
-  const handleSaveContact = () => {
-    const vCardData = `
-BEGIN:VCARD
-VERSION:3.0
-FN:${userData?.name?.first} ${userData?.name?.last}
-ORG:${userData?.company?.name}
-TEL:${userData?.phone}
-EMAIL:${userData?.email}
-ADR:${userData?.address}
-END:VCARD
-    `;
+  const handleSaveContact = async () => {
+    try {
+      if (!userData || !userData.name || !userData.phone || !userData.email) {
+        throw new Error(
+          "Incomplete user data. Please provide name, phone, and email."
+        );
+      }
 
-    const blob = new Blob([vCardData], { type: "text/vcard" });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = `${userData?.name?.first}_${userData?.name?.last}.vcf`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+      const vCardContent = `BEGIN:VCARD\r\nVERSION:3.0\r\nN:${userData.name
+        .split(" ")
+        .reverse()
+        .join(";")}\r\nFN:${userData.name}\r\nTEL;TYPE=CELL:${
+        userData.phone
+      }\r\nEMAIL:${userData.email}\r\nEND:VCARD`;
+
+      const blob = new Blob([vCardContent], {
+        type: "text/vcard;charset=utf-8",
+      });
+
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${userData.name.replace(/ /g, "_")}.vcf`;
+
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error creating vCard:", error);
+    }
   };
   const renderSocialIcon = (platform) => {
     switch (platform) {
-      case "instagram":
-        return <AppInstagramIcon />;
-      case "twitter":
-        return <AppTwitterIcon />;
-      case "linkedin":
-        return <AppLinkedInIcon />;
-      case "facebook":
-        return <AppFacebookIcon />;
+      case "Instagram":
+        return <Instagram sx={{ color: "#f58220" }} />;
+      case "Twitter":
+        return <Twitter sx={{ color: "#f58220" }} />;
+      case "Linkedin":
+        return <LinkedIn sx={{ color: "#f58220" }} />;
+      case "Facebook":
+        return <Facebook sx={{ color: "#f58220" }} />;
       default:
         return null;
     }
@@ -122,75 +138,124 @@ END:VCARD
                 mt: 4,
               }}
             >
-              <Stack
-                direction={isMobile ? "column" : "row"}
-                justifyContent={isMobile ? "center" : "start"}
-                alignItems={"center"}
-                spacing={isMobile ? 0 : 5}
+              <Box
+                sx={{
+                  borderBottom: "1px solid #eaeaea",
+                  pb: 3,
+                  mb: 4,
+                }}
               >
-                <Stack>
-                  <img
-                    src={userData?.image || image}
-                    alt="image"
-                    width={"130px"}
-                    height={"130px"}
-                    style={{
-                      borderRadius: "50%",
-                      objectFit: "cover",
-                    }}
-                  />
-                </Stack>
-                <Stack direction={"column"} alignItems={isMobile && "center"}>
-                  <Typography variant="h3" color="textTertiary" mt={1} mb={1}>
-                    {userData?.name?.first} {userData?.name?.last}
-                  </Typography>
-                  {userData?.company?.name && (
-                    <Stack
-                      mt={2}
-                      direction={"row"}
-                      alignItems={"center"}
-                      spacing={1}
-                    >
-                      <Stack>
-                        <img
-                          src={userData?.company?.logo || companylogo}
-                          alt="image"
-                          width={"36px"}
-                          height={"36px"}
-                          style={{ borderRadius: "50%", objectFit: "cover" }}
-                        />
-                      </Stack>
-                      <Stack>
-                        <Typography variant="h6">
-                          {userData?.company?.name}
-                        </Typography>
-                        <Typography variant="h8">
-                          {userData?.company?.designation}
-                        </Typography>
-                      </Stack>
-                    </Stack>
-                  )}
-                </Stack>
-                {isMobile && (
+                <Stack
+                  direction={isMobile ? "column" : "row"}
+                  spacing={isMobile ? 2 : 4}
+                  alignItems="center"
+                >
+                  {/* Profile Image with Accent Corner */}
                   <Box
-                    padding={2}
-                    mt={4}
-                    border={"1px solid rgba(0, 0, 0, 0.12)"}
-                    borderRadius={"12px"}
+                    sx={{
+                      position: "relative",
+                      width: "110px",
+                      height: "110px",
+                    }}
                   >
-                    <Typography variant="h8" color="textTertiary" mt={1} mb={1}>
-                      {userData?.college?.collegeName}, {userData?.batch} Alumni
-                    </Typography>
+                    {/* Orange Corner Accent */}
+                    <Box
+                      sx={{
+                        position: "absolute",
+                        top: -5,
+                        left: -5,
+                        width: "40px",
+                        height: "40px",
+                        borderTop: "3px solid #f58220",
+                        borderLeft: "3px solid #f58220",
+                      }}
+                    />
+
+                    {/* Profile Image */}
+                    <Box
+                      sx={{
+                        width: "100%",
+                        height: "100%",
+                        borderRadius: "4px",
+                        overflow: "hidden",
+                      }}
+                    >
+                      <img
+                        src={userData?.image || image}
+                        alt="profile"
+                        width="100%"
+                        height="100%"
+                        style={{ objectFit: "cover" }}
+                      />
+                    </Box>
+
+                    {/* Bottom Right Corner Accent */}
+                    <Box
+                      sx={{
+                        position: "absolute",
+                        bottom: -5,
+                        right: -5,
+                        width: "40px",
+                        height: "40px",
+                        borderBottom: "3px solid #f58220",
+                        borderRight: "3px solid #f58220",
+                      }}
+                    />
                   </Box>
-                )}
-                <Typography
-                  variant="h8"
-                  color="textTertiary"
-                  mt={1}
-                  mb={1}
-                  fontWeight={600}
-                ></Typography>
-              </Stack>
+
+                  {/* User Information */}
+                  <Stack spacing={1.5} flex={1}>
+                    <Typography variant="h3" color="#333" fontWeight={500}>
+                      {userData?.name}
+                    </Typography>
+
+                    <Box
+                      sx={{
+                        height: "1px",
+                        width: "40px",
+                        backgroundColor: "#f58220",
+                        mb: 1,
+                      }}
+                    />
+
+                    <Stack direction="row" spacing={3} flexWrap="wrap">
+                      {userData?.memberId && (
+                        <Typography
+                          variant="h6"
+                          color="text.secondary"
+                          sx={{ display: "flex", alignItems: "center" }}
+                        >
+                          <Person
+                            sx={{
+                              fontSize: "0.9rem",
+                              mr: 0.5,
+                              color: "#f58220",
+                            }}
+                          />
+                          ID: {userData?.memberId}
+                        </Typography>
+                      )}
+
+                      {userData?.chapter?.name && (
+                        <Typography
+                          variant="h6"
+                          color="text.secondary"
+                          sx={{ display: "flex", alignItems: "center" }}
+                        >
+                          <Group
+                            sx={{
+                              fontSize: "0.9rem",
+                              mr: 0.5,
+                              color: "#f58220",
+                            }}
+                          />
+                          {userData?.chapter?.name}
+                        </Typography>
+                      )}
+                    </Stack>
+                  </Stack>
+                </Stack>
+              </Box>
               <Typography
                 variant="h5"
                 color="textTertiary"
@@ -201,16 +266,24 @@ END:VCARD
               </Typography>
               <Stack spacing={2} mb={4} mt={4}>
                 <Stack direction="row" alignItems="center" spacing={1}>
-                <Stack> <AppPhoneIcon /> </Stack>
+                  <Stack>
+                    {" "}
+                    <Phone sx={{ color: "#f58220" }} />{" "}
+                  </Stack>
                   <Typography variant="h7">{userData?.phone}</Typography>
                 </Stack>
                 <Stack direction="row" alignItems="center" spacing={1}>
-                <Stack><AppEmailIcon /> </Stack>
+                  <Stack>
+                    <Email sx={{ color: "#f58220" }} />{" "}
+                  </Stack>
                   <Typography variant="h7">{userData?.email}</Typography>
                 </Stack>
                 {userData?.address && (
                   <Stack direction="row" alignItems="center" spacing={1}>
-                     <Stack> <AppLocationIcon /> </Stack>
+                    <Stack>
+                      {" "}
+                      <Place sx={{ color: "#f58220" }} />{" "}
+                    </Stack>
                     <Typography variant="h7">{userData?.address}</Typography>
                   </Stack>
                 )}
@@ -225,25 +298,99 @@ END:VCARD
                   </Stack>
                 </>
               )}
-              {userData?.company && (
+              {userData?.company && userData.company.length > 0 && (
                 <>
                   <Typography variant="h5" color="textTertiary" mt={4} mb={2}>
                     Company
                   </Typography>
-                  <Stack spacing={2} mb={4} mt={4}>
-                    <Stack direction="row" alignItems="center" spacing={1}>
-                    <Stack> <AppPhoneIcon /> </Stack>
-                      <Typography variant="h7">
-                        {userData?.company?.phone}
-                      </Typography>
-                    </Stack>
-                    <Stack direction="row" alignItems="center" spacing={1}>
-                    <Stack><AppLocationIcon /> </Stack>
-                      <Typography variant="h7">
-                        {userData?.company?.address}
-                      </Typography>
-                    </Stack>
-                    
+                  <Stack spacing={2} mb={4}>
+                    {userData.company.map((company, index) => (
+                      <Box
+                        key={company._id || index}
+                        sx={{
+                          backgroundColor: "rgba(0, 0, 0, 0.03)",
+                          borderRadius: "8px",
+                          padding: 2,
+                          border: "1px solid rgba(0, 0, 0, 0.08)",
+                        }}
+                      >
+                        <Typography variant="h6" fontWeight={600} mb={1}>
+                          {company.name}
+                        </Typography>
+
+                        {company.designation && (
+                          <Typography
+                            variant="body1"
+                            color="text.secondary"
+                            mb={2}
+                          >
+                            {company.designation}
+                          </Typography>
+                        )}
+
+                        <Stack spacing={2}>
+                          {company.phone && (
+                            <Stack
+                              direction="row"
+                              alignItems="center"
+                              spacing={1}
+                            >
+                              <Stack>
+                                <Phone sx={{ color: "#f58220" }} />
+                              </Stack>
+                              <Typography variant="body2">
+                                {company.phone}
+                              </Typography>
+                            </Stack>
+                          )}
+
+                          {company.email && (
+                            <Stack
+                              direction="row"
+                              alignItems="center"
+                              spacing={1}
+                            >
+                              <Stack>
+                                <Email sx={{ color: "#f58220" }} />
+                              </Stack>
+                              <Typography variant="body2">
+                                {company.email}
+                              </Typography>
+                            </Stack>
+                          )}
+
+                          {company.address && (
+                            <Stack
+                              direction="row"
+                              alignItems="center"
+                              spacing={1}
+                            >
+                              <Stack>
+                                <Place sx={{ color: "#f58220" }} />
+                              </Stack>
+                              <Typography variant="body2">
+                                {company.address}
+                              </Typography>
+                            </Stack>
+                          )}
+
+                          {company.websites && (
+                            <Stack
+                              direction="row"
+                              alignItems="center"
+                              spacing={1}
+                            >
+                              <Stack>
+                                <Language sx={{ color: "#f58220" }} />
+                              </Stack>
+                              <Typography variant="body2">
+                                {company.websites}
+                              </Typography>
+                            </Stack>
+                          )}
+                        </Stack>
+                      </Box>
+                    ))}
                   </Stack>
                 </>
               )}
@@ -264,7 +411,7 @@ END:VCARD
                 }}
               >
                 <a
-                  href={`https://wa.me/${userData?.company?.phone}`}
+                  href={`https://wa.me/${userData?.phone}`}
                   target="_blank"
                   style={{ textDecoration: "none" }}
                   rel="noopener noreferrer"
@@ -326,7 +473,7 @@ END:VCARD
                                   color: "#6D6D6D",
                                 }}
                               >
-                                {media?.link}
+                                {media?.name}
                               </a>
                             </Typography>
                           </Box>
@@ -360,7 +507,7 @@ END:VCARD
                           borderRadius={"12px"}
                           p={2}
                         >
-                          <AppWebsiteIcon />{" "}
+                          <Language sx={{ color: "#f58220" }} />{" "}
                           <Typography
                             variant="h5"
                             color="#6D6D6D"

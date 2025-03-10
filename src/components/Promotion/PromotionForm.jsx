@@ -164,14 +164,13 @@ export default function Promotionform({ isUpdate }) {
         formData.type = "poster";
         formData.media = imageUrl;
         if (data?.link) formData.link = data?.link;
-     
       }
       if (isUpdate && id) {
         await updatePromotion(id, formData);
       } else {
         await addPromotions(formData);
       }
-      navigate("/promotions",{ state: { type: type } });
+      navigate("/promotions", { state: { type: type } });
     } catch (error) {
       toast.error(error.message);
     } finally {
@@ -242,9 +241,15 @@ export default function Promotionform({ isUpdate }) {
                       }}
                       ratio={getAspectRatio()}
                       value={value}
-                    /><FormHelperText style={{ color: "#888" }}>
-                    File size limit: 1 MB
-                  </FormHelperText>
+                    />
+                    <FormHelperText style={{ color: "#888" }}>
+                      File size limit: 1 MB | Recommended aspect ratio:{" "}
+                      {type === "banner"
+                        ? "2:1"
+                        : type === "poster"
+                        ? "19:20"
+                        : "1:1"}
+                    </FormHelperText>
                   </>
                 )}
               />
