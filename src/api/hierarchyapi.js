@@ -67,3 +67,11 @@ export const deleteLevel = async (type, filter) => {
     console.error(error.response.data.message);
   }
 };
+export const getchapterList = async () => {
+  try {
+    const response = await axiosInstance.get(`/hierarchy/chapter/list`);
+    return response.data;
+  } catch (error) {
+    return null;
+  }
+};

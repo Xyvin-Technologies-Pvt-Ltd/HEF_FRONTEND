@@ -21,22 +21,51 @@ const BulkAdd = () => {
 
   const parseFile = (file, callback) => {
     const reader = new FileReader();
-
+  
     reader.onload = (event) => {
       const data = event.target.result;
-
+  
       const processData = (data) =>
         data.map((row) => {
           const result = {
-            name: row.name || "",
-            phone: row.phone || "",
+            name: row.name?.trim() || "",
+            email: row.email?.trim() || "",
+            phone: formatPhoneNumber(String(row.phone || "").trim()),
+            chapter: row.chapter?.trim() || "",
+            businessTags: formatBusinessTags(row.businessTags),
+            dateOfJoining: formatDate(row.dateOfJoining?.trim()),
           };
-          if (row.email && row.email.trim() !== "") {
-            result.email = row.email.trim();
-          }
           return result;
         });
-
+  
+      const formatPhoneNumber = (phone) => {
+        phone = phone.replace(/[^\d]/g, "");
+        if (phone.startsWith("91") && !phone.startsWith("+91")) {
+          return `+${phone}`;
+        } else if (!phone.startsWith("+91")) {
+          return `+91${phone}`;
+        }
+        return phone;
+      };
+  
+      const formatBusinessTags = (tags) => {
+        if (typeof tags === "string") {
+          return tags.split(",").map((tag) => tag.trim());
+        }
+        return [];
+      };
+  
+      const formatDate = (date) => {
+        if (date) {
+          const dateParts = date.split("-");
+          if (dateParts.length === 3) {
+            const [day, month, year] = dateParts;
+            return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+          }
+        }
+        return "";
+      };
+  
       if (file.type === "text/csv") {
         const parsedData = Papa.parse(data, { header: true });
         const filteredData = parsedData.data.filter((row) =>
@@ -58,13 +87,17 @@ const BulkAdd = () => {
         callback(processData(filteredData));
       }
     };
-
+  
     if (file.type === "text/csv") {
       reader.readAsText(file);
     } else {
       reader.readAsBinaryString(file);
     }
   };
+  
+  
+  
+  
 
   const handleSave = async () => {
     if (files.length > 0) {

@@ -18,6 +18,8 @@ import { ReactComponent as AddIcon } from "../../assets/icons/AddIcon.svg";
 import { useNavigate } from "react-router-dom";
 import useHierarchyStore from "../../store/hierarchyStore";
 import { toast } from "react-toastify";
+import { getchapterList } from "../../api/hierarchyapi";
+import { generateExcel } from "../../utils/generateExcel";
 
 const LevelPage = () => {
   const [selectedTab, setSelectedTab] = useState(0);
@@ -54,7 +56,6 @@ const LevelPage = () => {
     setSelectedTab(newValue);
   };
   const handleEdit = (id) => {
-
     const typeMapping = {
       0: "state",
       1: "zone",
@@ -108,6 +109,21 @@ const LevelPage = () => {
       setIsChange(!isChange);
     } catch (error) {
       console.log(error);
+    }
+  };
+  const handleDownload = async () => {
+    try {
+      const data = await getchapterList();
+      const csvData = data?.data;
+      if (csvData && csvData.headers && csvData.body) {
+        generateExcel(csvData.headers, csvData.body,"Chapter");
+      } else {
+        console.error(
+          "Error: Missing headers or data in the downloaded content"
+        );
+      }
+    } catch (error) {
+      console.error("Error downloading users:", error);
     }
   };
   return (
@@ -185,6 +201,9 @@ const LevelPage = () => {
               placeholder={"Search"}
               onchange={(e) => setSearch(e.target.value)}
             />
+            {selectedTab === 3 && (
+              <StyledButton name={"Download csv"} variant="primary" onClick={handleDownload}/>
+            )}
           </Stack>
         </Stack>
         <Box

@@ -14,6 +14,7 @@ const StyledSelectField = ({
   onChange,
   value,
   isMulti,
+  onInputChange
 }) => {
   const customStyles = {
     control: (provided, state) => ({
@@ -76,6 +77,11 @@ const StyledSelectField = ({
         isMulti={isMulti}
         isDisabled={isDisabled}
         styles={customStyles}
+        onInputChange={(inputValue, { action }) => {
+          if (action === "input-change") {
+            onInputChange(inputValue);
+          }
+        }}
       />
     </SelectContainer>
   );

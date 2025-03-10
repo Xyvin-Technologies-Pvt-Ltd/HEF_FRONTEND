@@ -6,8 +6,9 @@ import {
   LinearProgress,
   FormHelperText,
   Button,
+  debounce,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import StyledInput from "../../ui/StyledInput";
 import StyledSelectField from "../../ui/StyledSelectField";
@@ -20,6 +21,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useMemberStore } from "../../store/Memberstore";
 import { getLevels, getAllLevel } from "../../api/hierarchyapi";
 import { Delete } from "@mui/icons-material";
+import { getTags } from "../../api/memberapi";
 
 const AddMember = () => {
   const {
@@ -45,16 +47,14 @@ const AddMember = () => {
   const [chapterOptions, setChapterOptions] = useState([]);
   const [selectedZone, setSelectedZone] = useState("");
   const [selectedDistrict, setSelectedDistrict] = useState("");
-
+  const [options, setOptions] = useState([]);
+  const [inputValue, setInputValue] = useState("");
   useEffect(() => {
     if (isUpdate && memberId) {
       fetchMemberById(memberId);
     }
   }, [memberId, isUpdate]);
-  const business = [{ value: "IT Services", label: "IT Services" }];
-  const sub = [
-    { value: "Software Development", label: "Software Development" },
-  ];
+
   const tagOptions = [
     { value: "latest", label: "Latest" },
     { value: "currentAffairs", label: "Current Affairs" },
@@ -93,14 +93,10 @@ const AddMember = () => {
           }));
           setValue("companies", companies);
         }
-        const selectedBusinessCatergory = business?.find(
-          (item) => item?.value === member?.businessCatogary
-        );
-        setValue("businessCatogary", selectedBusinessCatergory || "");
-        const selectedSubCatergory = sub?.find(
-          (item) => item?.value === member?.businessSubCatogary
-        );
-        setValue("businessSubCatogary", selectedSubCatergory || "");
+
+        setValue("businessCatogary", member?.businessCatogary);
+
+        setValue("businessSubCatogary", member?.businessSubCatogary);
         const selectedStatus = statusOptions?.find(
           (item) => item?.value === member?.status
         );
@@ -109,7 +105,13 @@ const AddMember = () => {
           (option) => option?.value === member?.state?._id
         );
         setValue("state", selectedState || "");
-
+        if (Array.isArray(member?.businessTags) && member.businessTags.length) {
+          const businessTags = member.businessTags.map((tag) => ({
+            label: tag,
+            value: tag,
+          }));
+          setValue("businessTags", businessTags);
+        }
         if (selectedState) {
           const zones = await fetchData("state", selectedState.value);
           const formattedZones = zones.map(({ _id, name }) => ({
@@ -228,9 +230,12 @@ const AddMember = () => {
         ...(data?.address && { address: data?.address }),
         ...(imageUrl && { image: imageUrl }),
         ...(data?.companies?.length ? { company: data.companies } : {}),
-        businessCatogary: data?.businessCatogary?.value,
-        businessSubCatogary: data?.businessSubCatogary?.value,
+        businessCatogary: data?.businessCatogary,
+        businessSubCatogary: data?.businessSubCatogary,
         chapter: data?.chapter?.value,
+        ...(Array.isArray(data?.businessTags) && data?.businessTags.length
+        ? { businessTags: data.businessTags.map((tag) => tag?.value || tag) }
+        : {}),
       };
       if (isUpdate) {
         await updateMember(memberId, formData);
@@ -299,6 +304,23 @@ const AddMember = () => {
     control,
     name: "companies",
   });
+  const fetchTags = async (input) => {
+    const response = await getTags({ search: input });
+    const data = response.data;
+    if (data) {
+      setOptions(data.map((tag) => ({ label: tag, value: tag })));
+    }
+  };
+  const debouncedFetchTags = useCallback(
+    debounce((input) => fetchTags(input), 300),
+    []
+  );
+
+  useEffect(() => {
+    if (inputValue) {
+      debouncedFetchTags(inputValue);
+    }
+  }, [inputValue, debouncedFetchTags]);
   return (
     <>
       {loading ? (
@@ -661,9 +683,8 @@ const AddMember = () => {
                   defaultValue=""
                   render={({ field }) => (
                     <>
-                      <StyledSelectField
-                        placeholder="Select business category"
-                        options={business}
+                      <StyledInput
+                        placeholder="Enter business category"
                         {...field}
                       />
                     </>
@@ -684,12 +705,31 @@ const AddMember = () => {
                   defaultValue=""
                   render={({ field }) => (
                     <>
-                      <StyledSelectField
-                        placeholder="Select subcategory"
-                        options={sub}
-                        {...field}
-                      />
+                      <StyledInput placeholder="Enter subcategory" {...field} />
                     </>
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Typography
+                  sx={{ marginBottom: 1 }}
+                  variant="h6"
+                  color="textSecondary"
+                >
+                  Tags
+                </Typography>
+                <Controller
+                  name="businessTags"
+                  control={control}
+                  defaultValue={[]}
+                  render={({ field }) => (
+                    <StyledSelectField
+                      {...field}
+                      isMulti
+                      placeholder="Enter tags"
+                      options={options}
+                      onInputChange={(value) => setInputValue(value)}
+                    />
                   )}
                 />
               </Grid>

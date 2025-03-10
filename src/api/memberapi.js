@@ -82,3 +82,14 @@ export const addMembersBulk = async (data) => {
     throw error.response.data;
   }
 };
+
+export const getTags= async (filter) => {
+  try {
+    const response = await axiosInstance.get(`/user/business-tags`, {
+      params: filter,
+    });
+    return response.data;
+  } catch (error) {
+    return null;
+  }
+};
