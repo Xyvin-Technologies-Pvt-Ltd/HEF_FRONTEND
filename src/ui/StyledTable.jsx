@@ -280,7 +280,7 @@ const StyledTable = ({
                       padding={column.padding || "normal"}
                       sx={{ cursor: "pointer" }}
                       onClick={() => handleRowClick(row._id)}
-                      $isEmail={column.field === "email"}
+                      $isEmail={column.field === "email" || column.field === "apiEndpoint"}
                     >
                       {[
                         "renewal",

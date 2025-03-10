@@ -12,6 +12,7 @@ import { getAllLevel } from "../api/hierarchyapi";
 import { getAllSubscription } from "../api/subscriptionapi";
 import { getActivities } from "../api/activityapi";
 import { getParentSub, getPayment } from "../api/paymentapi";
+import { getNotification } from "../api/notificationapi";
 
 const useListStore = create((set, get) => ({
   lists: [],
@@ -79,6 +80,13 @@ const useListStore = create((set, get) => ({
   fetchFeed: async (filter) => {
     set({ loading: true });
     const allData = await getFeed(filter);
+    set({ lists: allData?.data || [] });
+    set({ totalCount: allData?.totalCount || 0 });
+    set({ loading: false });
+  },
+  fetchNotification : async () => {
+    set({ loading: true });
+    const allData = await getNotification();
     set({ lists: allData?.data || [] });
     set({ totalCount: allData?.totalCount || 0 });
     set({ loading: false });

@@ -21,6 +21,11 @@ export const adminActivityColumns = [
   { title: "Created on", field: "createdAt", padding: "none" },
   { title: "Status", field: "status" },
 ];
+export const notificationColumns = [
+  { title: "Type", field: "type" },
+  { title: "Subject", field: "subject", padding: "none" },
+  { title: "Created on", field: "createdAt", padding: "none" },
+];
 export const groupmemberColumns = [
   { title: "Member ID", field: "memberId", padding: "none" },
   { title: "Name", field: "name", padding: "none" },

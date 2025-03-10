@@ -2,6 +2,7 @@ import { Box, Grid, Stack, Tab, Tabs, Typography } from "@mui/material";
 import React, { useState } from "react";
 import EmailNotification from "../../components/Notification/EmailNotification";
 import InAppNotification from "../../components/Notification/InAppNotification";
+import NotificationLog from "./NotificationLog";
 
 const Notificationpage = () => {
   const [selectedTab, setSelectedTab] = useState(0);
@@ -42,6 +43,7 @@ const Notificationpage = () => {
       >
         <Tab label="E-mail Notifcations" />
         <Tab label="In-app Notifications" />
+        <Tab label="Notification Logs" />
       </Tabs>
       <Box padding="15px" marginBottom={4}>
         {selectedTab === 0 && (
@@ -55,6 +57,13 @@ const Notificationpage = () => {
           <Grid container>
             <Grid item md={7}>
               <InAppNotification />
+            </Grid>
+          </Grid>
+        )}
+        {selectedTab === 2 && (
+          <Grid container>
+            <Grid item md={12}>
+              <NotificationLog />
             </Grid>
           </Grid>
         )}

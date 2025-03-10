@@ -10,3 +10,19 @@ export const addNotification = async (data) => {
     throw error.response.data;
   }
 };
+export const getNotification = async () => {
+  try {
+    const response = await axiosInstance.get("/notification");
+    return response.data;
+  } catch (error) {
+    console.error("Error caught:", error);
+  }
+};
+export const getNotificationById = async (id) => {
+  try {
+    const response = await axiosInstance.get(`/notification/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error caught:", error);
+  }
+};
