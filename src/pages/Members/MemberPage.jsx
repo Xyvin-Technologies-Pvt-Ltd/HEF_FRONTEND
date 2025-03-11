@@ -15,21 +15,7 @@ const MemberPage = () => {
     setSelectedTab(newValue);
   };
   const navigate = useNavigate();
-  const handleDownload = async () => {
-    try {
-      const data = await getMember({ fullUser: true });
-      const csvData = data.data;
-      if (csvData && csvData.headers && csvData.body) {
-        generateExcel(csvData.headers, csvData.body,"Members");
-      } else {
-        console.error(
-          "Error: Missing headers or data in the downloaded content"
-        );
-      }
-    } catch (error) {
-      console.error("Error downloading users:", error);
-    }
-  };
+ 
   return (
     <>
       <Stack
