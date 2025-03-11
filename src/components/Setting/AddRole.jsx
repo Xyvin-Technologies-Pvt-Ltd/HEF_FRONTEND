@@ -7,6 +7,7 @@ import styled from "styled-components";
 import { useRoleStore } from "../../store/roleStore";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import StyledSelectField from "../../ui/StyledSelectField";
 
 const CircleButton = styled.span`
   display: inline-block;
@@ -73,7 +74,10 @@ const AddRole = () => {
     try {
       setLoading(true);
       const roleData = {
-        ...data,
+        roleName: data.roleName,
+        description: data.description,
+        ...(data?.status && { status: data?.status?.value }),
+
         permissions,
       };
       if (isUpdate) {
@@ -101,6 +105,8 @@ const AddRole = () => {
       setValue("roleName", singleRole.roleName);
       setPermissions(singleRole.permissions);
       setValue("description", singleRole.description);
+      const selectedStatus = singleRole.status ? { value: true, label: "Active" } : { value: false, label: "Inactive" };
+      setValue("status", selectedStatus);
     }
   }, [singleRole, isUpdate, setValue]);
 
@@ -127,7 +133,6 @@ const AddRole = () => {
     >
       <form onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={4}>
-          {/* Role Name */}
           <Grid item xs={12}>
             <Typography
               sx={{ marginBottom: 1 }}
@@ -248,7 +253,32 @@ const AddRole = () => {
               ))}
             </Grid>
           </Grid>
-
+          <Grid item xs={12}>
+            <Typography
+              sx={{ marginBottom: 1 }}
+              variant="h6"
+              color="textSecondary"
+            >
+              Status
+            </Typography>
+            <Controller
+              name="status"
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <>
+                  <StyledSelectField
+                    options={[
+                      { value: true, label: "Active" },
+                      { value: false, label: "Inactive" },
+                    ]}
+                    placeholder="Choose the Status"
+                    {...field}
+                  />
+                </>
+              )}
+            />
+          </Grid>
           {/* Buttons */}
           <Grid item xs={6}></Grid>
           <Grid item xs={6}>
