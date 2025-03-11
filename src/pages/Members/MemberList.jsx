@@ -11,6 +11,7 @@ import SuspendProfile from "../../components/Member/SuspendProfile";
 import { ReactComponent as FilterIcon } from "../../assets/icons/FilterIcon.svg";
 import MemberFilter from "../../components/Member/MemberFilter";
 import { getDwld } from "../../api/adminapi";
+import { generateExcel } from "../../utils/generateExcel";
 const MemberList = () => {
   const navigate = useNavigate();
   const { fetchMember } = useListStore();
@@ -91,9 +92,6 @@ const MemberList = () => {
   const handleTabChange = (tab) => {
     setSelectedTab(tab);
   };
-  console.log('====================================');
-  console.log("filters", filters);
-  console.log('====================================');
   return (
     <>
       <Box padding={"15px"}>
