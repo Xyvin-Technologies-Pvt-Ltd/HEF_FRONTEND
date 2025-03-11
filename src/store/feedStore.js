@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { editFeed, getFeed } from "../api/feedapi";
+import { deleteFeed, editFeed, getFeed } from "../api/feedapi";
 
 const useFeedStore = create((set) => ({
   feeds: [],
@@ -11,6 +11,9 @@ const useFeedStore = create((set) => ({
  
   updateFeed: async (action, id, data) => {
     await editFeed(action, id, data);
+  },
+  deleteFeeds: async (id) => {
+    await deleteFeed(id);
   },
 }));
 

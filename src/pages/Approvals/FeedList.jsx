@@ -7,15 +7,19 @@ import { useFeedStore } from "../../store/feedStore";
 import FeedApproval from "../../components/Approve/FeedApproval";
 import FeedReject from "../../components/Approve/FeedReject";
 import { useListStore } from "../../store/listStore";
+import { toast } from "react-toastify";
 
 const FeedList = () => {
   const [rejectOpen, setRejectOpen] = useState(false);
   const [approveOpen, setApproveOpen] = useState(false);
   const [isChange, setIsChange] = useState(false);
   const { fetchFeed } = useListStore();
+  const [selectedRows, setSelectedRows] = useState([]);
+
   const [search, setSearch] = useState("");
   const [pageNo, setPageNo] = useState(1);
   const [row, setRow] = useState(10);
+  const { deleteFeeds } = useFeedStore();
   const [approvalId, setApprovalId] = useState(null);
   useEffect(() => {
     let filter = {};
@@ -27,7 +31,9 @@ const FeedList = () => {
     }
     fetchFeed(filter);
   }, [isChange, pageNo, search, row]);
-
+  const handleSelectionChange = (newSelectedIds) => {
+    setSelectedRows(newSelectedIds);
+  };
   const handleReject = (id) => {
     setApprovalId(id);
     setRejectOpen(true);
@@ -41,6 +47,19 @@ const FeedList = () => {
   };
   const handleCloseApprove = () => {
     setApproveOpen(false);
+  };
+  const handleDelete = async () => {
+    
+    if (selectedRows.length > 0) {
+      try {
+        await Promise.all(selectedRows?.map((id) => deleteFeeds(id)));
+        toast.success("Deleted successfully");
+        setIsChange(!isChange);
+        setSelectedRows([]);
+      } catch (error) {
+        console.log(error);
+      }
+    }
   };
   return (
     <>
@@ -67,8 +86,10 @@ const FeedList = () => {
         <StyledTable
           columns={feedColumns}
           pageNo={pageNo}
+          onSelectionChange={handleSelectionChange}
           setPageNo={setPageNo}
           payment
+          onDelete={handleDelete}
           onModify={handleApprove}
           onAction={handleReject}
           rowPerSize={row}

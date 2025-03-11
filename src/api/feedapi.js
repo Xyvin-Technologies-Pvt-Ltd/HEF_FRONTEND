@@ -24,3 +24,12 @@ export const editFeed = async (action, id, data) => {
     throw error.response.data;
   }
 };
+export const deleteFeed = async (id) => {
+  try {
+    const response = await axiosInstance.delete(`/feeds/single/${id}`);
+
+    return response.data;
+  } catch (error) {
+    console.error("Error caught:", error);
+  }
+};
