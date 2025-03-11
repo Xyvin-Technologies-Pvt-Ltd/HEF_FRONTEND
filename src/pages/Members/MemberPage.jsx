@@ -19,8 +19,8 @@ const MemberPage = () => {
     try {
       const data = await getMember({ fullUser: true });
       const csvData = data.data;
-      if (csvData && csvData.headers && csvData.csvData) {
-        generateExcel(csvData.headers, csvData.csvData,"Members");
+      if (csvData && csvData.headers && csvData.body) {
+        generateExcel(csvData.headers, csvData.body,"Members");
       } else {
         console.error(
           "Error: Missing headers or data in the downloaded content"
