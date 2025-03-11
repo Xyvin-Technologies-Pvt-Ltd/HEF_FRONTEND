@@ -3,7 +3,7 @@ export const memberColumns = [
   { title: "Member ID", field: "memberId" },
   { title: "Chapter Name", field: "chapterName" },
   { title: "Phone Number", field: "phone" },
-  { title: "Join Date", field: "createdAt" },
+  { title: "Join Date", field: "dateOfJoining" },
   { title: "Status", field: "status" },
 ];
 export const eventHistoryColumns = [
