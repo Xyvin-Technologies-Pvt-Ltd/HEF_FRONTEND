@@ -10,6 +10,7 @@ import { useListStore } from "../../store/listStore";
 import SuspendProfile from "../../components/Member/SuspendProfile";
 import { ReactComponent as FilterIcon } from "../../assets/icons/FilterIcon.svg";
 import MemberFilter from "../../components/Member/MemberFilter";
+import { getDwld } from "../../api/adminapi";
 const MemberList = () => {
   const navigate = useNavigate();
   const { fetchMember } = useListStore();
@@ -39,9 +40,34 @@ const MemberList = () => {
     if (filters.name) filter.name = filters.name;
     if (filters.membershipId) filter.membershipId = filters.membershipId;
     if (filters.status) filter.status = filters.status;
-    if (filters.installed) filter.installed = filters.installed;
+    if (typeof filters.installed === "boolean") {
+      filter.installed = filters.installed;
+    }
     fetchMember(filter);
   }, [isChange, pageNo, search, row, filters]);
+  const handleDownload = async () => {
+    try {
+      let filter = {};
+
+      if (filters.name) filter.name = filters.name;
+      if (filters.membershipId) filter.membershipId = filters.membershipId;
+      if (filters.status) filter.status = filters.status;
+      if (typeof filters.installed === "boolean") {
+        filter.installed = filters.installed;
+      }
+      const data = await getDwld(filter);
+      const csvData = data.data;
+      if (csvData && csvData.headers && csvData.body) {
+        generateExcel(csvData.headers, csvData.body, "Members");
+      } else {
+        console.error(
+          "Error: Missing headers or data in the downloaded content"
+        );
+      }
+    } catch (error) {
+      console.error("Error downloading users:", error);
+    }
+  };
 
   const handleRowDelete = (id) => {
     setMemberId(id);
@@ -65,6 +91,9 @@ const MemberList = () => {
   const handleTabChange = (tab) => {
     setSelectedTab(tab);
   };
+  console.log('====================================');
+  console.log("filters", filters);
+  console.log('====================================');
   return (
     <>
       <Box padding={"15px"}>
@@ -78,6 +107,11 @@ const MemberList = () => {
             <StyledSearchbar
               placeholder={"Search"}
               onchange={(e) => setSearch(e.target.value)}
+            />{" "}
+            <StyledButton
+              variant={"primary"}
+              name={"Download"}
+              onClick={handleDownload}
             />
             <Badge
               color="error"
@@ -87,7 +121,7 @@ const MemberList = () => {
                   filters.name ||
                   filters.membershipId ||
                   filters.status ||
-                  filters.installed
+                  (filters.installed !== undefined && filters.installed !== "")
                 )
               }
               sx={{

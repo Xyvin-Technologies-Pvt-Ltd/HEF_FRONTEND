@@ -92,3 +92,13 @@ export const getDashboard=async()=>{
     console.error(error.response.data.message);
   }
 }
+export const getDwld = async (filter) => {
+  try {
+    const response = await axiosInstance.get(`/admin/download-user`, {
+      params: filter,
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

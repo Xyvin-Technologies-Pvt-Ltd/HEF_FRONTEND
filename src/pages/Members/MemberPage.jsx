@@ -46,11 +46,7 @@ const MemberPage = () => {
           </Typography>
         </Stack>
         <Stack direction={"row"} spacing={2}>
-          <StyledButton
-            variant={"secondary"}
-            name={"Download"}
-            onClick={handleDownload}
-          />
+         
           <StyledButton
             variant={"primary"}
             name={
