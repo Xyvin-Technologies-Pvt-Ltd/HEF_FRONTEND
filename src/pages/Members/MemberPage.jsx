@@ -6,6 +6,7 @@ import { StyledButton } from "../../ui/StyledButton";
 
 import { ReactComponent as AddIcon } from "../../assets/icons/AddIcon.svg";
 import { useNavigate } from "react-router-dom";
+import { getMember } from "../../api/memberapi";
 
 const MemberPage = () => {
   const [selectedTab, setSelectedTab] = useState(0);

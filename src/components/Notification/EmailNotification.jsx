@@ -73,7 +73,8 @@ export default function EmailNotification({}) {
         content: data?.content,
         subject: data?.subject,
         users: users,
-        media: imageUrl,
+        ...imageUrl && { media: imageUrl },
+        
       };
       formData.type = "email";
       await addNotifications(formData);
@@ -194,7 +195,6 @@ export default function EmailNotification({}) {
               name="media"
               control={control}
               defaultValue=""
-              rules={{ required: "File is required" }}
               render={({ field: { onChange, value } }) => (
                 <>
                   <StyledEventUpload
@@ -204,12 +204,10 @@ export default function EmailNotification({}) {
                       onChange(file);
                     }}
                     value={value}
-                  /><FormHelperText style={{ color: "#888" }}>
-                  File size limit: 1 MB
-                </FormHelperText>
-                  {errors.media && (
-                    <span style={{ color: "red" }}>{errors.media.message}</span>
-                  )}
+                  />
+                  <FormHelperText style={{ color: "#888" }}>
+                    File size limit: 1 MB
+                  </FormHelperText>
                 </>
               )}
             />

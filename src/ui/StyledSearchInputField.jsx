@@ -7,14 +7,14 @@ const SelectContainer = styled.div`
   width: 100%;
 `;
 
-const StyledSelectField = ({
+const StyledSearchInputField = ({
   placeholder,
   isDisabled,
   options,
   onChange,
   value,
   isMulti,
-  // onInputChang
+  onInputChange
 }) => {
   const customStyles = {
     control: (provided, state) => ({
@@ -77,10 +77,14 @@ const StyledSelectField = ({
         isMulti={isMulti}
         isDisabled={isDisabled}
         styles={customStyles}
-      
+        onInputChange={(inputValue, { action }) => {
+          if (action === "input-change") {
+            onInputChange(inputValue);
+          }
+        }}
       />
     </SelectContainer>
   );
 };
 
-export default StyledSelectField;
+export default StyledSearchInputField;

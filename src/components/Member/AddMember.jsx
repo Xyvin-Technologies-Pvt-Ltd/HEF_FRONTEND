@@ -22,6 +22,8 @@ import { useMemberStore } from "../../store/Memberstore";
 import { getLevels, getAllLevel } from "../../api/hierarchyapi";
 import { Delete } from "@mui/icons-material";
 import { getTags } from "../../api/memberapi";
+import StyledSearchInputField from "../../ui/StyledSearchInputField";
+import { StyledCalender } from "../../ui/StyledCalender";
 
 const AddMember = () => {
   const {
@@ -73,6 +75,7 @@ const AddMember = () => {
         setValue("address", member?.address || "");
         setValue("whatsapp", member?.secondaryPhone?.whatsapp);
         setValue("business", member?.secondaryPhone?.business);
+        setValue("dateOfJoining", member?.dateOfJoining || "");
         if (member?.secondaryPhone?.whatsapp) {
           setAdditionalPhones([{ name: "WhatsApp Number", key: "whatsapp" }]);
         }
@@ -229,6 +232,7 @@ const AddMember = () => {
         ...(data?.bio && { bio: data?.bio }),
         ...(data?.address && { address: data?.address }),
         ...(imageUrl && { image: imageUrl }),
+        ...(data?.dateOfJoining && { dateOfJoining: data?.dateOfJoining }),
         ...(data?.companies?.length ? { company: data.companies } : {}),
         businessCatogary: data?.businessCatogary,
         businessSubCatogary: data?.businessSubCatogary,
@@ -622,6 +626,7 @@ const AddMember = () => {
                       )}
                     />
                   </Grid>
+
                   <Grid item xs={6}>
                     <Typography variant="h6" color="textSecondary">
                       Tags
@@ -631,7 +636,7 @@ const AddMember = () => {
                       control={control}
                       defaultValue={company.tags?.map((tag) => tag.value) || []}
                       render={({ field: { onChange, value, ...field } }) => (
-                        <StyledSelectField
+                        <StyledSearchInputField
                           placeholder="Select Tag"
                           options={tagOptions}
                           isMulti
@@ -706,6 +711,26 @@ const AddMember = () => {
                   render={({ field }) => (
                     <>
                       <StyledInput placeholder="Enter subcategory" {...field} />
+                    </>
+                  )}
+                />
+              </Grid>{" "}
+              <Grid item xs={12}>
+                <Typography
+                  sx={{ marginBottom: 1 }}
+                  variant="h6"
+                  color="textSecondary"
+                >
+                  Date of Joining
+                </Typography>
+                <Controller
+                  name="dateOfJoining"
+                  control={control}
+                  defaultValue={null}
+                  // rules={{ required: "Start Date is required" }}
+                  render={({ field }) => (
+                    <>
+                      <StyledCalender {...field} />
                     </>
                   )}
                 />
