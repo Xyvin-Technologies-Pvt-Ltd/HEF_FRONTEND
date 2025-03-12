@@ -290,6 +290,7 @@ const StyledTable = ({
                         "startDate",
                         "endDate",
                         "expiryDate",
+                        "dateOfJoining"
                       ].includes(column.field) ? (
                         formatIndianDate(row[column.field])
                       ) : [
