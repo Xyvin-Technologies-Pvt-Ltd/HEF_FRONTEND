@@ -1,4 +1,12 @@
-import { Box, Stack } from "@mui/material";
+import {
+  Box,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Stack,
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
 import StyledSearchbar from "../../ui/StyledSearchbar";
 import StyledTable from "../../ui/StyledTable";
@@ -8,6 +16,7 @@ import FeedApproval from "../../components/Approve/FeedApproval";
 import FeedReject from "../../components/Approve/FeedReject";
 import { useListStore } from "../../store/listStore";
 import { toast } from "react-toastify";
+import { StyledButton } from "../../ui/StyledButton";
 
 const FeedList = () => {
   const [rejectOpen, setRejectOpen] = useState(false);
@@ -15,7 +24,7 @@ const FeedList = () => {
   const [isChange, setIsChange] = useState(false);
   const { fetchFeed } = useListStore();
   const [selectedRows, setSelectedRows] = useState([]);
-
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [pageNo, setPageNo] = useState(1);
   const [row, setRow] = useState(10);
@@ -48,17 +57,21 @@ const FeedList = () => {
   const handleCloseApprove = () => {
     setApproveOpen(false);
   };
-  const handleDelete = async () => {
-    
+  const handleDelete = () => {
     if (selectedRows.length > 0) {
-      try {
-        await Promise.all(selectedRows?.map((id) => deleteFeeds(id)));
-        toast.success("Deleted successfully");
-        setIsChange(!isChange);
-        setSelectedRows([]);
-      } catch (error) {
-        console.log(error);
-      }
+      setDeleteDialogOpen(true);
+    }
+  };
+
+  const confirmDelete = async () => {
+    setDeleteDialogOpen(false);
+    try {
+      await Promise.all(selectedRows.map((id) => deleteFeeds(id)));
+      toast.success("Deleted successfully");
+      setIsChange(!isChange);
+      setSelectedRows([]);
+    } catch (error) {
+      console.log(error);
     }
   };
   return (
@@ -107,6 +120,38 @@ const FeedList = () => {
           id={approvalId}
           setIsChange={setIsChange}
         />
+        <Dialog
+          open={deleteDialogOpen}
+          onClose={() => setDeleteDialogOpen(false)}
+          PaperProps={{
+            sx: { borderRadius: "12px", padding: 2 },
+          }}
+        >
+          <DialogTitle>Confirm Deletion</DialogTitle>
+          <DialogContent sx={{ height: "auto", width: "330px" }}>
+            <DialogContentText>
+              Are you sure you want to delete the selected items?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <StyledButton
+              variant="secondary"
+              name="Cancel"
+              onClick={(event) => {
+                event.preventDefault();
+                setDeleteDialogOpen(false);
+              }}
+            />
+            <StyledButton
+              variant="primary"
+              name={"Delete"}
+              onClick={(event) => {
+                event.preventDefault();
+                confirmDelete();
+              }}
+            />
+          </DialogActions>
+        </Dialog>
       </Box>
     </>
   );
