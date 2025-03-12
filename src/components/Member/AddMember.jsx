@@ -636,7 +636,7 @@ const AddMember = () => {
                       control={control}
                       defaultValue={company.tags?.map((tag) => tag.value) || []}
                       render={({ field: { onChange, value, ...field } }) => (
-                        <StyledSearchInputField
+                        <StyledSelectField
                           placeholder="Select Tag"
                           options={tagOptions}
                           isMulti
@@ -748,7 +748,7 @@ const AddMember = () => {
                   control={control}
                   defaultValue={[]}
                   render={({ field }) => (
-                    <StyledSelectField
+                    <StyledSearchInputField
                       {...field}
                       isMulti
                       placeholder="Enter tags"
