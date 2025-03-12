@@ -28,7 +28,7 @@ const MemberPage = () => {
       >
         <Stack>
           <Typography variant="h4" color="textSecondary">
-            User
+            Users
           </Typography>
         </Stack>
         <Stack direction={"row"} spacing={2}>

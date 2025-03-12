@@ -179,6 +179,8 @@ const StyledTable = ({
     }
   };
   const formatIndianDate = (date) => {
+    if (!date) return "";
+
     return moment.utc(date).format("DD-MM-YYYY");
   };
 
