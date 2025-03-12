@@ -59,10 +59,14 @@ const BusinessPage = () => {
   };
   const handleDelete = async () => {
     if (selectedRows.length > 0) {
-      await Promise.all(selectedRows?.map((id) => removeActivity(id)));
-      toast.success("Deleted successfully");
-      setIsChange(!isChange);
-      setSelectedRows([]);
+      try {
+        await Promise.all(selectedRows?.map((id) => removeActivity(id)));
+        toast.success("Deleted successfully");
+        setIsChange(!isChange);
+        setSelectedRows([]);
+      } catch (error) {
+        toast.error(error.message);
+      }
     }
   };
 
@@ -84,7 +88,7 @@ const BusinessPage = () => {
     fetchActivity(filter);
   }, [isChange, pageNo, search, row, selectedTab]);
   const activityColumns = [
-    { title: "Date", field: "date", padding: "none" },
+    { title: "Date", field: "createdAt", padding: "none" },
     { title: "Business giver", field: "senderName" },
     { title: "Business receiver", field: "memberName" },
     { title: "Request Type", field: "type" },

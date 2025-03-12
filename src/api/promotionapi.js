@@ -35,7 +35,7 @@ export const deletePromotion = async (id) => {
 
     return response.data;
   } catch (error) {
-    console.error(error.response.data.message);
+    throw error.response.data;
   }
 };
 export const editPromotion = async (id, data) => {

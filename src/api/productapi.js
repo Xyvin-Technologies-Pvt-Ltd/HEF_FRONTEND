@@ -45,7 +45,7 @@ export const deleteProductById = async (id) => {
 
     return response.data;
   } catch (error) {
-    console.error("Error caught:", error);
+    throw error.response.data;
   }
 };
 export const getProductById = async (id) => {

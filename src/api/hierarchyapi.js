@@ -64,7 +64,8 @@ export const deleteLevel = async (type, filter) => {
     });
     return response.data;
   } catch (error) {
-    console.error(error.response.data.message);
+    throw error.response.data;
+
   }
 };
 export const getchapterList = async () => {

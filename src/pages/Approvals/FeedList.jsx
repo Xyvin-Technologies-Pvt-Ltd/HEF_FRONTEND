@@ -71,7 +71,7 @@ const FeedList = () => {
       setIsChange(!isChange);
       setSelectedRows([]);
     } catch (error) {
-      console.log(error);
+      toast.error(error.message);
     }
   };
   return (

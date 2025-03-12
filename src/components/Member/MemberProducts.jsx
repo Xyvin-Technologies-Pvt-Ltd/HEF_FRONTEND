@@ -39,7 +39,7 @@ const MemberProducts = ({ id }) => {
         setIsChange(!isChange);
         setSelectedRows([]);
       } catch (error) {
-        console.log(error);
+        toast.error(error.message);
       }
     }
   };
@@ -49,7 +49,7 @@ const MemberProducts = ({ id }) => {
       toast.success("Deleted successfully");
       setIsChange(!isChange);
     } catch (error) {
-      console.log(error);
+      toast.error(error.message);
     }
   };
   return (

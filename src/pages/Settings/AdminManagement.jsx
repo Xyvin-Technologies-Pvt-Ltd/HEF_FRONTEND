@@ -38,7 +38,7 @@ export default function AdminManagement() {
         setIsChange(!isChange);
         setSelectedRows([]);
       } catch (error) {
-        console.log(error);
+        toast.error(error.message);
       }
     }
   };
@@ -48,7 +48,7 @@ export default function AdminManagement() {
       toast.success("Deleted successfully");
       setIsChange(!isChange);
     } catch (error) {
-      console.log(error);
+      toast.error(error.message);
     }
   };
   const handleEdit = (id) => {
@@ -116,7 +116,6 @@ export default function AdminManagement() {
               setPageNo={setPageNo}
               rowPerSize={row}
               setRowPerSize={setRow}
-              
               onSelectionChange={handleSelectionChange}
               onDelete={handleDelete}
               onDeleteRow={handleRowDelete}

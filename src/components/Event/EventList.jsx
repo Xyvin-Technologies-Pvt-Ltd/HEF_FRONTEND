@@ -32,16 +32,24 @@ const EventList = () => {
   };
   const handleDelete = async () => {
     if (selectedRows.length > 0) {
-      await Promise.all(selectedRows?.map((id) => deleteEvent(id)));
-      toast.success("Deleted successfully");
-      setIsChange(!isChange);
-      setSelectedRows([]);
+      try {
+        await Promise.all(selectedRows?.map((id) => deleteEvent(id)));
+        toast.success("Deleted successfully");
+        setIsChange(!isChange);
+        setSelectedRows([]);
+      } catch (error) {
+        toast.error(error.message);
+      }
     }
   };
   const handleRowDelete = async (id) => {
-    await deleteEvent(id);
-    toast.success("Deleted successfully");
-    setIsChange(!isChange);
+    try {
+      await deleteEvent(id);
+      toast.success("Deleted successfully");
+      setIsChange(!isChange);
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
   return (
     <Box>

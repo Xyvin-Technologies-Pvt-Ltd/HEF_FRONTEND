@@ -42,6 +42,6 @@ export const deleteRole = async (id) => {
     const response = await axiosInstance.delete(`/role/single/${id}`);
     return response.data;
   } catch (error) {
-    console.error(error.response.data.message);
+    throw error.response.data;
   }
 };

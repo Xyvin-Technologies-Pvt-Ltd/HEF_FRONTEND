@@ -16,7 +16,7 @@ export default function NewsDisplay() {
   const [selectedRows, setSelectedRows] = useState([]);
   const [filterOpen, setFilterOpen] = useState(false);
   const [isChange, setIsChange] = useState(false);
-const[view,setView]=useState(false)
+  const [view, setView] = useState(false);
   const { deleteNews, fetchNewsById, singleNews } = useNewsStore();
   const { fetchNews } = useListStore();
   const [pageNo, setPageNo] = useState(1);
@@ -40,16 +40,24 @@ const[view,setView]=useState(false)
   };
   const handleDelete = async () => {
     if (selectedRows.length > 0) {
-      await Promise.all(selectedRows?.map((id) => deleteNews(id)));
-      toast.success("Deleted successfully");
-      setIsChange(!isChange);
-      setSelectedRows([]);
+      try {
+        await Promise.all(selectedRows?.map((id) => deleteNews(id)));
+        toast.success("Deleted successfully");
+        setIsChange(!isChange);
+        setSelectedRows([]);
+      } catch {
+        toast.error(error.message);
+      }
     }
   };
   const handleRowDelete = async (id) => {
-    await deleteNews(id);
-    toast.success("Deleted successfully");
-    setIsChange(!isChange);
+    try {
+      await deleteNews(id);
+      toast.success("Deleted successfully");
+      setIsChange(!isChange);
+    } catch {
+      toast.error(error.message);
+    }
   };
   useEffect(() => {
     let filter = {};
@@ -63,7 +71,7 @@ const[view,setView]=useState(false)
       filter.category = selectedTab;
     }
     fetchNews(filter);
-  }, [isChange, pageNo, search,selectedTab,row]);
+  }, [isChange, pageNo, search, selectedTab, row]);
   const handleEdit = (id) => {
     navigate(`/news/edit/${id}`);
   };
@@ -78,10 +86,10 @@ const[view,setView]=useState(false)
   const handleChange = () => {
     setIsChange(!isChange);
   };
-const handleView=async(id)=>{
-  await fetchNewsById(id);
-  setView(true);
-}
+  const handleView = async (id) => {
+    await fetchNewsById(id);
+    setView(true);
+  };
   return (
     <>
       <Stack
@@ -92,7 +100,10 @@ const handleView=async(id)=>{
         marginRight={2}
       >
         <Stack direction={"row"} spacing={2}>
-        <StyledSearchbar placeholder={"Search"} onchange={(e) => setSearch(e.target.value)} />
+          <StyledSearchbar
+            placeholder={"Search"}
+            onchange={(e) => setSearch(e.target.value)}
+          />
         </Stack>
       </Stack>
 
@@ -118,7 +129,6 @@ const handleView=async(id)=>{
             variant={selectedTab === "Trending" ? "primary" : "third"}
             onClick={() => handleTabChange("Trending")}
           />
-          
         </Stack>
       </Stack>
       <Box

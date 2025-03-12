@@ -31,12 +31,12 @@ const MemberPage = () => {
   const [row, setRow] = useState(10);
   const [selectedTab, setSelectedTab] = useState(0);
   const [open, setOpen] = useState(false);
-  const[isChange, setIsChange] = useState(false);
+  const [isChange, setIsChange] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [confirmationAction, setConfirmationAction] = useState("");
   const [paymentId, setPaymentId] = useState(null);
   const [openView, setOpenView] = useState(false);
-  const { patchPayments, fetchSinglePayment, singlePayment,deletePayments } =
+  const { patchPayments, fetchSinglePayment, singlePayment, deletePayments } =
     usePaymentStore();
   const handleTabChange = (event, newValue) => {
     setSelectedTab(newValue);
@@ -73,10 +73,14 @@ const MemberPage = () => {
   };
   const handleDelete = async () => {
     if (selectedRows.length > 0) {
-      await Promise.all(selectedRows?.map((id) => deletePayments(id)));
-      toast.success("Payments deleted successfully");
-      setIsChange(!isChange);
-      setSelectedRows([]);
+      try {
+        await Promise.all(selectedRows?.map((id) => deletePayments(id)));
+        toast.success("Payments deleted successfully");
+        setIsChange(!isChange);
+        setSelectedRows([]);
+      } catch {
+        toast.error(error.message);
+      }
     }
   };
   useEffect(() => {

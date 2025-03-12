@@ -1,6 +1,7 @@
 import axios from "axios";
 import { toast } from "react-toastify";
-const baseURL = import.meta.env.VITE_APP_API_URL || "http://localhost:3005/api/v1/";
+const baseURL =
+  import.meta.env.VITE_APP_API_URL || "http://localhost:3005/api/v1/";
 import axiosInstance from "./axiosintercepter";
 
 export const getLogin = async (datas) => {
@@ -71,7 +72,7 @@ export const deleteAdmin = async (id) => {
     const response = await axiosInstance.delete(`/admin/profile/${id}`);
     return response.data;
   } catch (error) {
-    console.error(error.response.data.message);
+    throw error.response.data;
   }
 };
 export const getAdminActivity = async (filter) => {
@@ -84,14 +85,14 @@ export const getAdminActivity = async (filter) => {
     console.error(error.response.data.message);
   }
 };
-export const getDashboard=async()=>{
+export const getDashboard = async () => {
   try {
     const response = await axiosInstance.get(`/admin/dashboard`);
     return response.data;
   } catch (error) {
     console.error(error.response.data.message);
   }
-}
+};
 export const getDwld = async (filter) => {
   try {
     const response = await axiosInstance.get(`/admin/download-user`, {

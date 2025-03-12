@@ -102,7 +102,7 @@ const LevelPage = () => {
         setIsChange(!isChange);
         setSelectedRows([]);
       } catch (error) {
-        console.log(error);
+        toast.error(error.message);
       }
     }
   };
@@ -121,7 +121,7 @@ const LevelPage = () => {
       toast.success("Deleted successfully");
       setIsChange(!isChange);
     } catch (error) {
-      console.log(error);
+      toast.error(error.message);
     }
   };
   const handleDownload = async () => {

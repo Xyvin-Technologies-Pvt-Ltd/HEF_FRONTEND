@@ -41,7 +41,7 @@ const StyledNoticeTable = () => {
         setIsChange(!isChange);
         setSelectedRows([]);
       } catch (error) {
-        console.log(error);
+        toast.error(error.message);
       }
     }
   };
@@ -54,7 +54,7 @@ const StyledNoticeTable = () => {
       toast.success("Deleted successfully");
       setIsChange(!isChange);
     } catch (error) {
-      console.log(error);
+    toast.error(error.message);
     }
   };
 
