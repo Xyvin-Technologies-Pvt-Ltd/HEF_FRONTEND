@@ -15,14 +15,18 @@ import StyledSearchbar from "../../ui/StyledSearchbar";
 import { StyledButton } from "../../ui/StyledButton";
 
 import { ReactComponent as AddIcon } from "../../assets/icons/AddIcon.svg";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import useHierarchyStore from "../../store/hierarchyStore";
 import { toast } from "react-toastify";
 import { getchapterList } from "../../api/hierarchyapi";
 import { generateExcel } from "../../utils/generateExcel";
-
+const tabMapping = {
+  state: 0,
+  zone: 1,
+  district: 2,
+  chapter: 3,
+};
 const LevelPage = () => {
-  const [selectedTab, setSelectedTab] = useState(0);
   const { fetchLevels } = useListStore();
   const [selectedRows, setSelectedRows] = useState([]);
   const [search, setSearch] = useState("");
@@ -31,6 +35,15 @@ const LevelPage = () => {
   const [isChange, setIsChange] = useState(false);
   const { deleteLevels } = useHierarchyStore();
   const navigate = useNavigate();
+  const location = useLocation();
+  const { type } = location?.state || {};
+  const [selectedTab, setSelectedTab] = useState(tabMapping[type] ?? 0);
+
+  useEffect(() => {
+    if (type && tabMapping.hasOwnProperty(type)) {
+      setSelectedTab(tabMapping[type]);
+    }
+  }, [type]);
   useEffect(() => {
     let filter = {};
     filter.pageNo = pageNo;
@@ -116,7 +129,7 @@ const LevelPage = () => {
       const data = await getchapterList();
       const csvData = data?.data;
       if (csvData && csvData.headers && csvData.body) {
-        generateExcel(csvData.headers, csvData.body,"Chapter");
+        generateExcel(csvData.headers, csvData.body, "Chapter");
       } else {
         console.error(
           "Error: Missing headers or data in the downloaded content"
@@ -202,7 +215,11 @@ const LevelPage = () => {
               onchange={(e) => setSearch(e.target.value)}
             />
             {selectedTab === 3 && (
-              <StyledButton name={"Download csv"} variant="primary" onClick={handleDownload}/>
+              <StyledButton
+                name={"Download csv"}
+                variant="primary"
+                onClick={handleDownload}
+              />
             )}
           </Stack>
         </Stack>

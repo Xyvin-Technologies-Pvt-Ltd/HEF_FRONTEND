@@ -148,7 +148,7 @@ export default function LevelAdd() {
       } else {
         await addLevel(type, formData);
       }
-      navigate("/levels");
+      navigate("/levels", { state: { type: type } });
     } catch (error) {
       toast.error(error.message);
     } finally {
