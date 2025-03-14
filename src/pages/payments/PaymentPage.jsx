@@ -84,21 +84,27 @@ const MemberPage = () => {
     }
   };
   useEffect(() => {
-    let filter = {};
-    filter.pageNo = pageNo;
-    filter.limit = row;
+    if (selectedTab === 3) return; 
+  
+    let filter = {
+      pageNo,
+      limit: row,
+    };
+  
     if (search) {
       filter.search = search;
       setPageNo(1);
     }
+  
     if (selectedTab === 1) {
       filter.status = "active";
-    }
-    if (selectedTab === 2) {
+    } else if (selectedTab === 2) {
       filter.status = "pending";
     }
+  
     fetchPayment(filter);
-  }, [pageNo, search, row, selectedTab, isChange]);
+  }, [pageNo, search, row, selectedTab !== 3 ? selectedTab : null, isChange]); 
+  
 
   return (
     <>
