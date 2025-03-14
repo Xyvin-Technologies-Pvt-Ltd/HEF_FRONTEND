@@ -364,8 +364,7 @@ const StyledTable = ({
                       )}{" "}
                       {!menu &&
                         row.status !== "rejected" &&
-                        row.status !== "accepted"  &&
-                        row.status !== "active" && (
+                        row.status !== "accepted"  && (
                           <IconButton
                             aria-controls="simple-menu"
                             aria-haspopup="true"
