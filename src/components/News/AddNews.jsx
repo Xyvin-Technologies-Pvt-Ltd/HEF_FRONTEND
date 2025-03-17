@@ -15,10 +15,10 @@ import StyledInput from "../../ui/StyledInput";
 import { StyledMultilineTextField } from "../../ui/StyledMultilineTextField";
 import { StyledButton } from "../../ui/StyledButton";
 import { useNewsStore } from "../../store/newsStore";
-import uploadFileToS3 from "../../utils/s3Upload";
 import { toast } from "react-toastify";
 import { ReactComponent as CloseIcon } from "../../assets/icons/CloseIcon.svg";
 import StyledCropImage from "../../ui/StyledCropImage";
+import { upload } from "../../api/adminapi";
 export default function AddNews({ isUpdate, setSelectedTab }) {
   const {
     control,
@@ -112,12 +112,13 @@ export default function AddNews({ isUpdate, setSelectedTab }) {
 
       if (imageFile) {
         try {
-          imageUrl = await new Promise((resolve, reject) => {
-            uploadFileToS3(
-              imageFile,
-              (location) => resolve(location),
-              (error) => reject(error)
-            );
+          imageUrl = await new Promise(async (resolve, reject) => {
+            try {
+              const response = await upload(imageFile);
+              resolve(response?.data || "");
+            } catch (error) {
+              reject(error);
+            }
           });
         } catch (error) {
           console.error("Failed to upload image:", error);
@@ -126,12 +127,14 @@ export default function AddNews({ isUpdate, setSelectedTab }) {
       }
       if (pdfFile) {
         try {
-          pdfUrl = await new Promise((resolve, reject) => {
-            uploadFileToS3(
-              pdfFile,
-              (location) => resolve(location),
-              (error) => reject(error)
-            );
+          pdfUrl = await new Promise(async(resolve, reject) => {
+            try{
+              const response = await upload(pdfFile);
+              resolve(response?.data || "");
+            }
+            catch (error) {
+              reject(error);
+            }
           });
         } catch (error) {
           console.error("Failed to upload pdf:", error);

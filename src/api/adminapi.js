@@ -103,3 +103,21 @@ export const getDwld = async (filter) => {
     throw error;
   }
 };
+export const upload = async (file) => {
+  try {
+    const formData = new FormData();
+    formData.append("image", file);
+    const response = await axios.post(`${baseURL}upload`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    const errorMsg =
+      error.response?.data?.message || "An error occurred during file upload";
+    toast.error(errorMsg);
+    throw error;
+  }
+};

@@ -8,9 +8,9 @@ import StyledInput from "../../ui/StyledInput";
 import { StyledEventUpload } from "../../ui/StyledEventUpload";
 import { useDropDownStore } from "../../store/dropDownStore";
 import { useNotificationStore } from "../../store/notificationStore";
-import uploadFileToS3 from "../../utils/s3Upload";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { upload } from "../../api/adminapi";
 
 export default function EmailNotification({}) {
   const {
@@ -54,12 +54,13 @@ export default function EmailNotification({}) {
 
       if (imageFile) {
         try {
-          imageUrl = await new Promise((resolve, reject) => {
-            uploadFileToS3(
-              imageFile,
-              (location) => resolve(location),
-              (error) => reject(error)
-            );
+          imageUrl = await new Promise(async (resolve, reject) => {
+            try {
+              const response = await upload(imageFile);
+              resolve(response?.data || "");
+            } catch (error) {
+              reject(error);
+            }
           });
         } catch (error) {
           console.error("Failed to upload image:", error);

@@ -15,7 +15,6 @@ import StyledSelectField from "../../ui/StyledSelectField";
 import { StyledMultilineTextField } from "../../ui/StyledMultilineTextField";
 import { StyledButton } from "../../ui/StyledButton";
 import { StyledEventUpload } from "../../ui/StyledEventUpload";
-import uploadFileToS3 from "../../utils/s3Upload";
 import { toast } from "react-toastify";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useMemberStore } from "../../store/Memberstore";
@@ -24,6 +23,7 @@ import { Delete } from "@mui/icons-material";
 import { getTags } from "../../api/memberapi";
 import StyledSearchInputField from "../../ui/StyledSearchInputField";
 import { StyledCalender } from "../../ui/StyledCalender";
+import { upload } from "../../api/adminapi";
 
 const AddMember = () => {
   const {
@@ -200,15 +200,15 @@ const AddMember = () => {
     try {
       setLoadings(true);
       let imageUrl = data?.image || "";
-
       if (imageFile) {
         try {
-          imageUrl = await new Promise((resolve, reject) => {
-            uploadFileToS3(
-              imageFile,
-              (location) => resolve(location),
-              (error) => reject(error)
-            );
+          imageUrl = await new Promise(async (resolve, reject) => {
+            try {
+              const response = await upload(imageFile);
+              resolve(response?.data || "");
+            } catch (error) {
+              reject(error);
+            }
           });
         } catch (error) {
           console.error("Failed to upload image:", error);

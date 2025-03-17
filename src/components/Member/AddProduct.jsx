@@ -7,8 +7,8 @@ import { StyledEventUpload } from "../../ui/StyledEventUpload";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import StyledSelectField from "../../ui/StyledSelectField";
 import { useProductStore } from "../../store/productStore";
-import uploadFileToS3 from "../../utils/s3Upload";
 import { toast } from "react-toastify";
+import { upload } from "../../api/adminapi";
 
 const AddProduct = () => {
   const {
@@ -72,12 +72,13 @@ const AddProduct = () => {
 
       if (imageFile) {
         try {
-          imageUrl = await new Promise((resolve, reject) => {
-            uploadFileToS3(
-              imageFile,
-              (location) => resolve(location),
-              (error) => reject(error)
-            );
+          imageUrl = await new Promise(async (resolve, reject) => {
+            try {
+              const response = await upload(imageFile);
+              resolve(response?.data || "");
+            } catch (error) {
+              reject(error);
+            }
           });
         } catch (error) {
           console.error("Failed to upload image:", error);
