@@ -920,7 +920,7 @@ const AddMember = () => {
                 {" "}
                 <Typography
                   variant="body2"
-                  color="error"
+                  color="red"
                   sx={{ marginBottom: 2 }}
                 >
                   * Fields are mandatory
