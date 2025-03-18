@@ -1,12 +1,12 @@
 import { create } from "zustand";
-import { getReport } from "../api/reportapi";
+import { getReportById } from "../api/reportapi";
 
 const useReportStore = create((set) => ({
-  reports: [],
+  report: [],
 
-  getReports: async () => {
-    const response = await getReport();
-    set({ reports: response.data || [] });
+  fetchReportById: async (id) => {
+    const allData = await getReportById(id);
+    set({ report: allData?.data || [] });
   },
 }));
 

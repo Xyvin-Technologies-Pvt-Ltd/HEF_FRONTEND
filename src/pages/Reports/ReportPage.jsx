@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from "react";
 import StyledTable from "../../ui/StyledTable";
-import { Box,  Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import { StyledButton } from "../../ui/StyledButton";
 import StyledSearchbar from "../../ui/StyledSearchbar";
 import { paymentColumns, reportColumns } from "../../assets/json/TableData";
 import { useListStore } from "../../store/listStore";
+import { useReportStore } from "../../store/reportStore";
+import ReportView from "../../components/Reports/ReportView";
 
 const ReportPage = () => {
   const { fetchReport } = useListStore();
+  const [view, setView] = useState(false);
   const [pageNo, setPageNo] = useState(1);
   const [search, setSearch] = useState("");
-  const[row, setRow] = useState(10)
+  const [row, setRow] = useState(10);
+  const { report, fetchReportById } = useReportStore();
   useEffect(() => {
     let filter = {};
     filter.pageNo = pageNo;
@@ -20,8 +24,11 @@ const ReportPage = () => {
       setPageNo(1);
     }
     fetchReport(filter);
-  }, [pageNo,search,row]);
-
+  }, [pageNo, search, row]);
+  const handleView = async (id) => {
+    await fetchReportById(id);
+    setView(true);
+  };
   return (
     <>
       <Stack
@@ -49,7 +56,10 @@ const ReportPage = () => {
           alignItems={"center"}
         >
           <Stack direction={"row"} spacing={2}>
-            <StyledSearchbar placeholder={"Search"} onchange={(e) => setSearch(e.target.value)} />
+            <StyledSearchbar
+              placeholder={"Search"}
+              onchange={(e) => setSearch(e.target.value)}
+            />
           </Stack>
         </Stack>
         <Box
@@ -61,12 +71,14 @@ const ReportPage = () => {
           <StyledTable
             columns={reportColumns}
             menu
+            onView={handleView}
             pageNo={pageNo}
             setPageNo={setPageNo}
             rowPerSize={row}
             setRowPerSize={setRow}
           />
         </Box>
+        <ReportView open={view} onClose={() => setView(false)} data={report} />
       </Box>
     </>
   );
