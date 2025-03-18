@@ -68,7 +68,7 @@ const ReportView = ({ open, onClose, data }) => {
         // color: "primary.contrastText"
       }}>
         <Box display="flex" justifyContent="space-between" alignItems="center">
-          <Typography variant="h6">Report Details</Typography>
+          <Typography variant="h3">Report Details</Typography>
           <Typography
             onClick={onClose}
             color="#000"
@@ -108,7 +108,7 @@ const ReportView = ({ open, onClose, data }) => {
           <Paper elevation={0} sx={{ bgcolor: "grey.50", p: 2, mb: 3, borderRadius: 2 }}>
             <Box display="flex" alignItems="center" gap={1} mb={1}>
               <PersonIcon color="action" fontSize="small" />
-              <Typography variant="subtitle2" color="textSecondary">
+              <Typography variant="h6" color="textSecondary">
                 Reported By
               </Typography>
             </Box>
@@ -119,7 +119,7 @@ const ReportView = ({ open, onClose, data }) => {
 
           {data?.reportType === "Feeds" && (
             <Paper elevation={0} sx={{ bgcolor: "grey.50", p: 2, mb: 3, borderRadius: 2 }}>
-              <Typography variant="subtitle2" color="textSecondary" mb={2}>
+              <Typography variant="h6" color="textSecondary" mb={2}>
                 Reported Content
               </Typography>
               
@@ -151,7 +151,7 @@ const ReportView = ({ open, onClose, data }) => {
 
           {data?.reportType === "Message" && (
             <Paper elevation={0} sx={{ bgcolor: "grey.50", p: 2, mb: 3, borderRadius: 2 }}>
-              <Typography variant="subtitle2" color="textSecondary" mb={2}>
+              <Typography variant="h6" color="textSecondary" mb={2}>
                 Message Information
               </Typography>
               
@@ -163,7 +163,7 @@ const ReportView = ({ open, onClose, data }) => {
               
               <Box display="flex" flexWrap="wrap" gap={3}>
                 <Box flex="1 0 45%">
-                  <Typography variant="subtitle2" color="textSecondary">
+                  <Typography variant="h6" color="textSecondary">
                     From:
                   </Typography>
                   <Typography variant="body2">
@@ -172,7 +172,7 @@ const ReportView = ({ open, onClose, data }) => {
                 </Box>
                 
                 <Box flex="1 0 45%">
-                  <Typography variant="subtitle2" color="textSecondary">
+                  <Typography variant="h6" color="textSecondary">
                     To:
                   </Typography>
                   <Typography variant="body2">
@@ -185,7 +185,7 @@ const ReportView = ({ open, onClose, data }) => {
 
           {data?.reportType === "Product" && (
             <Paper elevation={0} sx={{ bgcolor: "grey.50", p: 2, mb: 3, borderRadius: 2 }}>
-              <Typography variant="subtitle2" color="textSecondary" mb={2}>
+              <Typography variant="h6" color="textSecondary" mb={2}>
                 Product Details
               </Typography>
               
@@ -212,7 +212,7 @@ const ReportView = ({ open, onClose, data }) => {
                 <Box display="flex" flexWrap="wrap" gap={2}>
                   <Box flex="1 0 45%" display="flex" alignItems="center" gap={1}>
                     <AttachMoneyIcon color="action" fontSize="small" />
-                    <Typography variant="subtitle2" color="textSecondary">
+                    <Typography variant="h6" color="textSecondary">
                       Price:
                     </Typography>
                     <Typography variant="body1" fontWeight="medium">
@@ -222,7 +222,7 @@ const ReportView = ({ open, onClose, data }) => {
                   
                   <Box flex="1 0 45%" display="flex" alignItems="center" gap={1}>
                     <LocalOfferIcon color="action" fontSize="small" />
-                    <Typography variant="subtitle2" color="textSecondary">
+                    <Typography variant="h6" color="textSecondary">
                       Offer:
                     </Typography>
                     <Typography variant="body1" fontWeight="medium">
@@ -234,7 +234,7 @@ const ReportView = ({ open, onClose, data }) => {
                 <Box display="flex" flexWrap="wrap" gap={2}>
                   <Box flex="1 0 45%" display="flex" alignItems="center" gap={1}>
                     <InventoryIcon color="action" fontSize="small" />
-                    <Typography variant="subtitle2" color="textSecondary">
+                    <Typography variant="h6" color="textSecondary">
                       MOQ:
                     </Typography>
                     <Typography variant="body1">
@@ -243,7 +243,7 @@ const ReportView = ({ open, onClose, data }) => {
                   </Box>
                   
                   <Box flex="1 0 45%" display="flex" alignItems="center" gap={1}>
-                    <Typography variant="subtitle2" color="textSecondary">
+                    <Typography variant="h6" color="textSecondary">
                       Units:
                     </Typography>
                     <Typography variant="body1">
