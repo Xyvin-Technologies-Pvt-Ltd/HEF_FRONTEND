@@ -61,7 +61,7 @@ export const batchColumns = [
   { title: "No of members", field: "noOfMembers" },
 ];
 export const activityColumns = [
-  { title: "Date", field: "date", padding: "none" },
+  { title: "Date", field: "createdAt", padding: "none" },
   { title: "Business giver", field: "senderName" },
   { title: "Business receiver", field: "memberName" },
   { title: "Request Type", field: "type" },

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Box, Stack, Tab, Tabs } from "@mui/material";
 
 import StyledTable from "../../ui/StyledTable";
-import { activityColumns } from "../../assets/json/TableData";
 import StyledSearchbar from "../../ui/StyledSearchbar";
 import { useNavigate, useParams } from "react-router-dom";
 import { useListStore } from "../../store/listStore";
@@ -24,11 +23,27 @@ const MemberActivity = () => {
       filter.search = search;
       setPageNo(1);
     }
-    // filter.user = id;
+    if (selectedTab === 1) {
+      filter.type = "Business";
+    } else if (selectedTab === 2) {
+      filter.type = "One v One Meeting";
+    } else if (selectedTab === 3) {
+      filter.type = "Referral";
+    }
     filter.pageNo = pageNo;
     filter.limit = row;
     fetchActivity(filter);
-  }, [pageNo, search, row, id]);
+  }, [pageNo, search, row, id,selectedTab]);
+  const activityColumns = [
+    { title: "Date", field: "createdAt", padding: "none" },
+    { title: "Business giver", field: "senderName" },
+    { title: "Business receiver", field: "memberName" },
+    { title: "Request Type", field: "type" },
+    { title: "Status", field: "status" },
+    ...(selectedTab === 3
+      ? [{ title: "Referral", field: "referralName" }]
+      : []),
+  ];
   return (
     <>
       {" "}
