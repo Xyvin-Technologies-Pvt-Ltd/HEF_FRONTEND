@@ -344,7 +344,7 @@ const AddMember = () => {
                   variant="h6"
                   color="textSecondary"
                 >
-                  Full Name
+                  Full Name <span style={{ color: "red" }}>*</span>
                 </Typography>
                 <Controller
                   name="name"
@@ -423,7 +423,7 @@ const AddMember = () => {
                   variant="h6"
                   color="textSecondary"
                 >
-                  Phone number
+                  Phone number <span style={{ color: "red" }}>*</span>
                 </Typography>
                 <Controller
                   name="phone"
@@ -680,11 +680,12 @@ const AddMember = () => {
                   variant="h6"
                   color="textSecondary"
                 >
-                  Business category
+                  Business Category <span style={{ color: "red" }}>*</span>
                 </Typography>
                 <Controller
                   name="businessCatogary"
                   control={control}
+                  rules={{ required: "Business category is required" }}
                   defaultValue=""
                   render={({ field }) => (
                     <>
@@ -692,6 +693,11 @@ const AddMember = () => {
                         placeholder="Enter business category"
                         {...field}
                       />
+                      {errors.businessCatogary && (
+                        <span style={{ color: "red" }}>
+                          {errors.businessCatogary.message}
+                        </span>
+                      )}
                     </>
                   )}
                 />
@@ -702,15 +708,21 @@ const AddMember = () => {
                   variant="h6"
                   color="textSecondary"
                 >
-                  Subcategory
+                  Subcategory <span style={{ color: "red" }}>*</span>
                 </Typography>
                 <Controller
                   name="businessSubCatogary"
                   control={control}
                   defaultValue=""
+                  rules={{ required: "Subcategory is required" }}
                   render={({ field }) => (
                     <>
                       <StyledInput placeholder="Enter subcategory" {...field} />
+                      {errors.businessSubCatogary && (
+                        <span style={{ color: "red" }}>
+                          {errors.businessSubCatogary.message}
+                        </span>
+                      )}
                     </>
                   )}
                 />
@@ -788,6 +800,9 @@ const AddMember = () => {
                 </Typography>
               </Grid>
               <Grid item xs={6}>
+                <Typography variant="h6" color="textSecondary">
+                  State <span style={{ color: "red" }}>*</span>
+                </Typography>
                 <Controller
                   name="state"
                   control={control}
@@ -808,6 +823,7 @@ const AddMember = () => {
                 />
               </Grid>{" "}
               <Grid item xs={6}>
+                Zone <span style={{ color: "red" }}>*</span>
                 <Controller
                   name="zone"
                   control={control}
@@ -828,6 +844,7 @@ const AddMember = () => {
                 />
               </Grid>{" "}
               <Grid item xs={6}>
+                District <span style={{ color: "red" }}>*</span>
                 <Controller
                   name="district"
                   control={control}
@@ -848,6 +865,7 @@ const AddMember = () => {
                 />
               </Grid>{" "}
               <Grid item xs={6}>
+                Chapter <span style={{ color: "red" }}>*</span>
                 <Controller
                   name="chapter"
                   control={control}
@@ -875,7 +893,7 @@ const AddMember = () => {
                   variant="h6"
                   color="textSecondary"
                 >
-                  Status
+                  Status <span style={{ color: "red" }}>*</span>
                 </Typography>
                 <Controller
                   name="status"
@@ -898,7 +916,16 @@ const AddMember = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={6}></Grid>
+              <Grid item xs={6}>
+                {" "}
+                <Typography
+                  variant="body2"
+                  color="error"
+                  sx={{ marginBottom: 2 }}
+                >
+                  * Fields are mandatory
+                </Typography>
+              </Grid>
               <Grid item xs={6}>
                 <Stack
                   direction={"row"}
