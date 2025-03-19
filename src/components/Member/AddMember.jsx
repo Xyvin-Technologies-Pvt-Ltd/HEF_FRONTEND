@@ -208,7 +208,15 @@ const AddMember = () => {
           return;
         }
       }
-
+      const filteredCompanies = data?.companies
+      ?.map((company) => {
+        const cleanedCompany = Object.fromEntries(
+          Object.entries(company).filter(([_, value]) => value?.trim()) // Remove empty values
+        );
+        return Object.keys(cleanedCompany).length ? cleanedCompany : null; // Keep only non-empty objects
+      })
+      .filter(Boolean); // Remove null entries
+    
       const formData = {
         name: data?.name,
         ...(data?.email && { email: data?.email }),
@@ -226,7 +234,7 @@ const AddMember = () => {
         ...(data?.address && { address: data?.address }),
         ...(imageUrl && { image: imageUrl }),
         ...(data?.dateOfJoining && { dateOfJoining: data?.dateOfJoining }),
-        ...(data?.companies?.length ? { company: data.companies } : {}),
+        ...(filteredCompanies?.length ? { company: filteredCompanies } : {}),
         businessCatogary: data?.businessCatogary,
         businessSubCatogary: data?.businessSubCatogary,
         chapter: data?.chapter?.value,
