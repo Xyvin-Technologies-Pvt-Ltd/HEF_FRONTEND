@@ -21,10 +21,10 @@ const BulkAdd = () => {
 
   const parseFile = (file, callback) => {
     const reader = new FileReader();
-  
+
     reader.onload = (event) => {
       const data = event.target.result;
-  
+
       const processData = (data) =>
         data.map((row) => {
           const result = {
@@ -33,11 +33,14 @@ const BulkAdd = () => {
             phone: formatPhoneNumber(String(row.phone || "").trim()),
             chapter: row.chapter?.trim() || "",
             businessTags: formatBusinessTags(row.businessTags),
-            dateOfJoining: formatDate(row.dateOfJoining?.trim()),
           };
+          const formattedDate = formatDate(row.dateOfJoining?.trim());
+          if (formattedDate) {
+            result.dateOfJoining = formattedDate;
+          }
           return result;
         });
-  
+
       const formatPhoneNumber = (phone) => {
         phone = phone.replace(/[^\d]/g, "");
         if (phone.startsWith("91") && !phone.startsWith("+91")) {
@@ -47,14 +50,14 @@ const BulkAdd = () => {
         }
         return phone;
       };
-  
+
       const formatBusinessTags = (tags) => {
         if (typeof tags === "string") {
           return tags.split(",").map((tag) => tag.trim());
         }
         return [];
       };
-  
+
       const formatDate = (date) => {
         if (date) {
           const dateParts = date.split("-");
@@ -65,7 +68,7 @@ const BulkAdd = () => {
         }
         return "";
       };
-  
+
       if (file.type === "text/csv") {
         const parsedData = Papa.parse(data, { header: true });
         const filteredData = parsedData.data.filter((row) =>
@@ -87,17 +90,13 @@ const BulkAdd = () => {
         callback(processData(filteredData));
       }
     };
-  
+
     if (file.type === "text/csv") {
       reader.readAsText(file);
     } else {
       reader.readAsBinaryString(file);
     }
   };
-  
-  
-  
-  
 
   const handleSave = async () => {
     if (files.length > 0) {
