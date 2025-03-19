@@ -149,7 +149,7 @@ const StyledTable = ({
       case "active":
         return "#4CAF50";
       case "deleted":
-        return "#9E9E9E";
+        return "#F44336";
       case "cancelled":
         return "#FF5722";
       case "blocked":
