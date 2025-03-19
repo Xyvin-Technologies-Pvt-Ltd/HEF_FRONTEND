@@ -1,6 +1,14 @@
 import React, { useEffect, useState } from "react";
 import StyledTable from "../../ui/StyledTable";
-import { Badge, Box, Stack, Typography } from "@mui/material";
+import {
+  Badge,
+  Box,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { StyledButton } from "../../ui/StyledButton";
 import StyledSearchbar from "../../ui/StyledSearchbar";
 import { memberColumns, userData } from "../../assets/json/TableData";
@@ -12,6 +20,8 @@ import { ReactComponent as FilterIcon } from "../../assets/icons/FilterIcon.svg"
 import MemberFilter from "../../components/Member/MemberFilter";
 import { getDwld } from "../../api/adminapi";
 import { generateExcel } from "../../utils/generateExcel";
+import { toast } from "react-toastify";
+import { useMemberStore } from "../../store/Memberstore";
 const MemberList = () => {
   const navigate = useNavigate();
   const { fetchMember } = useListStore();
@@ -22,14 +32,43 @@ const MemberList = () => {
   const [filterOpen, setFilterOpen] = useState(false);
   const [memberId, setMemberId] = useState(null);
   const [pageNo, setPageNo] = useState(1);
+  const [selectedRows, setSelectedRows] = useState([]);
+  const { deleteMembers } = useMemberStore();
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [selectedTab, setSelectedTab] = useState("All");
   const [row, setRow] = useState(10);
+  const [loading, setLoading] = useState(false);
   const [filters, setFilters] = useState({
     name: "",
     membershipId: "",
     status: "",
     installed: "",
   });
+  const handleSelectionChange = (newSelectedIds) => {
+    setSelectedRows(newSelectedIds);
+  };
+  const handleDelete = () => {
+    if (selectedRows.length > 0) {
+      setConfirmDeleteOpen(true);
+    }
+  };
+
+  const confirmDelete = async () => {
+    setConfirmDeleteOpen(false);
+    setLoading(true);
+    if (selectedRows.length > 0) {
+      try {
+        await Promise.all(selectedRows?.map((id) => deleteMembers(id)));
+        toast.success("Deleted successfully");
+        setIschange(!isChange);
+        setSelectedRows([]);
+      } catch (error) {
+        toast.error(error.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
   useEffect(() => {
     let filter = {};
     filter.pageNo = pageNo;
@@ -173,6 +212,8 @@ const MemberList = () => {
                 state: { memberId: id, isUpdate: true },
               });
             }}
+            onDelete={handleDelete}
+            onSelectionChange={handleSelectionChange}
             onAction={handleSuspend}
             rowPerSize={row}
             setRowPerSize={setRow}
@@ -196,6 +237,53 @@ const MemberList = () => {
           onApply={(filters) => setFilters(filters)}
         />
       </Box>
+      <Dialog
+        open={confirmDeleteOpen}
+        PaperProps={{
+          sx: { borderRadius: "12px", padding: 2 },
+        }}
+        onClose={() => setConfirmDeleteOpen(false)}
+      >
+        <DialogContent sx={{ height: "auto", width: "330px" }}>
+          <Stack
+            // direction={"row"}
+            spacing={2}
+            paddingTop={2}
+            justifyContent={"center"}
+            alignItems={"center"}
+          >
+            <Typography
+              variant="h3"
+              color={"textTertiary"}
+              textAlign={"center"}
+            >
+              Are you sure you want to delete the profile ?{" "}
+            </Typography>
+            <Typography
+              variant="h7"
+              color={"textSecondary"}
+              textAlign={"center"}
+            >
+              {/* Lorem ipsum dolor sit amet consectetur. Eget in ac urna
+                   suspendisse.{" "} */}
+            </Typography>
+          </Stack>
+        </DialogContent>
+        <DialogActions>
+          <StyledButton
+            name="Cancel"
+            variant={"secondary"}
+            disabled={loading}
+            onClick={() => setConfirmDeleteOpen(false)}
+          />
+          <StyledButton
+            name={loading ? "Deleting..." : "Confirm"}
+            variant="primary"
+            disabled={loading}
+            onClick={confirmDelete}
+          />
+        </DialogActions>
+      </Dialog>
     </>
   );
 };
