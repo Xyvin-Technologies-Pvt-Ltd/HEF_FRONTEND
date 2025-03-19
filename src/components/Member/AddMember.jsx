@@ -57,13 +57,7 @@ const AddMember = () => {
     }
   }, [memberId, isUpdate]);
 
-  const tagOptions = [
-    { value: "latest", label: "Latest" },
-    { value: "currentAffairs", label: "Current Affairs" },
-    { value: "trending", label: "Trending" },
-    { value: "entertainment", label: "Entertainment" },
-    { value: "history", label: "History" },
-  ];
+
   useEffect(() => {
     const setFormValues = async () => {
       if (isUpdate && member) {
@@ -92,7 +86,6 @@ const AddMember = () => {
             email: company?.email || "",
             designation: company?.designation || "",
             websites: company?.websites || "",
-            tags: company?.tags || [],
           }));
           setValue("companies", companies);
         }
@@ -540,7 +533,6 @@ const AddMember = () => {
                       phone: "",
                       email: "",
                       websites: "",
-                      tags: [],
                     })
                   }
                 >
@@ -627,32 +619,7 @@ const AddMember = () => {
                     />
                   </Grid>
 
-                  <Grid item xs={6}>
-                    <Typography variant="h6" color="textSecondary">
-                      Tags
-                    </Typography>
-                    <Controller
-                      name={`companies[${index}].tags`}
-                      control={control}
-                      defaultValue={company.tags?.map((tag) => tag.value) || []}
-                      render={({ field: { onChange, value, ...field } }) => (
-                        <StyledSelectField
-                          placeholder="Select Tag"
-                          options={tagOptions}
-                          isMulti
-                          value={tagOptions?.filter((option) =>
-                            value?.includes(option.value)
-                          )}
-                          onChange={(selectedOptions) =>
-                            onChange(
-                              selectedOptions.map((option) => option.value)
-                            )
-                          }
-                          {...field}
-                        />
-                      )}
-                    />
-                  </Grid>
+              
                   <Grid item xs={12}>
                     <Typography
                       onClick={() => remove(index)}
