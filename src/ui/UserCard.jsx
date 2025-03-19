@@ -8,10 +8,17 @@ import BlockProfile from "../components/Member/BlockProfile";
 import { useParams } from "react-router-dom";
 import image from "../assets/images/image.png";
 import UnBlockProfile from "../components/Member/UnBlockProfile";
+import moment from "moment";
 
 const UserCard = ({ user }) => {
   const [open, setOpen] = useState(false);
   const [unopen, setUnOpen] = useState(false);
+    const formatIndianDate = (date) => {
+      if (!date) return "";
+  
+      return moment.utc(date).format("DD-MM-YYYY");
+    };
+  
   const { id } = useParams();
   const handleBlock = () => {
     setOpen(true);
@@ -80,10 +87,10 @@ const UserCard = ({ user }) => {
           </Stack>
           <Stack direction={"row"} spacing={2}>
             <Typography variant="h7" color={"textPrimary"}>
-              Designation :
+              Date Joined :
             </Typography>
             <Typography variant="h7" color={"textPrimary"} fontWeight={600}>
-              {user?.role}
+              {formatIndianDate(user?.dateOfJoining) }
             </Typography>
           </Stack>
           <Stack direction="row" alignItems="center" spacing={1}>
