@@ -71,31 +71,27 @@ export default function LevelAdd() {
   }, [levelId, isUpdate]);
 
   useEffect(() => {
-    if (level && isUpdate) {
+    if (level && isUpdate && stateOptions.length && zoneOptions.length && districtOptions.length) {
       setValue("name", level.name);
       setValue("type", { value: category, label: category });
       setType(category);
       setAdmins(level.admins);
       setViewAdmin(level.admins);
+  
       if (category === "zone") {
-        const selectedState = stateOptions.find(
-          (option) => option.value === level.stateId
-        );
-        setValue("state", selectedState);
+        const selectedState = stateOptions.find((option) => option.value === level.stateId);
+        if (selectedState) setValue("state", selectedState);
       } else if (category === "district") {
-        const selectedZone = zoneOptions.find(
-          (option) => option.value === level.zoneId
-        );
-        setValue("zone", selectedZone);
+        const selectedZone = zoneOptions.find((option) => option.value === level.zoneId);
+        if (selectedZone) setValue("zone", selectedZone);
       } else if (category === "chapter") {
-        const selectedDistrict = districtOptions.find(
-          (option) => option.value === level.districtId
-        );
-        setValue("district", selectedDistrict);
+        const selectedDistrict = districtOptions.find((option) => option.value === level.districtId);
+        if (selectedDistrict) setValue("district", selectedDistrict);
         setValue("shortCode", level?.shortCode);
       }
     }
-  }, [level, isUpdate, setValue]);
+  }, [level, isUpdate, setValue, stateOptions, zoneOptions, districtOptions]);
+  
   useEffect(() => {
     const fetchData = async (type, setter) => {
       try {
