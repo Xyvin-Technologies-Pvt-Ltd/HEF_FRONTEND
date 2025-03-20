@@ -6,6 +6,7 @@ export const memberColumns = [
   { title: "Join Date", field: "dateOfJoining" },
   { title: "Status", field: "status" },
 ];
+
 export const eventHistoryColumns = [
   { title: "Name", field: "fullName", padding: "none" },
   { title: "College Name", field: "college" },
@@ -83,7 +84,7 @@ export const levelColumns = [
 export const postColumns = [
   { title: "Date", field: "createdAt", padding: "none" },
   { title: "Name", field: "name" },
-  { title: "Image", field: "media" },
+  { title: "Image", field: "image" },
   { title: "Description", field: "description" },
   { title: "Status", field: "status" },
 ];
