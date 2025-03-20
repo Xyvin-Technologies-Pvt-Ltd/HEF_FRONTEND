@@ -37,7 +37,7 @@ export default function LevelAdd() {
   const { levelId, category, isUpdate } = location.state || {};
   const [type, setType] = useState();
   const [submitting, setSubmitting] = useState(false);
-  const { addLevel, fetchLevelById, level, updateLevel, loading } =
+  const { addLevel, fetchLevelById, level, updateLevel } =
     useHierarchyStore();
   const [open, setOpen] = useState(false);
   const [stateOptions, setStateOptions] = useState([]);
@@ -71,27 +71,39 @@ export default function LevelAdd() {
   }, [levelId, isUpdate]);
 
   useEffect(() => {
-    if (level && isUpdate && stateOptions.length && zoneOptions.length && districtOptions.length) {
+    if (
+      level &&
+      isUpdate &&
+      stateOptions.length &&
+      zoneOptions.length &&
+      districtOptions.length
+    ) {
       setValue("name", level.name);
       setValue("type", { value: category, label: category });
       setType(category);
       setAdmins(level.admins);
       setViewAdmin(level.admins);
-  
+
       if (category === "zone") {
-        const selectedState = stateOptions.find((option) => option.value === level.stateId);
+        const selectedState = stateOptions.find(
+          (option) => option.value === level.stateId
+        );
         if (selectedState) setValue("state", selectedState);
       } else if (category === "district") {
-        const selectedZone = zoneOptions.find((option) => option.value === level.zoneId);
+        const selectedZone = zoneOptions.find(
+          (option) => option.value === level.zoneId
+        );
         if (selectedZone) setValue("zone", selectedZone);
       } else if (category === "chapter") {
-        const selectedDistrict = districtOptions.find((option) => option.value === level.districtId);
+        const selectedDistrict = districtOptions.find(
+          (option) => option.value === level.districtId
+        );
         if (selectedDistrict) setValue("district", selectedDistrict);
         setValue("shortCode", level?.shortCode);
       }
     }
   }, [level, isUpdate, setValue, stateOptions, zoneOptions, districtOptions]);
-  
+
   useEffect(() => {
     const fetchData = async (type, setter) => {
       try {
@@ -250,98 +262,318 @@ export default function LevelAdd() {
       borderRadius={"12px"}
       border={"1px solid rgba(0, 0, 0, 0.12)"}
     >
-      {loading ? (
-        <LinearProgress
-          sx={{
-            backgroundColor: "#f58220",
-            "& .MuiLinearProgress-bar": { backgroundColor: "#f58220" },
-          }}
-        />
-      ) : (
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <Grid container spacing={4}>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Grid container spacing={4}>
+          <Grid item xs={12}>
+            <Typography
+              sx={{ marginBottom: 1 }}
+              variant="h6"
+              color="textSecondary"
+            >
+              Choose type
+            </Typography>
+            <Controller
+              name="type"
+              control={control}
+              defaultValue=""
+              rules={{ required: "Type is required" }}
+              render={({ field }) => (
+                <>
+                  <StyledSelectField
+                    placeholder="Select the type"
+                    options={option}
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(e);
+                      handleTypeChange(e);
+                    }}
+                  />
+                  {errors.type && (
+                    <span style={{ color: "red" }}>{errors.type.message}</span>
+                  )}
+                </>
+              )}
+            />
+          </Grid>{" "}
+          {type === "zone" && (
             <Grid item xs={12}>
               <Typography
                 sx={{ marginBottom: 1 }}
                 variant="h6"
                 color="textSecondary"
               >
-                Choose type
+                State
               </Typography>
               <Controller
-                name="type"
+                name="state"
                 control={control}
                 defaultValue=""
-                rules={{ required: "Type is required" }}
                 render={({ field }) => (
-                  <>
-                    <StyledSelectField
-                      placeholder="Select the type"
-                      options={option}
-                      {...field}
-                      onChange={(e) => {
-                        field.onChange(e);
-                        handleTypeChange(e);
-                      }}
-                    />
-                    {errors.type && (
-                      <span style={{ color: "red" }}>
-                        {errors.type.message}
-                      </span>
-                    )}
-                  </>
+                  <StyledSelectField
+                    placeholder="Select the state"
+                    options={stateOptions}
+                    {...field}
+                  />
                 )}
               />
-            </Grid>{" "}
-            {type === "zone" && (
+            </Grid>
+          )}
+          {type === "district" && (
+            <Grid item xs={12}>
+              <Typography
+                sx={{ marginBottom: 1 }}
+                variant="h6"
+                color="textSecondary"
+              >
+                Zone
+              </Typography>
+              <Controller
+                name="zone"
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <StyledSelectField
+                    placeholder="Select the zone"
+                    options={zoneOptions}
+                    {...field}
+                  />
+                )}
+              />
+            </Grid>
+          )}
+          {type === "chapter" && (
+            <>
               <Grid item xs={12}>
                 <Typography
                   sx={{ marginBottom: 1 }}
                   variant="h6"
                   color="textSecondary"
                 >
-                  State
+                  District
                 </Typography>
                 <Controller
-                  name="state"
+                  name="district"
                   control={control}
                   defaultValue=""
                   render={({ field }) => (
                     <StyledSelectField
-                      placeholder="Select the state"
-                      options={stateOptions}
+                      placeholder="Select the district"
+                      options={districtOptions}
                       {...field}
                     />
                   )}
                 />
               </Grid>
-            )}
-            {type === "district" && (
               <Grid item xs={12}>
                 <Typography
                   sx={{ marginBottom: 1 }}
                   variant="h6"
                   color="textSecondary"
                 >
-                  Zone
+                  Chapter Short Code
                 </Typography>
                 <Controller
-                  name="zone"
+                  name="shortCode"
                   control={control}
                   defaultValue=""
                   render={({ field }) => (
-                    <StyledSelectField
-                      placeholder="Select the zone"
-                      options={zoneOptions}
+                    <StyledInput
+                      placeholder={"Enter the chapter short code"}
                       {...field}
                     />
                   )}
                 />
               </Grid>
+            </>
+          )}
+          <Grid item xs={12}>
+            <Typography
+              sx={{ marginBottom: 1 }}
+              variant="h6"
+              color="textSecondary"
+            >
+              Name
+            </Typography>
+            <Controller
+              name="name"
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <StyledInput placeholder={"Enter the name"} {...field} />
+              )}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            {viewAdmin?.length > 0 ? (
+              <Box sx={{ mt: 2 }}>
+                {viewAdmin?.map((admin, index) => (
+                  <Box
+                    key={index}
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      p: 2,
+                      mb: 1,
+                      border: "1px solid rgba(0, 0, 0, 0.12)",
+                      borderRadius: "8px",
+                    }}
+                  >
+                    <div>
+                      <Typography variant="subtitle2" color="primary">
+                        {admin?.role}
+                      </Typography>
+                      {!isUpdate ? (
+                        <Typography variant="body2" color="textSecondary">
+                          {admin?.user}
+                        </Typography>
+                      ) : (
+                        <Typography variant="body2" color="textSecondary">
+                          {admin?.user?.name}
+                        </Typography>
+                      )}
+                    </div>
+                    <IconButton
+                      onClick={() => handleRemoveAdmin(index)}
+                      size="small"
+                      sx={{ color: "error.main" }}
+                    >
+                      <Delete />
+                    </IconButton>
+                  </Box>
+                ))}
+              </Box>
+            ) : (
+              <Typography
+                color="textSecondary"
+                sx={{ textAlign: "center", py: 4 }}
+              >
+                No admins added yet. Click "Add Admin" to add admins.
+              </Typography>
             )}
-            {type === "chapter" && (
-              <>
-                <Grid item xs={12}>
+          </Grid>
+          <Grid item xs={12} display={"flex"} justifyContent={"end"} mb={4}>
+            {" "}
+            <Typography
+              sx={{ marginBottom: 1 }}
+              variant="h6"
+              fontWeight={500}
+              color={"#004797"}
+              onClick={() => setOpen(true)}
+            >
+              + Add Admin
+            </Typography>
+          </Grid>
+          <Grid item xs={12} display={"flex"} justifyContent={"end"}>
+            {" "}
+            <Stack direction={"row"} spacing={2}>
+              <StyledButton
+                name="Clear"
+                variant="secondary"
+                disabled={submitting}
+                onClick={(event) => handleClear(event)}
+              />
+              <StyledButton
+                name={submitting ? "Submitting" : "Submit"}
+                variant="primary"
+                type="submit"
+                disabled={submitting}
+              />
+            </Stack>
+          </Grid>
+          <Dialog
+            open={open}
+            onClose={() => setOpen(false)}
+            fullWidth
+            maxWidth={"md"}
+            style={{ borderRadius: "12px", padding: "20px" }}
+          >
+            <DialogContent style={{ padding: "20px", paddingBottom: "40px" }}>
+              <Grid container spacing={2}>
+                <Grid item xs={6}>
+                  <Typography
+                    sx={{ marginBottom: 1 }}
+                    variant="h6"
+                    color="textSecondary"
+                  >
+                    Role
+                  </Typography>
+                  <Controller
+                    name="role"
+                    control={control}
+                    defaultValue=""
+                    rules={{ required: "Role is required" }}
+                    render={({ field }) => (
+                      <>
+                        <StyledSelectField
+                          placeholder="Choose the Role"
+                          options={availableRoleOptions}
+                          {...field}
+                        />
+                        {errors.role && (
+                          <span style={{ color: "red" }}>
+                            {errors.role.message}
+                          </span>
+                        )}
+                      </>
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography
+                    sx={{ marginBottom: 1 }}
+                    variant="h6"
+                    color="textSecondary"
+                  >
+                    State
+                  </Typography>
+                  <Controller
+                    name="state"
+                    control={control}
+                    defaultValue=""
+                    render={({ field }) => (
+                      <>
+                        <StyledSelectField
+                          placeholder="Choose the state"
+                          options={adminStateOptions}
+                          {...field}
+                          onChange={(e) => {
+                            field.onChange(e);
+                            handleStateChange(e);
+                          }}
+                        />{" "}
+                      </>
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography
+                    sx={{ marginBottom: 1 }}
+                    variant="h6"
+                    color="textSecondary"
+                  >
+                    Zone
+                  </Typography>
+                  <Controller
+                    name="zone"
+                    control={control}
+                    defaultValue=""
+                    render={({ field }) => (
+                      <>
+                        <StyledSelectField
+                          placeholder="Choose the zone"
+                          options={adminZoneOptions}
+                          {...field}
+                          onChange={(e) => {
+                            field.onChange(e);
+                            handleZoneChange(e.value);
+                          }}
+                        />
+                      </>
+                    )}
+                  />
+                </Grid>{" "}
+                <Grid item xs={6}>
                   <Typography
                     sx={{ marginBottom: 1 }}
                     variant="h6"
@@ -354,313 +586,82 @@ export default function LevelAdd() {
                     control={control}
                     defaultValue=""
                     render={({ field }) => (
-                      <StyledSelectField
-                        placeholder="Select the district"
-                        options={districtOptions}
-                        {...field}
-                      />
+                      <>
+                        <StyledSelectField
+                          placeholder="Choose the district"
+                          options={adminDistrictOptions}
+                          {...field}
+                          onChange={(e) => {
+                            field.onChange(e);
+                            handleDistrictChange(e.value);
+                          }}
+                        />
+                      </>
                     )}
                   />
-                </Grid>
-                <Grid item xs={12}>
+                </Grid>{" "}
+                <Grid item xs={6}>
                   <Typography
                     sx={{ marginBottom: 1 }}
                     variant="h6"
                     color="textSecondary"
                   >
-                    Chapter Short Code
+                    Chapter
                   </Typography>
                   <Controller
-                    name="shortCode"
+                    name="chapter"
                     control={control}
                     defaultValue=""
                     render={({ field }) => (
-                      <StyledInput
-                        placeholder={"Enter the chapter short code"}
-                        {...field}
-                      />
+                      <>
+                        <StyledSelectField
+                          placeholder="Choose the chapter"
+                          options={adminChapterOptions}
+                          {...field}
+                          onChange={(e) => {
+                            field.onChange(e);
+                            handleChapterChange(e.value);
+                          }}
+                        />
+                      </>
                     )}
                   />
                 </Grid>
-              </>
-            )}
-            <Grid item xs={12}>
-              <Typography
-                sx={{ marginBottom: 1 }}
-                variant="h6"
-                color="textSecondary"
-              >
-                Name
-              </Typography>
-              <Controller
-                name="name"
-                control={control}
-                defaultValue=""
-                render={({ field }) => (
-                  <StyledInput placeholder={"Enter the name"} {...field} />
-                )}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              {viewAdmin?.length > 0 ? (
-                <Box sx={{ mt: 2 }}>
-                  {viewAdmin?.map((admin, index) => (
-                    <Box
-                      key={index}
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        p: 2,
-                        mb: 1,
-                        border: "1px solid rgba(0, 0, 0, 0.12)",
-                        borderRadius: "8px",
-                      }}
-                    >
-                      <div>
-                        <Typography variant="subtitle2" color="primary">
-                          {admin?.role}
-                        </Typography>
-                        {!isUpdate ? (
-                          <Typography variant="body2" color="textSecondary">
-                            {admin?.user}
-                          </Typography>
-                        ) : (
-                          <Typography variant="body2" color="textSecondary">
-                            {admin?.user?.name}
-                          </Typography>
-                        )}
-                      </div>
-                      <IconButton
-                        onClick={() => handleRemoveAdmin(index)}
-                        size="small"
-                        sx={{ color: "error.main" }}
-                      >
-                        <Delete />
-                      </IconButton>
-                    </Box>
-                  ))}
-                </Box>
-              ) : (
-                <Typography
-                  color="textSecondary"
-                  sx={{ textAlign: "center", py: 4 }}
-                >
-                  No admins added yet. Click "Add Admin" to add admins.
-                </Typography>
-              )}
-            </Grid>
-            <Grid item xs={12} display={"flex"} justifyContent={"end"} mb={4}>
-              {" "}
-              <Typography
-                sx={{ marginBottom: 1 }}
-                variant="h6"
-                fontWeight={500}
-                color={"#004797"}
-                onClick={() => setOpen(true)}
-              >
-                + Add Admin
-              </Typography>
-            </Grid>
-            <Grid item xs={12} display={"flex"} justifyContent={"end"}>
-              {" "}
-              <Stack direction={"row"} spacing={2}>
-                <StyledButton
-                  name="Clear"
-                  variant="secondary"
-                  disabled={submitting}
-                  onClick={(event) => handleClear(event)}
-                />
-                <StyledButton
-                  name={submitting ? "Submitting" : "Submit"}
-                  variant="primary"
-                  type="submit"
-                  disabled={submitting}
-                />
-              </Stack>
-            </Grid>
-            <Dialog
-              open={open}
-              onClose={() => setOpen(false)}
-              fullWidth
-              maxWidth={"md"}
-              style={{ borderRadius: "12px", padding: "20px" }}
-            >
-              <DialogContent style={{ padding: "20px", paddingBottom: "40px" }}>
-                <Grid container spacing={2}>
-                  <Grid item xs={6}>
-                    <Typography
-                      sx={{ marginBottom: 1 }}
-                      variant="h6"
-                      color="textSecondary"
-                    >
-                      Role
-                    </Typography>
-                    <Controller
-                      name="role"
-                      control={control}
-                      defaultValue=""
-                      rules={{ required: "Role is required" }}
-                      render={({ field }) => (
-                        <>
-                          <StyledSelectField
-                            placeholder="Choose the Role"
-                            options={availableRoleOptions}
-                            {...field}
-                          />
-                          {errors.role && (
-                            <span style={{ color: "red" }}>
-                              {errors.role.message}
-                            </span>
-                          )}
-                        </>
-                      )}
-                    />
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Typography
-                      sx={{ marginBottom: 1 }}
-                      variant="h6"
-                      color="textSecondary"
-                    >
-                      State
-                    </Typography>
-                    <Controller
-                      name="state"
-                      control={control}
-                      defaultValue=""
-                      render={({ field }) => (
-                        <>
-                          <StyledSelectField
-                            placeholder="Choose the state"
-                            options={adminStateOptions}
-                            {...field}
-                            onChange={(e) => {
-                              field.onChange(e);
-                              handleStateChange(e);
-                            }}
-                          />{" "}
-                        </>
-                      )}
-                    />
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Typography
-                      sx={{ marginBottom: 1 }}
-                      variant="h6"
-                      color="textSecondary"
-                    >
-                      Zone
-                    </Typography>
-                    <Controller
-                      name="zone"
-                      control={control}
-                      defaultValue=""
-                      render={({ field }) => (
-                        <>
-                          <StyledSelectField
-                            placeholder="Choose the zone"
-                            options={adminZoneOptions}
-                            {...field}
-                            onChange={(e) => {
-                              field.onChange(e);
-                              handleZoneChange(e.value);
-                            }}
-                          />
-                        </>
-                      )}
-                    />
-                  </Grid>{" "}
-                  <Grid item xs={6}>
-                    <Typography
-                      sx={{ marginBottom: 1 }}
-                      variant="h6"
-                      color="textSecondary"
-                    >
-                      District
-                    </Typography>
-                    <Controller
-                      name="district"
-                      control={control}
-                      defaultValue=""
-                      render={({ field }) => (
-                        <>
-                          <StyledSelectField
-                            placeholder="Choose the district"
-                            options={adminDistrictOptions}
-                            {...field}
-                            onChange={(e) => {
-                              field.onChange(e);
-                              handleDistrictChange(e.value);
-                            }}
-                          />
-                        </>
-                      )}
-                    />
-                  </Grid>{" "}
-                  <Grid item xs={6}>
-                    <Typography
-                      sx={{ marginBottom: 1 }}
-                      variant="h6"
-                      color="textSecondary"
-                    >
-                      Chapter
-                    </Typography>
-                    <Controller
-                      name="chapter"
-                      control={control}
-                      defaultValue=""
-                      render={({ field }) => (
-                        <>
-                          <StyledSelectField
-                            placeholder="Choose the chapter"
-                            options={adminChapterOptions}
-                            {...field}
-                            onChange={(e) => {
-                              field.onChange(e);
-                              handleChapterChange(e.value);
-                            }}
-                          />
-                        </>
-                      )}
-                    />
-                  </Grid>
-                  <Grid item xs={6} mb={16}>
-                    <Typography
-                      sx={{ marginBottom: 1 }}
-                      variant="h6"
-                      color="textSecondary"
-                    >
-                      Member
-                    </Typography>
-                    <Controller
-                      name="sender"
-                      control={control}
-                      defaultValue=""
-                      render={({ field }) => (
-                        <>
-                          <StyledSelectField
-                            placeholder="Choose the member"
-                            options={adminMemberOptions}
-                            {...field}
-                          />
-                        </>
-                      )}
-                    />
-                  </Grid>
+                <Grid item xs={6} mb={16}>
+                  <Typography
+                    sx={{ marginBottom: 1 }}
+                    variant="h6"
+                    color="textSecondary"
+                  >
+                    Member
+                  </Typography>
+                  <Controller
+                    name="sender"
+                    control={control}
+                    defaultValue=""
+                    render={({ field }) => (
+                      <>
+                        <StyledSelectField
+                          placeholder="Choose the member"
+                          options={adminMemberOptions}
+                          {...field}
+                        />
+                      </>
+                    )}
+                  />
                 </Grid>
-              </DialogContent>
-              <DialogActions>
-                <StyledButton
-                  name={"Add"}
-                  variant="primary"
-                  onClick={handleAddAdmin}
-                />
-              </DialogActions>
-            </Dialog>
-          </Grid>
-        </form>
-      )}
+              </Grid>
+            </DialogContent>
+            <DialogActions>
+              <StyledButton
+                name={"Add"}
+                variant="primary"
+                onClick={handleAddAdmin}
+              />
+            </DialogActions>
+          </Dialog>
+        </Grid>
+      </form>
     </Box>
   );
 }
