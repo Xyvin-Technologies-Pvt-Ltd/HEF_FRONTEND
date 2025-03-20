@@ -29,7 +29,6 @@ const BulkAdd = () => {
         data.map((row) => {
           const result = {
             name: row.name?.trim() || "",
-            email: row.email?.trim() || "",
             phone: formatPhoneNumber(String(row.phone || "").trim()),
             chapter: row.chapter?.trim() || "",
             businessTags: formatBusinessTags(row.businessTags),
@@ -37,6 +36,9 @@ const BulkAdd = () => {
           const formattedDate = formatDate(row.dateOfJoining?.trim());
           if (formattedDate) {
             result.dateOfJoining = formattedDate;
+          }
+          if (row.email?.trim()) {
+            result.email = row.email.trim();
           }
           return result;
         });
