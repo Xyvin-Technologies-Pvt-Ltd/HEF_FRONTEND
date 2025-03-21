@@ -97,16 +97,12 @@ const AddGroup = () => {
     if (singleGroup && isUpdate) {
       setValue("groupName", singleGroup?.groupName);
       setValue("groupInfo", singleGroup?.groupInfo);
-
-      // Set participants
       const participantOptions =
         singleGroup?.participants?.map((participant) => ({
           value: participant?._id,
           label: participant?.name,
         })) || [];
       setValue("participants", participantOptions);
-
-      // Extract state, district, and chapter from first participant
       if (singleGroup?.participants?.length > 0) {
         const firstParticipant = singleGroup.participants[0];
 
@@ -115,7 +111,7 @@ const AddGroup = () => {
           label: firstParticipant.chapter.districtId.zoneId.stateId.name,
         };
         setValue("state", stateOption);
-        setStateOptions([stateOption]); // Set dropdown options
+        setStateOptions([stateOption]);
 
         const zoneOption = {
           value: firstParticipant.chapter.districtId.zoneId._id,
@@ -137,6 +133,7 @@ const AddGroup = () => {
         };
         setValue("chapter", chapterOption);
         setChapterOptions([chapterOption]);
+        handleChapterChange(firstParticipant.chapter._id);
       }
     }
   }, [singleGroup, isUpdate, setValue]);
