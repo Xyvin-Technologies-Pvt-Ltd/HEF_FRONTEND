@@ -125,9 +125,34 @@ export default function NewsDisplay() {
             onClick={() => handleTabChange("Latest")}
           />
           <StyledButton
+            name="Current Affairs"
+            variant={selectedTab === "Current Affairs" ? "primary" : "third"}
+            onClick={() => handleTabChange("Current Affairs")}
+          />
+          <StyledButton
             name="Trending"
             variant={selectedTab === "Trending" ? "primary" : "third"}
             onClick={() => handleTabChange("Trending")}
+          />
+          <StyledButton
+            name="Entertainment"
+            variant={selectedTab === "Entertainment" ? "primary" : "third"}
+            onClick={() => handleTabChange("Entertainment")}
+          />
+          <StyledButton
+            name="History"
+            variant={selectedTab === "History" ? "primary" : "third"}
+            onClick={() => handleTabChange("History")}
+          />
+          <StyledButton
+            name="Volunteering"
+            variant={selectedTab === "Volunteering" ? "primary" : "third"}
+            onClick={() => handleTabChange("Volunteering")}
+          />
+          <StyledButton
+            name="Events/ Programmes"
+            variant={selectedTab === "Events/ Programmes" ? "primary" : "third"}
+            onClick={() => handleTabChange("Events/ Programmes")}
           />
         </Stack>
       </Stack>
