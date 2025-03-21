@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { StyledButton } from "../../ui/StyledButton";
 import { addMembersBulk } from "../../api/memberapi";
 import StyledUpload from "../../ui/StyledUpload";
+import * as base64js from "base64-js";
 const BulkAdd = () => {
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -112,6 +113,9 @@ const BulkAdd = () => {
               navigate("/members");
             } catch (error) {
               toast.error(error.message);
+              if (error?.data?.excelFile) {
+                handleDownloadReport(error.data.excelFile);
+              }
             } finally {
               setLoading(false);
             }
@@ -123,6 +127,26 @@ const BulkAdd = () => {
     } else {
       toast("No file uploaded yet!");
     }
+  };
+  const handleDownloadReport = (base64Data) => {
+    const byteCharacters = atob(base64Data);
+    const byteNumbers = new Array(byteCharacters.length)
+      .fill(null)
+      .map((_, i) => byteCharacters.charCodeAt(i));
+    const byteArray = new Uint8Array(byteNumbers);
+
+    const blob = new Blob([byteArray], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "Duplicate_PhoneNumbers.xlsx";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   };
 
   return (
