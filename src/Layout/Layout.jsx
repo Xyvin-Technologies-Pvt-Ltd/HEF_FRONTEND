@@ -37,6 +37,7 @@ import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import {
   AccountTree,
   GridView,
+  GroupsOutlined,
   LogoutOutlined,
   OutlinedFlag,
 } from "@mui/icons-material";
@@ -44,7 +45,7 @@ import { useAdminStore } from "../store/adminStore";
 const drawerWidth = 250;
 const subNavigation = [
   { name: "Dashboard", to: "/dashboard", icon: <GridView /> },
-  { name: "Levels", to: "/levels", icon: <AccountTree/> },
+  { name: "Levels", to: "/levels", icon: <AccountTree /> },
   { name: "Users", to: "/members", icon: <PeopleAltOutlinedIcon /> },
 
   { name: "Activity", to: "/activity", icon: <SchoolOutlinedIcon /> },
@@ -58,6 +59,7 @@ const subNavigation = [
     to: "/subscriptions",
     icon: <AccountBalanceWalletIcon />,
   },
+  { name: "Groups", to: "/groups", icon: <GroupsOutlined /> },
 
   {
     name: "Events",

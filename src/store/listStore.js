@@ -9,10 +9,10 @@ import { getNews } from "../api/newsapi";
 import { getMember } from "../api/memberapi";
 import { getReport } from "../api/reportapi";
 import { getAllLevel } from "../api/hierarchyapi";
-import { getAllSubscription } from "../api/subscriptionapi";
 import { getActivities } from "../api/activityapi";
 import { getParentSub, getPayment } from "../api/paymentapi";
 import { getNotification } from "../api/notificationapi";
+import { getGroup } from "../api/groupapi";
 
 const useListStore = create((set, get) => ({
   lists: [],
@@ -84,7 +84,7 @@ const useListStore = create((set, get) => ({
     set({ totalCount: allData?.totalCount || 0 });
     set({ loading: false });
   },
-  fetchNotification : async (filter) => {
+  fetchNotification: async (filter) => {
     set({ loading: true });
     const allData = await getNotification(filter);
     set({ lists: allData?.data || [] });
@@ -151,6 +151,14 @@ const useListStore = create((set, get) => ({
   fetchParentSub: async () => {
     set({ loading: true });
     const allData = await getParentSub();
+    set({ lists: allData?.data || [] });
+    set({ totalCount: allData?.totalCount || 0 });
+    set({ loading: false });
+  },
+
+  fetchGroup: async (filter) => {
+    set({ loading: true });
+    const allData = await getGroup(filter);
     set({ lists: allData?.data || [] });
     set({ totalCount: allData?.totalCount || 0 });
     set({ loading: false });

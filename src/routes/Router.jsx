@@ -30,6 +30,8 @@ import AddLevelPage from "../pages/Level/AddLevel";
 import AddEventPage from "../pages/Events/AddEventPage";
 import AddProductPage from "../pages/Members/AddProductPage";
 import AddActivityPage from "../pages/Activity/AddActivityPage";
+import GroupPage from "../pages/Group/GroupPage";
+import AddGroupPage from "../pages/Group/AddGroupPage";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -256,6 +258,26 @@ const router = createBrowserRouter([
       <PrivateRoute>
         <Layout>
           <NewsPage />
+        </Layout>
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/groups",
+    element: (
+      <PrivateRoute>
+        <Layout>
+          <GroupPage />
+        </Layout>
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/groups/group",
+    element: (
+      <PrivateRoute>
+        <Layout>
+          <AddGroupPage />
         </Layout>
       </PrivateRoute>
     ),
