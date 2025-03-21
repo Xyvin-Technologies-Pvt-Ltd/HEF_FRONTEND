@@ -107,7 +107,7 @@ const AddGroup = () => {
       setValue("participants", participantOptions);
 
       // Extract state, district, and chapter from first participant
-      if (singleGroup.participants.length > 0) {
+      if (singleGroup?.participants?.length > 0) {
         const firstParticipant = singleGroup.participants[0];
 
         const stateOption = {
