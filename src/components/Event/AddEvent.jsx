@@ -86,6 +86,7 @@ export default function AddEvent({ isUpdate }) {
       setValue("venue", event.venue);
       setValue("image", event.image);
       setValue("startDate", event.startDate);
+      setValue("eventDate", event.eventDate);
       setValue("endDate", event.endDate);
       setValue("startTime", event.startTime);
       setValue("endTime", event.endTime);
@@ -214,6 +215,7 @@ export default function AddEvent({ isUpdate }) {
         startDate: data?.startDate,
         startTime: data?.startTime,
         endDate: data?.endDate,
+        eventDate: data?.eventDate,
         endTime: data?.endTime,
         speakers: speakersData,
         description: data?.description,
@@ -549,7 +551,7 @@ export default function AddEvent({ isUpdate }) {
                 </>
               )}
               {type === "Offline" && (
-                <Grid item xs={12}>
+                <Grid item xs={6}>
                   <Typography
                     sx={{ marginBottom: 1 }}
                     variant="h6"
@@ -577,6 +579,31 @@ export default function AddEvent({ isUpdate }) {
                 </Grid>
               )}
 
+              <Grid item xs={6}>
+                <Typography
+                  sx={{ marginBottom: 1 }}
+                  variant="h6"
+                  color="textSecondary"
+                >
+                  Event Date
+                </Typography>
+                <Controller
+                  name="eventDate"
+                  control={control}
+                  defaultValue={null}
+                  rules={{ required: "Event Date is required" }}
+                  render={({ field }) => (
+                    <>
+                      <StyledCalender {...field} />
+                      {errors.eventDate && (
+                        <span style={{ color: "red" }}>
+                          {errors.eventDate.message}
+                        </span>
+                      )}
+                    </>
+                  )}
+                />
+              </Grid>
               <Grid item xs={6}>
                 <Typography
                   sx={{ marginBottom: 1 }}
