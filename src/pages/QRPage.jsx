@@ -28,6 +28,7 @@ import {
   Person,
   Phone,
   Place,
+  Twitter,
   Web,
 } from "@mui/icons-material";
 import { getSingleUser } from "../api/memberapi";
