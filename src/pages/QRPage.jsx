@@ -136,6 +136,7 @@ const QRPage = () => {
                 borderRadius: isMobile ? 0 : 5,
                 boxShadow: isMobile ? "none" : 2,
                 mt: 4,
+                mb: 4,
               }}
             >
               <Box
