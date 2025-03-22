@@ -57,7 +57,6 @@ const AddMember = () => {
     }
   }, [memberId, isUpdate]);
 
-
   useEffect(() => {
     const setFormValues = async () => {
       if (isUpdate && member) {
@@ -69,6 +68,7 @@ const AddMember = () => {
         setValue("address", member?.address || "");
         setValue("whatsapp", member?.secondaryPhone?.whatsapp);
         setValue("business", member?.secondaryPhone?.business);
+        setValue("designation", member?.designation || "");
         setValue("dateOfJoining", member?.dateOfJoining || "");
         if (member?.secondaryPhone?.whatsapp) {
           setAdditionalPhones([{ name: "WhatsApp Number", key: "whatsapp" }]);
@@ -209,17 +209,18 @@ const AddMember = () => {
         }
       }
       const filteredCompanies = data?.companies
-      ?.map((company) => {
-        const cleanedCompany = Object.fromEntries(
-          Object.entries(company).filter(([_, value]) => value?.trim()) // Remove empty values
-        );
-        return Object.keys(cleanedCompany).length ? cleanedCompany : null; // Keep only non-empty objects
-      })
-      .filter(Boolean); // Remove null entries
-    
+        ?.map((company) => {
+          const cleanedCompany = Object.fromEntries(
+            Object.entries(company).filter(([_, value]) => value?.trim()) // Remove empty values
+          );
+          return Object.keys(cleanedCompany).length ? cleanedCompany : null; // Keep only non-empty objects
+        })
+        .filter(Boolean); // Remove null entries
+
       const formData = {
         name: data?.name,
         ...(data?.email && { email: data?.email }),
+        ...(data?.designation && { designation: data?.designation }),
         phone: data?.phone?.startsWith("+") ? data.phone : `+${data.phone}`,
         ...(data?.whatsapp || data?.business
           ? {
@@ -483,6 +484,28 @@ const AddMember = () => {
                   variant="h6"
                   color="textSecondary"
                 >
+                  Designation
+                </Typography>
+                <Controller
+                  name="designation"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <>
+                      <StyledInput
+                        placeholder="Enter the Designation"
+                        {...field}
+                      />
+                    </>
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Typography
+                  sx={{ marginBottom: 1 }}
+                  variant="h6"
+                  color="textSecondary"
+                >
                   Bio
                 </Typography>
                 <Controller
@@ -627,7 +650,6 @@ const AddMember = () => {
                     />
                   </Grid>
 
-              
                   <Grid item xs={12}>
                     <Typography
                       onClick={() => remove(index)}
