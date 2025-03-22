@@ -467,7 +467,11 @@ const QRPage = () => {
                               ml={1}
                             >
                               <a
-                                href={media?.link}
+                                href={
+                                  media?.link?.startsWith("http")
+                                    ? media.link
+                                    : `https://${media?.link}`
+                                }
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 style={{
@@ -517,7 +521,11 @@ const QRPage = () => {
                             ml={1}
                           >
                             <a
-                              href={website?.link}
+                              href={
+                                website?.link?.startsWith("http")
+                                  ? website.link
+                                  : `https://${website.link}`
+                              }
                               target="_blank"
                               rel="noopener noreferrer"
                               style={{
