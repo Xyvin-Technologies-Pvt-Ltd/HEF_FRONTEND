@@ -13,7 +13,7 @@ export const getMember = async (filter) => {
 };
 export const getSingleUser = async (id) => {
   try {
-    const response = await axiosInstance.get(`/user/get/${id}`);
+    const response = await axiosInstance.get(`/user/single/${id}`);
     return response.data;
   } catch (error) {
     throw error;

@@ -17,7 +17,6 @@ import AwardCard from "../ui/AwardCard";
 import image from "../assets/images/image.png";
 import companylogo from "../assets/images/companylogo.png";
 import { StyledButton } from "../ui/StyledButton";
-import { getMemberById, getSingleUser } from "../api/memberapi";
 import { useParams } from "react-router-dom";
 import {
   Email,
@@ -31,6 +30,7 @@ import {
   Place,
   Web,
 } from "@mui/icons-material";
+import { getSingleUser } from "../api/memberapi";
 const responsive = {
   superLargeDesktop: {
     breakpoint: { max: 4000, min: 3000 },
@@ -59,7 +59,7 @@ const QRPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await getMemberById(formattedId);
+        const response = await getSingleUser(formattedId);
         setUserData(response.data);
         setLoading(false);
       } catch (error) {
