@@ -43,7 +43,7 @@ const MemberFilter = ({ open, onClose, onApply }) => {
       name,
       membershipId,
       status: appliedStatus?.value || status?.value || "",
-      installed: appliedUser?.value || installed?.value || false,
+      installed: appliedUser?.value || installed?.value || "",
     });
     onClose();
   };
