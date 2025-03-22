@@ -79,6 +79,14 @@ const UserCard = ({ user }) => {
           </Typography>
           <Stack direction={"row"} spacing={2}>
             <Typography variant="h7" color={"textPrimary"}>
+              Designation :
+            </Typography>
+            <Typography variant="h7" color={"textPrimary"} fontWeight={600}>
+              {user?.designation}
+            </Typography>
+          </Stack>
+          <Stack direction={"row"} spacing={2}>
+            <Typography variant="h7" color={"textPrimary"}>
               User Id :
             </Typography>
             <Typography variant="h7" color={"textPrimary"} fontWeight={600}>

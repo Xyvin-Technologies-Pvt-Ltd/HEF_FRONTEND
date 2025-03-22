@@ -255,6 +255,20 @@ const QRPage = () => {
                         </Typography>
                       )}
                     </Stack>
+                    {userData?.designation && (
+                      <Stack direction={"row"} spacing={2}>
+                        <Typography variant="h7" color={"textPrimary"}>
+                          Designation :
+                        </Typography>
+                        <Typography
+                          variant="h7"
+                          color={"textPrimary"}
+                          fontWeight={600}
+                        >
+                          {userData?.designation}
+                        </Typography>
+                      </Stack>
+                    )}
                   </Stack>
                 </Stack>
               </Box>
