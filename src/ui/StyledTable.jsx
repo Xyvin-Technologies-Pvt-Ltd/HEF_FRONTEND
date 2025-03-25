@@ -433,12 +433,29 @@ const StyledTable = ({
                           : payment
                           ? [
                               <>
-                                <MenuItem onClick={handleModify}>
-                                  Approve
-                                </MenuItem>
-                                <MenuItem onClick={handleAction}>
-                                  Reject
-                                </MenuItem>
+                                {row.status === "published" && (
+                                  <MenuItem onClick={handleAction}>
+                                    Reject
+                                  </MenuItem>
+                                )}
+                                {row.status === "unpublished" && (
+                                  <MenuItem onClick={handleModify}>
+                                    Approve
+                                  </MenuItem>
+                                )}
+                                {row.status !== "published" &&
+                                  row.status !== "unpublished" && (
+                                    <>
+                                      <MenuItem onClick={handleModify}>
+                                        Approve
+                                      </MenuItem>
+                                      {row.status !== "cancelled" && (
+                                        <MenuItem onClick={handleAction}>
+                                          Reject
+                                        </MenuItem>
+                                      )}
+                                    </>
+                                  )}
                               </>,
                             ]
                           : college
