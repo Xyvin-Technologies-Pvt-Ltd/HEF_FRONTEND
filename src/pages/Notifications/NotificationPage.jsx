@@ -41,7 +41,7 @@ const Notificationpage = () => {
           },
         }}
       >
-        <Tab label="E-mail Notifcations" />
+        <Tab label="E-mail Notifications" />
         <Tab label="In-app Notifications" />
         <Tab label="Notification Logs" />
       </Tabs>
