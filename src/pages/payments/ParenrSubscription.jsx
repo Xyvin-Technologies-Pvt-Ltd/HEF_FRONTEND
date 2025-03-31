@@ -40,6 +40,7 @@ const ParentSubscription = () => {
       <StyledTable
         columns={parentSubColums}
         pageNo={pageNo}
+        menu
         onModify={handleEdit}
         setPageNo={setPageNo}
         rowPerSize={row}

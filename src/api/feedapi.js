@@ -33,3 +33,11 @@ export const deleteFeed = async (id) => {
     throw error.response.data;
   }
 };
+export const getFeedById = async (id) => {
+  try {
+    const response = await axiosInstance.get(`/feeds/single/${id}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

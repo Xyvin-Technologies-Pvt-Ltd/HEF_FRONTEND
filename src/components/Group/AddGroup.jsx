@@ -22,6 +22,7 @@ const AddGroup = () => {
   const { groupId, isUpdate } = location?.state || {};
   const [stateOptions, setStateOptions] = useState([]);
   const [zoneOptions, setZoneOptions] = useState([]);
+  const [selectedMemberOptions, setSelectedMemberOptions] = useState([]);
   const [districtOptions, setDistrictOptions] = useState([]);
   const [chapterOptions, setChapterOptions] = useState([]);
   const [memberOptions, setMemberOptions] = useState([]);
@@ -82,11 +83,20 @@ const AddGroup = () => {
     );
   };
   const handleChapterChange = async (chapterId) => {
-    setMemberOptions([]);
     const members = await fetchData("user", chapterId);
-    setMemberOptions(
-      members.map(({ _id, name }) => ({ value: _id, label: name }))
-    );
+
+    // Apply the same filtering logic as in EmailNotification
+    const memberOptionsList =
+      members && Array.isArray(members)
+        ? selectedMemberOptions.some((opt) => opt?.value === "*")
+          ? [{ value: "*", label: "All" }]
+          : [
+              { value: "*", label: "All" },
+              ...members.map(({ _id, name }) => ({ value: _id, label: name })),
+            ]
+        : [];
+
+    setMemberOptions(memberOptionsList);
   };
   useEffect(() => {
     if (isUpdate && groupId) {
@@ -146,12 +156,27 @@ const AddGroup = () => {
   const onSubmit = async (data) => {
     try {
       setLoading(true);
-      const participants = data?.participants?.map((user) => user?.value);
+      // Check if "All" is selected
+      const isAllSelected = data?.participants?.some(
+        (user) => user.value === "*"
+      );
+
       const formData = {
-        participantIds: participants,
         groupName: data?.groupName,
         groupInfo: data?.groupInfo,
       };
+
+      // If "All" is selected, set participants to ["*"] and include chapter
+      if (isAllSelected) {
+        formData.participants = ["*"];
+        formData.chapter = data.chapter.value; // Add the chapter ID
+      } else {
+        // Otherwise, use the selected participant IDs
+        formData.participantIds = data?.participants?.map(
+          (user) => user?.value
+        );
+      }
+
       if (isUpdate && groupId) {
         await updateGroup(groupId, formData);
       } else {
@@ -165,7 +190,6 @@ const AddGroup = () => {
       setLoading(false);
     }
   };
-
   return (
     <Box
       sx={{ padding: 3 }}
@@ -320,11 +344,56 @@ const AddGroup = () => {
               defaultValue=""
               render={({ field }) => (
                 <>
-                  <StyledSelectField
-                    placeholder="Choose the member"
-                    options={memberOptions}
-                    isMulti
-                    {...field}
+                  <Controller
+                    name="participants"
+                    control={control}
+                    defaultValue=""
+                    render={({ field }) => (
+                      <StyledSelectField
+                        placeholder="Choose the member"
+                        options={memberOptions}
+                        isMulti
+                        {...field}
+                        onChange={(selected) => {
+                          let updatedSelection = [...selected];
+                          const allJustAdded =
+                            selected.some((opt) => opt?.value === "*") &&
+                            !selectedMemberOptions.some(
+                              (opt) => opt?.value === "*"
+                            );
+
+                          const allJustRemoved =
+                            !selected.some((opt) => opt?.value === "*") &&
+                            selectedMemberOptions.some(
+                              (opt) => opt?.value === "*"
+                            );
+
+                          if (allJustAdded) {
+                            updatedSelection = selected.filter(
+                              (opt) => opt?.value === "*"
+                            );
+                          } else if (
+                            selected.some((opt) => opt?.value === "*") &&
+                            selected.length > 1
+                          ) {
+                            updatedSelection = selected.filter(
+                              (opt) => opt?.value !== "*"
+                            );
+                          }
+
+                          setSelectedMemberOptions(updatedSelection);
+                          field.onChange(updatedSelection);
+
+                          if (allJustAdded || allJustRemoved) {
+                            const chapterValue =
+                              control.getValues("chapter")?.value;
+                            if (chapterValue) {
+                              handleChapterChange(chapterValue);
+                            }
+                          }
+                        }}
+                      />
+                    )}
                   />
                 </>
               )}

@@ -17,18 +17,21 @@ import FeedReject from "../../components/Approve/FeedReject";
 import { useListStore } from "../../store/listStore";
 import { toast } from "react-toastify";
 import { StyledButton } from "../../ui/StyledButton";
+import FeedView from "../../components/Approve/FeedView";
 
 const FeedList = () => {
   const [rejectOpen, setRejectOpen] = useState(false);
   const [approveOpen, setApproveOpen] = useState(false);
   const [isChange, setIsChange] = useState(false);
   const { fetchFeed } = useListStore();
+  const [view, setView] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [pageNo, setPageNo] = useState(1);
   const [row, setRow] = useState(10);
   const { deleteFeeds } = useFeedStore();
+  const { fetchFeedById, feeds } = useFeedStore();
   const [approvalId, setApprovalId] = useState(null);
   useEffect(() => {
     let filter = {};
@@ -62,7 +65,10 @@ const FeedList = () => {
       setDeleteDialogOpen(true);
     }
   };
-
+  const handleView = async (id) => {
+    await fetchFeedById(id);
+    setView(true);
+  };
   const confirmDelete = async () => {
     setDeleteDialogOpen(false);
     try {
@@ -101,7 +107,8 @@ const FeedList = () => {
           pageNo={pageNo}
           onSelectionChange={handleSelectionChange}
           setPageNo={setPageNo}
-          payment
+          approve
+          onView={handleView}
           onDelete={handleDelete}
           onModify={handleApprove}
           onAction={handleReject}
@@ -153,6 +160,7 @@ const FeedList = () => {
           </DialogActions>
         </Dialog>
       </Box>
+      <FeedView open={view} onClose={() => setView(false)} data={feeds} />
     </>
   );
 };

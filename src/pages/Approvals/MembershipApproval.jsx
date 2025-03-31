@@ -17,6 +17,7 @@ import { useListStore } from "../../store/listStore";
 import { toast } from "react-toastify";
 import { useProductStore } from "../../store/productStore";
 import { StyledButton } from "../../ui/StyledButton";
+import ProductView from "../../components/Member/ProductView";
 
 const MembershipApproval = () => {
   const [rejectOpen, setRejectOpen] = useState(false);
@@ -26,9 +27,10 @@ const MembershipApproval = () => {
   const [selectedRows, setSelectedRows] = useState([]);
   const [approvalId, setApprovalId] = useState(null);
   const [search, setSearch] = useState("");
+  const [view, setView] = useState(false);
   const [pageNo, setPageNo] = useState(1);
   const [row, setRow] = useState(10);
-  const { deleteProduct } = useProductStore();
+  const { deleteProduct, fetchProductById, product } = useProductStore();
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const handleChange = () => {
     setIsChange((prev) => !prev);
@@ -65,6 +67,10 @@ const MembershipApproval = () => {
       setDeleteDialogOpen(true);
     }
   };
+  const handleView = async (id) => {
+    await fetchProductById(id);
+    setView(true);
+  };
   const confirmDelete = async () => {
     setDeleteDialogOpen(false);
     try {
@@ -100,7 +106,8 @@ const MembershipApproval = () => {
       >
         <StyledTable
           columns={approvalColumns}
-          payment
+          approve
+          onView={handleView}
           onSelectionChange={handleSelectionChange}
           onModify={handleApprove}
           onAction={handleReject}
@@ -155,6 +162,12 @@ const MembershipApproval = () => {
           </DialogActions>
         </Dialog>
       </Box>
+      <ProductView
+        open={view}
+        onClose={() => setView(false)}
+        data={product}
+        view
+      />
     </>
   );
 };

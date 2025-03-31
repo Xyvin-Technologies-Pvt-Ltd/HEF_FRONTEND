@@ -6,6 +6,7 @@ import {
   DialogTitle,
   Box,
   Divider,
+  Avatar,
 } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { ReactComponent as CloseIcon } from "../../assets/icons/CloseIcon.svg";
@@ -15,7 +16,7 @@ import { toast } from "react-toastify";
 import { useProductStore } from "../../store/productStore";
 import { useNavigate } from "react-router-dom";
 
-const ProductView = ({ open, onClose, onChange, data, onEdit }) => {
+const ProductView = ({ open, onClose, onChange, data, onEdit, view }) => {
   const { handleSubmit } = useForm();
   const { deleteProduct } = useProductStore();
   const navigate = useNavigate();
@@ -89,29 +90,60 @@ const ProductView = ({ open, onClose, onChange, data, onEdit }) => {
               </span>
               ₹{data?.offerPrice} per {data?.units}
             </Typography>
+            {view && (
+              <>
+                <Divider />
+                <Box sx={{ mt: 2 }}>
+                  <Typography variant="h6" color="textTertiary" sx={{ mb: 1 }}>
+                    Seller Details
+                  </Typography>
+                  <Box display="flex" alignItems="center" gap={2}>
+                    <Avatar
+                      src={data?.seller?.image}
+                      alt={data?.seller?.name}
+                      sx={{ width: 56, height: 56 }}
+                    />
+                    <Box>
+                      <Typography variant="subtitle1" color="textPrimary">
+                        {data?.seller?.name}
+                      </Typography>
+                      <Typography variant="body2" color="textSecondary">
+                        Member ID: {data?.seller?.memberId}
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Box>
+              </>
+            )}
           </Stack>{" "}
         </DialogContent>
-        <Stack direction={"row"} spacing={2} padding={2} justifyContent={"end"}>
-          <StyledButton
-            variant="secondary"
-            name="Delete"
-            onClick={async (event) => {
-              event.preventDefault();
-              try {
-                await deleteProduct(data?._id);
-                onChange();
-                toast.success("Deleted successfully");
-                onClose();
-              } catch (error) {
-                toast.error(error.message);
-              } finally {
-                onClose();
-              }
-            }}
-          />
-
-          <StyledButton variant="primary" name={"Edit"} type="submit" />
-        </Stack>
+        {!view && (
+          <Stack
+            direction={"row"}
+            spacing={2}
+            padding={2}
+            justifyContent={"end"}
+          >
+            <StyledButton
+              variant="secondary"
+              name="Delete"
+              onClick={async (event) => {
+                event.preventDefault();
+                try {
+                  await deleteProduct(data?._id);
+                  onChange();
+                  toast.success("Deleted successfully");
+                  onClose();
+                } catch (error) {
+                  toast.error(error.message);
+                } finally {
+                  onClose();
+                }
+              }}
+            />
+            <StyledButton variant="primary" name={"Edit"} type="submit" />
+          </Stack>
+        )}
       </form>
     </Dialog>
   );

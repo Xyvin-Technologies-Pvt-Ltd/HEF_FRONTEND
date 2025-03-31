@@ -50,8 +50,8 @@ const EventView = () => {
 
   const events = lists?.map((event) => ({
     ...event,
-    start: new Date(event?.startDate),
-    day: moment(event?.startDate)?.date(),
+    start: new Date(event?.eventDate),
+    day: moment(event?.eventDate)?.date(),
   }));
 
   const daysInMonth = moment()

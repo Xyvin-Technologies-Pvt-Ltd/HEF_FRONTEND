@@ -71,7 +71,6 @@ const AddActivity = () => {
         ...(data?.date && { date: data?.date }),
         ...(data?.time && { time: data?.time }),
         amount: data?.amount,
-        status: "accepted",
       };
       if (type === "online") {
         formData.meetingLink = data?.link;

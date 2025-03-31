@@ -75,6 +75,7 @@ const StyledTable = ({
   member,
   report,
   payment,
+  approve,
   college,
   rowPerSize,
   setRowPerSize,
@@ -366,7 +367,7 @@ const StyledTable = ({
                       {!menu &&
                         row.status !== "rejected" &&
                         row.status !== "accepted" &&
-                        !(payment && row.status === "active") && (
+                        !((payment || approve) && row.status === "active") && (
                           <IconButton
                             aria-controls="simple-menu"
                             aria-haspopup="true"
@@ -452,6 +453,38 @@ const StyledTable = ({
                                       {row.status !== "cancelled" && (
                                         <MenuItem onClick={handleAction}>
                                           Reject
+                                        </MenuItem>
+                                      )}
+                                    </>
+                                  )}
+                              </>,
+                            ]
+                          : approve
+                          ? [
+                              <>
+                                <MenuItem onClick={handleView}>
+                                  View Details
+                                </MenuItem>
+
+                                {row.status === "published" && (
+                                  <MenuItem onClick={handleAction}>
+                                    Unpublish
+                                  </MenuItem>
+                                )}
+                                {row.status === "unpublished" && (
+                                  <MenuItem onClick={handleModify}>
+                                    Publish
+                                  </MenuItem>
+                                )}
+                                {row.status !== "published" &&
+                                  row.status !== "unpublished" && (
+                                    <>
+                                      <MenuItem onClick={handleModify}>
+                                        Publish
+                                      </MenuItem>
+                                      {row.status !== "cancelled" && (
+                                        <MenuItem onClick={handleAction}>
+                                          Unpublish
                                         </MenuItem>
                                       )}
                                     </>

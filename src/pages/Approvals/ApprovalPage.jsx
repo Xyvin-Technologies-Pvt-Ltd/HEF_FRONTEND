@@ -19,39 +19,7 @@ import MembershipApproval from "./MembershipApproval";
 
 const ApprovalPage = () => {
   const [selectedTab, setSelectedTab] = useState(0);
-  const [rejectOpen, setRejectOpen] = useState(false);
-  const [approveOpen, setApproveOpen] = useState(false);
-  const [isChange, setIsChange] = useState(false);
-  const { fetchFeed } = useListStore();
-  const [search, setSearch] = useState("");
-  const [pageNo, setPageNo] = useState(1);
-  const [row, setRow] = useState(10);
-  const [approvalId, setApprovalId] = useState(null);
-  useEffect(() => {
-    let filter = {};
-    filter.pageNo = pageNo;
-    filter.limit = row;
-    if (search) {
-      filter.search = search;
-      setPageNo(1);
-    }
-    fetchFeed(filter);
-  }, [isChange, pageNo, search, row, selectedTab]);
 
-  const handleReject = (id) => {
-    setApprovalId(id);
-    setRejectOpen(true);
-  };
-  const handleCloseReject = () => {
-    setRejectOpen(false);
-  };
-  const handleApprove = (id) => {
-    setApprovalId(id);
-    setApproveOpen(true);
-  };
-  const handleCloseApprove = () => {
-    setApproveOpen(false);
-  };
   const handleChange = (event, newValue) => {
     setSelectedTab(newValue);
   };
@@ -101,7 +69,7 @@ const ApprovalPage = () => {
       </Tabs>
       <Divider />{" "}
       <Box padding={"15px"}>
-      {selectedTab === 0 && (
+        {selectedTab === 0 && (
           <Grid>
             <FeedList />
           </Grid>

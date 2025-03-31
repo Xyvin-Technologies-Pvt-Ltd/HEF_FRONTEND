@@ -87,6 +87,7 @@ export default function AddEvent({ isUpdate }) {
       setValue("image", event.image);
       setValue("startDate", event.startDate);
       setValue("eventDate", event.eventDate);
+      setValue("eventEndDate", event.eventEndDate);
       setValue("endDate", event.endDate);
       setValue("startTime", event.startTime);
       setValue("endTime", event.endTime);
@@ -216,6 +217,7 @@ export default function AddEvent({ isUpdate }) {
         startTime: data?.startTime,
         endDate: data?.endDate,
         eventDate: data?.eventDate,
+        ...(data?.eventEndDate && { eventEndDate: data?.eventEndDate }),
         endTime: data?.endTime,
         speakers: speakersData,
         description: data?.description,
@@ -585,7 +587,7 @@ export default function AddEvent({ isUpdate }) {
                   variant="h6"
                   color="textSecondary"
                 >
-                  Event Date
+                  Event Start Date
                 </Typography>
                 <Controller
                   name="eventDate"
@@ -600,6 +602,25 @@ export default function AddEvent({ isUpdate }) {
                           {errors.eventDate.message}
                         </span>
                       )}
+                    </>
+                  )}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <Typography
+                  sx={{ marginBottom: 1 }}
+                  variant="h6"
+                  color="textSecondary"
+                >
+                  Event End Date
+                </Typography>
+                <Controller
+                  name="eventEndDate"
+                  control={control}
+                  defaultValue={null}
+                  render={({ field }) => (
+                    <>
+                      <StyledCalender {...field} />
                     </>
                   )}
                 />

@@ -43,6 +43,9 @@ const MemberList = () => {
     membershipId: "",
     status: "",
     installed: "",
+   from: "",
+   to: "",
+    chapter: "",
   });
   const handleSelectionChange = (newSelectedIds) => {
     setSelectedRows(newSelectedIds);
@@ -79,6 +82,9 @@ const MemberList = () => {
     filter.limit = row;
     if (filters.name) filter.name = filters.name;
     if (filters.membershipId) filter.membershipId = filters.membershipId;
+    if (filters.from) filter.from = filters.from;
+    if (filters.to) filter.to = filters.to;
+    if(filters.chapter) filter.chapter = filters.chapter
     if (filters.status) filter.status = filters.status;
     if (typeof filters.installed === "boolean") {
       filter.installed = filters.installed;
@@ -92,6 +98,9 @@ const MemberList = () => {
       if (filters.name) filter.name = filters.name;
       if (filters.membershipId) filter.membershipId = filters.membershipId;
       if (filters.status) filter.status = filters.status;
+      if(filters.from) filter.from = filters.from;
+      if(filters.to) filter.to = filters.to;
+      if(filters.chapter) filter.chapter = filters.chapter
       if (typeof filters.installed === "boolean") {
         filter.installed = filters.installed;
       }
@@ -157,7 +166,10 @@ const MemberList = () => {
                 !(
                   filters.name ||
                   filters.membershipId ||
+                  filters.from ||
+                  filters.to ||
                   filters.status ||
+                  filters.chapter ||
                   (filters.installed !== undefined && filters.installed !== "")
                 )
               }
