@@ -43,8 +43,8 @@ const MemberList = () => {
     membershipId: "",
     status: "",
     installed: "",
-   from: "",
-   to: "",
+    from: "",
+    to: "",
     chapter: "",
   });
   const handleSelectionChange = (newSelectedIds) => {
@@ -84,7 +84,7 @@ const MemberList = () => {
     if (filters.membershipId) filter.membershipId = filters.membershipId;
     if (filters.from) filter.from = filters.from;
     if (filters.to) filter.to = filters.to;
-    if(filters.chapter) filter.chapter = filters.chapter
+    if (filters.chapter) filter.chapter = filters.chapter;
     if (filters.status) filter.status = filters.status;
     if (typeof filters.installed === "boolean") {
       filter.installed = filters.installed;
@@ -98,9 +98,9 @@ const MemberList = () => {
       if (filters.name) filter.name = filters.name;
       if (filters.membershipId) filter.membershipId = filters.membershipId;
       if (filters.status) filter.status = filters.status;
-      if(filters.from) filter.from = filters.from;
-      if(filters.to) filter.to = filters.to;
-      if(filters.chapter) filter.chapter = filters.chapter
+      if (filters.from) filter.from = filters.from;
+      if (filters.to) filter.to = filters.to;
+      if (filters.chapter) filter.chapter = filters.chapter;
       if (typeof filters.installed === "boolean") {
         filter.installed = filters.installed;
       }
@@ -175,9 +175,12 @@ const MemberList = () => {
               }
               sx={{
                 "& .MuiBadge-dot": {
-                  width: "15px",
-                  height: "15px",
+                  width: "12px",
+                  height: "12px",
                   borderRadius: "50%",
+                  backgroundColor: "#F58220",
+                  right: 8,
+                  top: 8,
                 },
               }}
               overlap="circular"
@@ -196,7 +199,32 @@ const MemberList = () => {
                 justifyContent="center"
                 border="1px solid rgba(0, 0, 0, 0.12)"
                 onClick={() => setFilterOpen(true)}
-                style={{ cursor: "pointer" }}
+                style={{
+                  cursor: "pointer",
+                  transition: "all 0.3s ease",
+                  boxShadow:
+                    filters.name ||
+                    filters.membershipId ||
+                    filters.from ||
+                    filters.to ||
+                    filters.status ||
+                    filters.chapter ||
+                    (filters.installed !== undefined &&
+                      filters.installed !== "")
+                      ? "0 0 8px rgba(245, 130, 32, 0.6)"
+                      : "none",
+                  borderColor:
+                    filters.name ||
+                    filters.membershipId ||
+                    filters.from ||
+                    filters.to ||
+                    filters.status ||
+                    filters.chapter ||
+                    (filters.installed !== undefined &&
+                      filters.installed !== "")
+                      ? "#F58220"
+                      : "rgba(0, 0, 0, 0.12)",
+                }}
               >
                 {" "}
                 <FilterIcon />

@@ -28,8 +28,6 @@ const MemberFilter = ({ open, onClose, onApply }) => {
   const [zoneOptions, setZoneOptions] = useState([]);
   const [districtOptions, setDistrictOptions] = useState([]);
   const [chapterOptions, setChapterOptions] = useState([]);
-  
-  // Add state for selections
   const [selectedState, setSelectedState] = useState(null);
   const [selectedZone, setSelectedZone] = useState(null);
   const [selectedDistrict, setSelectedDistrict] = useState(null);

@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import {
+  Badge,
   Box,
   Divider,
   Grid,
   Stack,
   Tab,
   Tabs,
+  Tooltip,
   Typography,
 } from "@mui/material";
 
@@ -23,6 +25,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import useActivityStore from "../../store/activityStore";
 import ActivityFilter from "../../components/Activity/ActivityFilter";
+import { generateExcel } from "../../utils/generateExcel";
+import { getBusinessDwld } from "../../api/activityapi";
 
 const BusinessPage = () => {
   const navigate = useNavigate();
@@ -38,7 +42,9 @@ const BusinessPage = () => {
   const [filters, setFilters] = useState({
     type: "",
     status: "",
-    date: "",
+    startDate: "",
+    endDate: "",
+    chapter: "",
   });
   const location = useLocation();
   const { tab } = location.state || {};
@@ -76,6 +82,11 @@ const BusinessPage = () => {
       filter.search = search;
       setPageNo(1);
     }
+    if (filters.chapter) filter.chapter = filters.chapter;
+    if (filters.status) filter.status = filters.status;
+    if (filters.startDate) filter.startDate = filters.startDate;
+    if (filters.endDate) filter.endDate = filters.endDate;
+    if (filters.type) filter.type = filters.type;
     if (selectedTab === 1) {
       filter.type = "Business";
     } else if (selectedTab === 2) {
@@ -86,7 +97,8 @@ const BusinessPage = () => {
     filter.pageNo = pageNo;
     filter.limit = row;
     fetchActivity(filter);
-  }, [isChange, pageNo, search, row, selectedTab]);
+  }, [isChange, pageNo, search, row, selectedTab, filters]);
+  const hasActiveFilters = Object.values(filters).some((value) => value);
   const activityColumns = [
     { title: "Date", field: "createdAt", padding: "none" },
     { title: "Business giver", field: "senderName" },
@@ -97,6 +109,28 @@ const BusinessPage = () => {
       ? [{ title: "Referral", field: "referralName" }]
       : []),
   ];
+  const handleDownload = async () => {
+    try {
+      let filter = {};
+
+      if (filters.chapter) filter.chapter = filters.chapter;
+      if (filters.status) filter.status = filters.status;
+      if (filters.startDate) filter.startDate = filters.startDate;
+      if (filters.endDate) filter.endDate = filters.endDate;
+      if (filters.type) filter.type = filters.type;
+      const data = await getBusinessDwld(filter);
+      const csvData = data.data;
+      if (csvData && csvData.headers && csvData.body) {
+        generateExcel(csvData.headers, csvData.body, "Business");
+      } else {
+        console.error(
+          "Error: Missing headers or data in the downloaded content"
+        );
+      }
+    } catch (error) {
+      console.error("Error downloading users:", error);
+    }
+  };
   return (
     <>
       {" "}
@@ -114,6 +148,7 @@ const BusinessPage = () => {
           </Typography>
         </Stack>
         <Stack direction={"row"} spacing={2} justifyContent={"flex-end"}>
+         
           <StyledButton
             variant={"primary"}
             name={
@@ -170,21 +205,58 @@ const BusinessPage = () => {
           alignItems={"center"}
         >
           <Stack direction={"row"} spacing={2} mt={2}>
-            <StyledSearchbar placeholder={"Search"} />
-            <Box
-              bgcolor={"#FFFFFF"}
-              borderRadius={"50%"}
-              width={"48px"}
-              height={"48px"}
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              border="1px solid rgba(0, 0, 0, 0.12)"
-              onClick={() => setFilterOpen(true)}
-              style={{ cursor: "pointer" }}
-            >
-              <FilterIcon />
-            </Box>
+          <StyledButton
+            variant={"primary"}
+            name={"Download"}
+            onClick={handleDownload}
+          />
+            <Tooltip title={hasActiveFilters ? "Active filters" : "Filter"}>
+              <Badge
+                color="error"
+                variant="dot"
+                invisible={!hasActiveFilters}
+                sx={{
+                  "& .MuiBadge-dot": {
+                    width: "12px",
+                    height: "12px",
+                    borderRadius: "50%",
+                    backgroundColor: "#F58220",
+                    right: 8,
+                    top: 8,
+                  },
+                }}
+                overlap="circular"
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+              >
+                <Box
+                  bgcolor={"#FFFFFF"}
+                  borderRadius={"50%"}
+                  width={"48px"}
+                  height={"48px"}
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  border="1px solid rgba(0, 0, 0, 0.12)"
+                  onClick={() => setFilterOpen(true)}
+                  style={{
+                    cursor: "pointer",
+                    transition: "all 0.3s ease",
+                    boxShadow: hasActiveFilters
+                      ? "0 0 5px rgba(245, 130, 32, 0.5)"
+                      : "none",
+                    borderColor: hasActiveFilters
+                      ? "#F58220"
+                      : "rgba(0, 0, 0, 0.12)",
+                  }}
+                  className={hasActiveFilters ? "filter-active" : ""}
+                >
+                  <FilterIcon />
+                </Box>
+              </Badge>
+            </Tooltip>
           </Stack>
         </Stack>
         <Box

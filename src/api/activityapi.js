@@ -29,3 +29,13 @@ export const deleteActivity = async (id) => {
     throw error.response.data;
   }
 };
+export const getBusinessDwld = async (filter) => {
+  try {
+    const response = await axiosInstance.get(`/analytic/download`, {
+      params: filter,
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

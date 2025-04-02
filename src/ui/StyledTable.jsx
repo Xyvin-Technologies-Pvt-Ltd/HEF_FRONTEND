@@ -425,7 +425,7 @@ const StyledTable = ({
                                       Delete
                                     </MenuItem>
                                     <MenuItem onClick={handleAction}>
-                                      Suspend
+                                    {row.status === "suspended" ? "Unsuspend" : "Suspend"}
                                     </MenuItem>
                                   </>
                                 )}
