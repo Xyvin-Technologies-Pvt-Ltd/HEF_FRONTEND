@@ -9,13 +9,17 @@ import { useNavigate } from "react-router-dom";
 import { getMember } from "../../api/memberapi";
 
 const MemberPage = () => {
-  const [selectedTab, setSelectedTab] = useState(0);
+  const storedTab = localStorage.getItem("memberTab");
 
+  const [selectedTab, setSelectedTab] = useState(
+    storedTab ? Number(storedTab) : 0
+  );
   const handleChange = (event, newValue) => {
+    localStorage.setItem("memberTab", newValue);
     setSelectedTab(newValue);
   };
   const navigate = useNavigate();
- 
+
   return (
     <>
       <Stack
@@ -32,7 +36,6 @@ const MemberPage = () => {
           </Typography>
         </Stack>
         <Stack direction={"row"} spacing={2}>
-         
           <StyledButton
             variant={"primary"}
             name={
@@ -77,7 +80,7 @@ const MemberPage = () => {
         }}
       >
         <Tab label="User Details" />
-        
+
         <Tab label="Accesses" />
       </Tabs>
       <Box padding="15px" marginBottom={4}>

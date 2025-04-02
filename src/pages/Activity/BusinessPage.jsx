@@ -30,7 +30,8 @@ import { getBusinessDwld } from "../../api/activityapi";
 
 const BusinessPage = () => {
   const navigate = useNavigate();
-  const [selectedTab, setSelectedTab] = useState(0);
+  const storedTab= localStorage.getItem("businessTab")
+  const [selectedTab, setSelectedTab] = useState(storedTab? Number(storedTab) : 0);
   const [pageNo, setPageNo] = useState(1);
   const [filterOpen, setFilterOpen] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
@@ -58,6 +59,7 @@ const BusinessPage = () => {
     setFilters(newFilters);
   };
   const handleChange = (event, newValue) => {
+    localStorage.setItem("businessTab", newValue);
     setSelectedTab(newValue);
   };
   const handleSelectionChange = (newSelectedIds) => {

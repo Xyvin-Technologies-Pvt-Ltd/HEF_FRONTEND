@@ -94,6 +94,16 @@ const SimpleDialog = ({ open, onClose }) => {
   const { singleAdmin, fetchAdminById } = useAdminStore();
   const handleLogout = () => {
     localStorage.removeItem("4ZbQwXtY8uVrN5mP7kL3JhF6");
+    localStorage.removeItem("memberactivityTab");
+    localStorage.removeItem("businessTab");
+    localStorage.removeItem("approvalTab");
+    localStorage.removeItem("levelTab");
+    localStorage.removeItem("memberTab");
+    localStorage.removeItem("memberViewTab");
+    localStorage.removeItem("notificationTab");
+    localStorage.removeItem("paymentTab");
+    localStorage.removeItem("promotionTab");
+    localStorage.removeItem("settingTab");
     navigate("/");
   };
   useEffect(() => {

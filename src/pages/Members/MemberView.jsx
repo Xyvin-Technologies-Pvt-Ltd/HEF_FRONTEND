@@ -18,7 +18,8 @@ import MemberProducts from "../../components/Member/MemberProducts";
 import MemberActivity from "../../components/Member/MemberActivity";
 
 const MemberView = () => {
-  const [selectedTab, setSelectedTab] = useState(0);
+  const storedTab = localStorage.getItem("memberViewTab");
+  const [selectedTab, setSelectedTab] = useState(storedTab ? Number(storedTab) : 0);
   const [isChange, setIsChange] = useState(false);
   const { id } = useParams();
   const { fetchMemberById, member, loading, refreshMember } = useMemberStore();
@@ -31,6 +32,7 @@ const MemberView = () => {
     fetchMemberById(id);
   }, [isChange, refreshMember]);
   const handleChange = (event, newValue) => {
+    localStorage.setItem("memberViewTab", newValue);
     setSelectedTab(newValue);
   };
 

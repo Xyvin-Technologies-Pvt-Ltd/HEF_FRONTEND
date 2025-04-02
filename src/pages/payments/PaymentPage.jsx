@@ -24,12 +24,13 @@ import PaymentView from "./PaymentView";
 import { toast } from "react-toastify";
 
 const MemberPage = () => {
+  const storedTab = localStorage.getItem("paymentTab");
   const { fetchPayment } = useListStore();
   const [pageNo, setPageNo] = useState(1);
   const [search, setSearch] = useState("");
   const [selectedRows, setSelectedRows] = useState([]);
   const [row, setRow] = useState(10);
-  const [selectedTab, setSelectedTab] = useState(0);
+  const [selectedTab, setSelectedTab] = useState(storedTab ? Number(storedTab) : 0);
   const [open, setOpen] = useState(false);
   const [isChange, setIsChange] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -39,6 +40,7 @@ const MemberPage = () => {
   const { patchPayments, fetchSinglePayment, singlePayment, deletePayments } =
     usePaymentStore();
   const handleTabChange = (event, newValue) => {
+    localStorage.setItem("paymentTab", newValue);
     setSelectedTab(newValue);
   };
   const handleParent = () => {

@@ -5,11 +5,13 @@ import RoleManagement from "./RoleManagement.jsx";
 import AdminActivity from "./AdminActivity.jsx";
 
 const SettingsPage = () => {
-  const [selectedTab, setSelectedTab] = useState(0);
-
-
+  const storedTab = localStorage.getItem("settingTab");
+  const [selectedTab, setSelectedTab] = useState(
+    storedTab ? Number(storedTab) : 0
+  );
 
   const handleChange = (event, newValue) => {
+    localStorage.setItem("settingTab", newValue);
     setSelectedTab(newValue);
   };
 

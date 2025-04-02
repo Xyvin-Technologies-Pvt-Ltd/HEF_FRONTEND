@@ -28,6 +28,7 @@ const tabMapping = {
 };
 const LevelPage = () => {
   const { fetchLevels } = useListStore();
+  const storedTab = localStorage.getItem("levelTab");
   const [selectedRows, setSelectedRows] = useState([]);
   const [search, setSearch] = useState("");
   const [pageNo, setPageNo] = useState(1);
@@ -37,11 +38,14 @@ const LevelPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { type } = location?.state || {};
-  const [selectedTab, setSelectedTab] = useState(tabMapping[type] ?? 0);
+  const [selectedTab, setSelectedTab] = useState(
+    storedTab !== null ? Number(storedTab) : tabMapping[type] ?? 0
+  );
 
   useEffect(() => {
     if (type && tabMapping.hasOwnProperty(type)) {
       setSelectedTab(tabMapping[type]);
+      localStorage.setItem("levelTab", tabMapping[type]); 
     }
   }, [type]);
   useEffect(() => {
@@ -66,6 +70,7 @@ const LevelPage = () => {
   }, [, pageNo, search, row, selectedTab, isChange]);
 
   const handleChange = (event, newValue) => {
+    localStorage.setItem("levelTab", newValue);
     setSelectedTab(newValue);
   };
   const handleEdit = (id) => {

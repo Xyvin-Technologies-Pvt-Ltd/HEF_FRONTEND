@@ -21,16 +21,21 @@ const tabMapping = {
 };
 const PromotionItem = () => {
   const location = useLocation();
+  const storedTab = localStorage.getItem("promotionTab");
   const { type } = location?.state || {};
 
-  const [selectedTab, setSelectedTab] = useState(tabMapping[type] ?? 0);
+  const [selectedTab, setSelectedTab] = useState(
+    storedTab !== null ? Number(storedTab) : tabMapping[type] ?? 0
+  );
 
   useEffect(() => {
     if (type && tabMapping.hasOwnProperty(type)) {
       setSelectedTab(tabMapping[type]);
+      localStorage.setItem("promotionTab", tabMapping[type]);
     }
   }, [type]);
   const handleChange = (event, newValue) => {
+    localStorage.setItem("promotionTab", newValue);
     setSelectedTab(newValue);
   };
 

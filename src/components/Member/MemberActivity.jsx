@@ -7,14 +7,16 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useListStore } from "../../store/listStore";
 
 const MemberActivity = () => {
+  const storeTab = localStorage.getItem("memberactivityTab");
   const navigate = useNavigate();
-  const [selectedTab, setSelectedTab] = useState(0);
+  const [selectedTab, setSelectedTab] = useState(storeTab? Number(storeTab) : 0);
   const [pageNo, setPageNo] = useState(1);
   const [search, setSearch] = useState();
   const [row, setRow] = useState(10);
   const { fetchActivity } = useListStore();
   const {id}=useParams();
   const handleChange = (event, newValue) => {
+    localStorage.setItem("memberactivityTab", newValue);
     setSelectedTab(newValue);
   };
   useEffect(() => {

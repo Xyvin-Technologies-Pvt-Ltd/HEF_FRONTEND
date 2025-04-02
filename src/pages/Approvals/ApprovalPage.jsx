@@ -18,9 +18,11 @@ import StyledSearchbar from "../../ui/StyledSearchbar";
 import MembershipApproval from "./MembershipApproval";
 
 const ApprovalPage = () => {
-  const [selectedTab, setSelectedTab] = useState(0);
+  const storedTab = localStorage.getItem("approvalTab");
+  const [selectedTab, setSelectedTab] = useState(storedTab ? Number(storedTab) : 0);
 
   const handleChange = (event, newValue) => {
+    localStorage.setItem("approvalTab", newValue);
     setSelectedTab(newValue);
   };
   return (

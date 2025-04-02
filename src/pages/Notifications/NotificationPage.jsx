@@ -5,9 +5,11 @@ import InAppNotification from "../../components/Notification/InAppNotification";
 import NotificationLog from "./NotificationLog";
 
 const Notificationpage = () => {
-  const [selectedTab, setSelectedTab] = useState(0);
+  const storedTab = localStorage.getItem("notificationTab");
+  const [selectedTab, setSelectedTab] = useState(storedTab ? Number(storedTab) : 0);
 
   const handleChange = (event, newValue) => {
+    localStorage.setItem("notificationTab", newValue);
     setSelectedTab(newValue);
   };
 
