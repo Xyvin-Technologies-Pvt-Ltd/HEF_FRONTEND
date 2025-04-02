@@ -19,8 +19,10 @@ const SuspendProfile = ({ open, onClose, onChange, id }) => {
       onChange();
       onClose();
     } catch (error) {
-      setLoading(false);
       console.error(error.message);
+    }
+    finally {
+      setLoading(false);
     }
   };
 
