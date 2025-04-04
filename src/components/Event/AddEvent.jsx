@@ -203,11 +203,11 @@ export default function AddEvent({ isUpdate }) {
 
       let status;
       if (currentDate.isAfter(endDate)) {
-        status = "upcoming";
+        status = "pending";
       } else if (currentDate.isSameOrAfter(startDate)) {
         status = "live";
       } else {
-        status = "upcoming";
+        status = "pending";
       }
       const formData = {
         type: data?.type?.value,
