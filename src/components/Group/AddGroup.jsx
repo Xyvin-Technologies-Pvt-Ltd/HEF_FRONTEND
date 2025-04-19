@@ -117,33 +117,33 @@ const AddGroup = () => {
         const firstParticipant = singleGroup.participants[0];
 
         const stateOption = {
-          value: firstParticipant.chapter.districtId.zoneId.stateId._id,
-          label: firstParticipant.chapter.districtId.zoneId.stateId.name,
+          value: firstParticipant?.chapter?.districtId?.zoneId?.stateId?._id,
+          label: firstParticipant?.chapter?.districtId?.zoneId?.stateId?.name,
         };
         setValue("state", stateOption);
         setStateOptions([stateOption]);
 
         const zoneOption = {
-          value: firstParticipant.chapter.districtId.zoneId._id,
-          label: firstParticipant.chapter.districtId.zoneId.name,
+          value: firstParticipant?.chapter?.districtId?.zoneId?._id,
+          label: firstParticipant?.chapter?.districtId?.zoneId?.name,
         };
         setValue("zone", zoneOption);
         setZoneOptions([zoneOption]);
 
         const districtOption = {
-          value: firstParticipant.chapter.districtId._id,
-          label: firstParticipant.chapter.districtId.name,
+          value: firstParticipant?.chapter?.districtId?._id,
+          label: firstParticipant?.chapter?.districtId?.name,
         };
         setValue("district", districtOption);
         setDistrictOptions([districtOption]);
 
         const chapterOption = {
-          value: firstParticipant.chapter._id,
-          label: firstParticipant.chapter.name,
+          value: firstParticipant?.chapter?._id,
+          label: firstParticipant?.chapter?.name,
         };
         setValue("chapter", chapterOption);
         setChapterOptions([chapterOption]);
-        handleChapterChange(firstParticipant.chapter._id);
+        handleChapterChange(firstParticipant?.chapter?._id);
       }
     }
   }, [singleGroup, isUpdate, setValue]);

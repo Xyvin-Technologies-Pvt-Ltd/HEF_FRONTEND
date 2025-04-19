@@ -36,7 +36,7 @@ const ApprovalPage = () => {
         alignItems={"center"}
       >
         <Typography variant="h4" color={"textSecondary"}>
-          Requirements
+          Approval
         </Typography>
       </Box>
       <Tabs
