@@ -24,7 +24,6 @@ const GroupPage = () => {
     filter.limit = row;
     if (search) {
       filter.search = search;
-      setPageNo(1);
     }
     fetchGroup(filter);
   }, [pageNo, search, row, isChange]);
@@ -87,7 +86,10 @@ const GroupPage = () => {
           <Stack direction={"row"} spacing={2}>
             <StyledSearchbar
               placeholder={"Search"}
-              onchange={(e) => setSearch(e.target.value)}
+              onchange={(e) => {
+                setSearch(e.target.value);
+                setPageNo(1);
+              }}
             />
           </Stack>
         </Stack>

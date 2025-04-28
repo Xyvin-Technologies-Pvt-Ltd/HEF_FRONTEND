@@ -41,7 +41,6 @@ const MembershipApproval = () => {
     filter.limit = row;
     if (search) {
       filter.search = search;
-      setPageNo(1);
     }
     fetchApproval(filter);
   }, [isChange, pageNo, search, row]);
@@ -94,7 +93,10 @@ const MembershipApproval = () => {
         <Stack direction={"row"} spacing={2}>
           <StyledSearchbar
             placeholder={"Search"}
-            onchange={(e) => setSearch(e.target.value)}
+            onchange={(e) => {
+              setSearch(e.target.value);
+              setPageNo(1);
+            }}
           />
         </Stack>
       </Stack>

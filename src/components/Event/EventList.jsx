@@ -21,7 +21,6 @@ const EventList = () => {
     let filter = {};
     if (search) {
       filter.search = search;
-      setPageNo(1);
     }
     filter.pageNo = pageNo;
     filter.limit = row;
@@ -64,6 +63,7 @@ const EventList = () => {
             placeholder={"Search"}
             onchange={(e) => {
               setSearch(e.target.value);
+              setPageNo(1);
             }}
           />
         </Stack>

@@ -3,7 +3,11 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import StyledTable from "../../ui/StyledTable.jsx";
-import { eventHistoryColumns, eventList, userData } from "../../assets/json/TableData";
+import {
+  eventHistoryColumns,
+  eventList,
+  userData,
+} from "../../assets/json/TableData";
 import { StyledButton } from "../../ui/StyledButton";
 import StyledSearchbar from "../../ui/StyledSearchbar.jsx";
 import { useListStore } from "../../store/listStore.js";
@@ -20,7 +24,6 @@ export default function EventHistorypage() {
     let filter = {};
     if (search) {
       filter.search = search;
-      setPageNo(1);
     }
     filter.status = "completed";
     filter.pageNo = pageNo;
@@ -48,9 +51,7 @@ export default function EventHistorypage() {
             </Typography>
           </Grid>
           <Grid item xs={6} container justifyContent="flex-end" spacing={2}>
-            <Grid item>
-            
-            </Grid>
+            <Grid item></Grid>
           </Grid>
         </Grid>
       </Box>
@@ -65,7 +66,10 @@ export default function EventHistorypage() {
             <Stack direction={"row"} spacing={2}>
               <StyledSearchbar
                 placeholder={"Search"}
-                onchange={(e) => setSearch(e.target.value)}
+                onchange={(e) => {
+                  setSearch(e.target.value);
+                  setPageNo(1);
+                }}
               />
             </Stack>
           </Stack>{" "}

@@ -45,7 +45,7 @@ const LevelPage = () => {
   useEffect(() => {
     if (type && tabMapping.hasOwnProperty(type)) {
       setSelectedTab(tabMapping[type]);
-      localStorage.setItem("levelTab", tabMapping[type]); 
+      localStorage.setItem("levelTab", tabMapping[type]);
     }
   }, [type]);
   useEffect(() => {
@@ -54,7 +54,6 @@ const LevelPage = () => {
     filter.limit = row;
     if (search) {
       filter.search = search;
-      setPageNo(1);
     }
     let type;
     if (selectedTab === 0) {
@@ -217,7 +216,10 @@ const LevelPage = () => {
           <Stack direction={"row"} spacing={2}>
             <StyledSearchbar
               placeholder={"Search"}
-              onchange={(e) => setSearch(e.target.value)}
+              onchange={(e) => {
+                setSearch(e.target.value);
+                setPageNo(1);
+              }}
             />
             {selectedTab === 3 && (
               <StyledButton
