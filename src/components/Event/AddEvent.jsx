@@ -631,7 +631,7 @@ export default function AddEvent({ isUpdate }) {
                   variant="h6"
                   color="textSecondary"
                 >
-                  Start Date
+                  Event Visibility Start Date
                 </Typography>
                 <Controller
                   name="startDate"
@@ -656,7 +656,7 @@ export default function AddEvent({ isUpdate }) {
                   variant="h6"
                   color="textSecondary"
                 >
-                  End Date
+                  Event Visibility End Date
                 </Typography>
                 <Controller
                   name="endDate"
