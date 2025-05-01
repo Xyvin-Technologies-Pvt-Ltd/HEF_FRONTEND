@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import Select from "react-select";
 
@@ -14,8 +14,10 @@ const StyledSearchInputField = ({
   onChange,
   value,
   isMulti,
-  onInputChange
+  onInputChange,
 }) => {
+  const [inputVal, setInputVal] = useState("");
+
   const customStyles = {
     control: (provided, state) => ({
       ...provided,
@@ -53,8 +55,8 @@ const StyledSearchInputField = ({
     }),
     menuList: (provided) => ({
       ...provided,
-      maxHeight: "150px", // Set the max height of the dropdown
-      overflowY: "auto", // Enable vertical scrolling
+      maxHeight: "150px",
+      overflowY: "auto",
     }),
     singleValue: (provided) => ({
       ...provided,
@@ -65,7 +67,36 @@ const StyledSearchInputField = ({
       color: "#79747E",
     }),
   };
-  
+  const handleInputChange = (inputValue, { action }) => {
+    if (action === "input-change") {
+      setInputVal(inputValue);
+      if (onInputChange) {
+        onInputChange(inputValue);
+      }
+
+      if (inputValue.endsWith(" ") && inputValue.trim() !== "") {
+        const terms = inputValue.trim().split(" ");
+        const currentValues = value || [];
+        const newValues = terms
+          .filter((term) => term)
+          .map((term) => ({
+            label: term,
+            value: term,
+          }));
+        const uniqueValues = [...currentValues];
+
+        newValues.forEach((newVal) => {
+          if (!uniqueValues.some((item) => item.value === newVal.value)) {
+            uniqueValues.push(newVal);
+          }
+        });
+        onChange(uniqueValues);
+        setInputVal("");
+        return "";
+      }
+    }
+    return inputValue;
+  };
 
   return (
     <SelectContainer>
@@ -77,11 +108,9 @@ const StyledSearchInputField = ({
         isMulti={isMulti}
         isDisabled={isDisabled}
         styles={customStyles}
-        onInputChange={(inputValue, { action }) => {
-          if (action === "input-change") {
-            onInputChange(inputValue);
-          }
-        }}
+        inputValue={inputVal}
+        onInputChange={handleInputChange}
+        isCreatable={true}
       />
     </SelectContainer>
   );
