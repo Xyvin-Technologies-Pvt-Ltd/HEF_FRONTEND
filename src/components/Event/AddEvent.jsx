@@ -590,50 +590,6 @@ export default function AddEvent({ isUpdate }) {
                   Event Start Date
                 </Typography>
                 <Controller
-                  name="eventDate"
-                  control={control}
-                  defaultValue={null}
-                  rules={{ required: "Event Date is required" }}
-                  render={({ field }) => (
-                    <>
-                      <StyledCalender {...field} />
-                      {errors.eventDate && (
-                        <span style={{ color: "red" }}>
-                          {errors.eventDate.message}
-                        </span>
-                      )}
-                    </>
-                  )}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <Typography
-                  sx={{ marginBottom: 1 }}
-                  variant="h6"
-                  color="textSecondary"
-                >
-                  Event End Date
-                </Typography>
-                <Controller
-                  name="eventEndDate"
-                  control={control}
-                  defaultValue={null}
-                  render={({ field }) => (
-                    <>
-                      <StyledCalender {...field} />
-                    </>
-                  )}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <Typography
-                  sx={{ marginBottom: 1 }}
-                  variant="h6"
-                  color="textSecondary"
-                >
-                  Event Visibility Start Date
-                </Typography>
-                <Controller
                   name="startDate"
                   control={control}
                   defaultValue={null}
@@ -656,7 +612,7 @@ export default function AddEvent({ isUpdate }) {
                   variant="h6"
                   color="textSecondary"
                 >
-                  Event Visibility End Date
+                  Event End Date
                 </Typography>
                 <Controller
                   name="endDate"
@@ -671,6 +627,50 @@ export default function AddEvent({ isUpdate }) {
                           {errors.endDate.message}
                         </span>
                       )}
+                    </>
+                  )}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <Typography
+                  sx={{ marginBottom: 1 }}
+                  variant="h6"
+                  color="textSecondary"
+                >
+                  Event Visibility Start Date
+                </Typography>
+                <Controller
+                  name="eventDate"
+                  control={control}
+                  defaultValue={null}
+                  rules={{ required: "Event Date is required" }}
+                  render={({ field }) => (
+                    <>
+                      <StyledCalender {...field} />
+                      {errors.eventDate && (
+                        <span style={{ color: "red" }}>
+                          {errors.eventDate.message}
+                        </span>
+                      )}
+                    </>
+                  )}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <Typography
+                  sx={{ marginBottom: 1 }}
+                  variant="h6"
+                  color="textSecondary"
+                >
+                  Event Visibility End Date
+                </Typography>
+                <Controller
+                  name="eventEndDate"
+                  control={control}
+                  defaultValue={null}
+                  render={({ field }) => (
+                    <>
+                      <StyledCalender {...field} />
                     </>
                   )}
                 />
