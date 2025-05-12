@@ -71,6 +71,7 @@ const LevelPage = () => {
   const handleChange = (event, newValue) => {
     localStorage.setItem("levelTab", newValue);
     setSelectedTab(newValue);
+    setPageNo(1);
   };
   const handleEdit = (id) => {
     const typeMapping = {
