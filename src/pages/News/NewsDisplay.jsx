@@ -9,12 +9,12 @@ import { newsColumns } from "../../assets/json/TableData";
 import { useNewsStore } from "../../store/newsStore";
 import { toast } from "react-toastify";
 import { useListStore } from "../../store/listStore";
+import { useAdminStore } from "../../store/adminStore";
 
 export default function NewsDisplay() {
   const navigate = useNavigate();
   const [selectedTab, setSelectedTab] = useState("All");
   const [selectedRows, setSelectedRows] = useState([]);
-  const [filterOpen, setFilterOpen] = useState(false);
   const [isChange, setIsChange] = useState(false);
   const [view, setView] = useState(false);
   const { deleteNews, fetchNewsById, singleNews } = useNewsStore();
@@ -23,13 +23,7 @@ export default function NewsDisplay() {
   const [row, setRow] = useState(10);
   const [search, setSearch] = useState("");
   const [previewOpen, setPreviewOpen] = useState(false);
-  const handleOpenFilter = () => {
-    setFilterOpen(true);
-  };
-
-  const handleCloseFilter = () => {
-    setFilterOpen(false);
-  };
+  const { singleAdmin } = useAdminStore();
 
   const handleTabChange = (tab) => {
     setSelectedTab(tab);
@@ -164,20 +158,37 @@ export default function NewsDisplay() {
         p={1}
         border={"1px solid rgba(0, 0, 0, 0.12)"}
       >
-        <StyledTable
-          columns={newsColumns}
-          news
-          onDelete={handleDelete}
-          onDeleteRow={handleRowDelete}
-          onSelectionChange={handleSelectionChange}
-          onModify={handleEdit}
-          pageNo={pageNo}
-          onView={handleView}
-          setPageNo={setPageNo}
-          onAction={handlePreview}
-          rowPerSize={row}
-          setRowPerSize={setRow}
-        />{" "}
+        {singleAdmin?.role?.permissions?.includes("newsManagement_modify") ? (
+          <StyledTable
+            columns={newsColumns}
+            news
+            onDelete={handleDelete}
+            onDeleteRow={handleRowDelete}
+            onSelectionChange={handleSelectionChange}
+            onModify={handleEdit}
+            pageNo={pageNo}
+            onView={handleView}
+            setPageNo={setPageNo}
+            onAction={handlePreview}
+            rowPerSize={row}
+            setRowPerSize={setRow}
+          />
+        ) : (
+          <StyledTable
+            columns={newsColumns}
+            news
+            menu
+            onDeleteRow={handleRowDelete}
+            onSelectionChange={handleSelectionChange}
+            onModify={handleEdit}
+            pageNo={pageNo}
+            onView={handleView}
+            setPageNo={setPageNo}
+            onAction={handlePreview}
+            rowPerSize={row}
+            setRowPerSize={setRow}
+          />
+        )}
         <NewsPreview
           open={previewOpen}
           onClose={handleClosePreview}

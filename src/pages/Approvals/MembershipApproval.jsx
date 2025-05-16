@@ -18,6 +18,7 @@ import { toast } from "react-toastify";
 import { useProductStore } from "../../store/productStore";
 import { StyledButton } from "../../ui/StyledButton";
 import ProductView from "../../components/Member/ProductView";
+import { useAdminStore } from "../../store/adminStore";
 
 const MembershipApproval = () => {
   const [rejectOpen, setRejectOpen] = useState(false);
@@ -32,6 +33,7 @@ const MembershipApproval = () => {
   const [row, setRow] = useState(10);
   const { deleteProduct, fetchProductById, product } = useProductStore();
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const { singleAdmin } = useAdminStore();
   const handleChange = () => {
     setIsChange((prev) => !prev);
   };
@@ -106,19 +108,38 @@ const MembershipApproval = () => {
         p={1}
         border={"1px solid rgba(0, 0, 0, 0.12)"}
       >
-        <StyledTable
-          columns={approvalColumns}
-          approve
-          onView={handleView}
-          onSelectionChange={handleSelectionChange}
-          onModify={handleApprove}
-          onAction={handleReject}
-          pageNo={pageNo}
-          setPageNo={setPageNo}
-          rowPerSize={row}
-          onDelete={handleDelete}
-          setRowPerSize={setRow}
-        />
+        {singleAdmin?.role?.permissions?.includes(
+          "businessManagement_modify"
+        ) ? (
+          <StyledTable
+            columns={approvalColumns}
+            approve
+            onView={handleView}
+            onSelectionChange={handleSelectionChange}
+            onModify={handleApprove}
+            onAction={handleReject}
+            pageNo={pageNo}
+            setPageNo={setPageNo}
+            rowPerSize={row}
+            onDelete={handleDelete}
+            setRowPerSize={setRow}
+          />
+        ) : (
+          <StyledTable
+            columns={approvalColumns}
+            approve
+            menu
+            onView={handleView}
+            onSelectionChange={handleSelectionChange}
+            onModify={handleApprove}
+            onAction={handleReject}
+            pageNo={pageNo}
+            setPageNo={setPageNo}
+            rowPerSize={row}
+            setRowPerSize={setRow}
+          />
+        )}
+
         <RejectEntry
           open={rejectOpen}
           onClose={handleCloseReject}

@@ -8,6 +8,7 @@ import { groupColumns } from "../../assets/json/TableData";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useGroupStore } from "../../store/groupStore";
+import { useAdminStore } from "../../store/adminStore";
 
 const GroupPage = () => {
   const { fetchGroup } = useListStore();
@@ -18,6 +19,7 @@ const GroupPage = () => {
   const [isChange, setIsChange] = useState(false);
   const navigate = useNavigate();
   const { deleteGroups } = useGroupStore();
+  const { singleAdmin } = useAdminStore();
   useEffect(() => {
     let filter = {};
     filter.pageNo = pageNo;
@@ -67,13 +69,17 @@ const GroupPage = () => {
           </Typography>
         </Stack>
         <Stack direction={"row"} spacing={2}>
-          <StyledButton
-            variant={"primary"}
-            name={"Add Group"}
-            onClick={() => {
-              navigate("/groups/group");
-            }}
-          />
+          {singleAdmin?.role?.permissions?.includes(
+            "memberManagement_modify"
+          ) && (
+            <StyledButton
+              variant={"primary"}
+              name={"Add Group"}
+              onClick={() => {
+                navigate("/groups/group");
+              }}
+            />
+          )}
         </Stack>
       </Stack>
       <Box padding={"15px"}>
@@ -99,21 +105,41 @@ const GroupPage = () => {
           p={1}
           border={"1px solid rgba(0, 0, 0, 0.12)"}
         >
-          <StyledTable
-            columns={groupColumns}
-            onSelectionChange={handleSelectionChange}
-            pageNo={pageNo}
-            setPageNo={setPageNo}
-            onDelete={handleDelete}
-            onDeleteRow={handleRowDelete}
-            rowPerSize={row}
-            setRowPerSize={setRow}
-            onModify={(id) => {
-              navigate("/groups/group", {
-                state: { groupId: id, isUpdate: true },
-              });
-            }}
-          />
+          {singleAdmin?.role?.permissions?.includes(
+            "memberManagement_modify"
+          ) ? (
+            <StyledTable
+              columns={groupColumns}
+              onSelectionChange={handleSelectionChange}
+              pageNo={pageNo}
+              setPageNo={setPageNo}
+              onDelete={handleDelete}
+              onDeleteRow={handleRowDelete}
+              rowPerSize={row}
+              setRowPerSize={setRow}
+              onModify={(id) => {
+                navigate("/groups/group", {
+                  state: { groupId: id, isUpdate: true },
+                });
+              }}
+            />
+          ) : (
+            <StyledTable
+              columns={groupColumns}
+              onSelectionChange={handleSelectionChange}
+              pageNo={pageNo}
+              setPageNo={setPageNo}
+              menu
+              onDeleteRow={handleRowDelete}
+              rowPerSize={row}
+              setRowPerSize={setRow}
+              onModify={(id) => {
+                navigate("/groups/group", {
+                  state: { groupId: id, isUpdate: true },
+                });
+              }}
+            />
+          )}
         </Box>
       </Box>
     </>

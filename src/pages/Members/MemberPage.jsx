@@ -3,10 +3,9 @@ import React, { useState } from "react";
 import MemberList from "./MemberList";
 import MemberAccess from "./MemberAccess";
 import { StyledButton } from "../../ui/StyledButton";
-
 import { ReactComponent as AddIcon } from "../../assets/icons/AddIcon.svg";
 import { useNavigate } from "react-router-dom";
-import { getMember } from "../../api/memberapi";
+import { useAdminStore } from "../../store/adminStore";
 
 const MemberPage = () => {
   const storedTab = localStorage.getItem("memberTab");
@@ -19,7 +18,7 @@ const MemberPage = () => {
     setSelectedTab(newValue);
   };
   const navigate = useNavigate();
-
+  const { singleAdmin } = useAdminStore();
   return (
     <>
       <Stack
@@ -36,18 +35,22 @@ const MemberPage = () => {
           </Typography>
         </Stack>
         <Stack direction={"row"} spacing={2}>
-          <StyledButton
-            variant={"primary"}
-            name={
-              <>
-                <AddIcon />
-                Add User
-              </>
-            }
-            onClick={() => {
-              navigate("/members/member");
-            }}
-          />
+          {singleAdmin?.role?.permissions?.includes(
+            "memberManagement_modify"
+          ) && (
+            <StyledButton
+              variant={"primary"}
+              name={
+                <>
+                  <AddIcon />
+                  Add User
+                </>
+              }
+              onClick={() => {
+                navigate("/members/member");
+              }}
+            />
+          )}
         </Stack>
       </Stack>
       <Tabs

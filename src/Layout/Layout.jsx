@@ -43,49 +43,84 @@ import {
 } from "@mui/icons-material";
 import { useAdminStore } from "../store/adminStore";
 const drawerWidth = 250;
-const subNavigation = [
-  { name: "Dashboard", to: "/dashboard", icon: <GridView /> },
-  { name: "Levels", to: "/levels", icon: <AccountTree /> },
-  { name: "Users", to: "/members", icon: <PeopleAltOutlinedIcon /> },
+const navigationItems = [
+  { name: "Dashboard", to: "/dashboard", icon: <GridView />, permissions: [] },
+  {
+    name: "Levels",
+    to: "/levels",
+    icon: <AccountTree />,
+    permissions: ["hierarchyManagement_view", "hierarchyManagement_modify"],
+  },
+  {
+    name: "Users",
+    to: "/members",
+    icon: <PeopleAltOutlinedIcon />,
+    permissions: ["memberManagement_view", "memberManagement_modify"],
+  },
 
-  { name: "Activity", to: "/activity", icon: <SchoolOutlinedIcon /> },
+  {
+    name: "Activity",
+    to: "/activity",
+    icon: <SchoolOutlinedIcon />,
+    permissions: ["activityManagement_view", "activityManagement_modify"],
+  },
   {
     name: "Approvals",
     to: "/approvals",
     icon: <ApprovalIcon />,
+    permissions: ["businessManagement_view", "businessManagement_modify"],
   },
   {
     name: "Subscriptions",
     to: "/subscriptions",
     icon: <AccountBalanceWalletIcon />,
+    permissions: ["memberManagement_view", "memberManagement_modify"],
   },
-  { name: "Groups", to: "/groups", icon: <GroupsOutlined /> },
+  {
+    name: "Groups",
+    to: "/groups",
+    icon: <GroupsOutlined />,
+    permissions: ["memberManagement_view", "memberManagement_modify"],
+  },
 
   {
     name: "Events",
     icon: <EventNoteOutlinedIcon />,
     to: "/events/list",
+    permissions: ["eventManagement_view", "eventManagement_modify"],
   },
-  { name: "News and Updates", to: "/news", icon: <NewspaperOutlinedIcon /> },
+  {
+    name: "News and Updates",
+    to: "/news",
+    icon: <NewspaperOutlinedIcon />,
+    permissions: ["newsManagement_view", "newsManagement_modify"],
+  },
   {
     name: "Advertisements",
     to: "/promotions",
     icon: <CalendarMonthIcon />,
+    permissions: ["promotionManagement_view", "promotionManagement_modify"],
   },
   {
     name: "Reports",
     to: "/reports",
     icon: <OutlinedFlag />,
+    permissions: ["reportManagement_view", "reportManagement_modify"],
   },
   {
     name: "Notifications",
     to: "/notifications",
     icon: <NotificationsNoneOutlinedIcon />,
+    permissions: [
+      "notificationManagement_view",
+      "notificationManagement_modify",
+    ],
   },
   {
     name: "Settings",
     to: "/settings",
     icon: <SettingsOutlinedIcon />,
+    permissions: ["adminManagement_view", "adminManagement_modify"],
   },
   // { name: "Logout", to: "/logout", icon: <LogoutOutlined /> },
 ];
@@ -162,6 +197,7 @@ const Layout = (props) => {
   const navigate = useNavigate();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const { singleAdmin } = useAdminStore();
+  const [visibleNavItems, setVisibleNavItems] = useState([]);
   const location = useLocation();
   const handleDrawerClose = () => {
     setIsClosing(true);
@@ -193,6 +229,21 @@ const Layout = (props) => {
     localStorage.removeItem("4ZbQwXtY8uVrN5mP7kL3JhF6");
     navigate("/");
   };
+  useEffect(() => {
+    if (singleAdmin?.role?.permissions) {
+      const adminPermissions = singleAdmin?.role?.permissions;
+      const filteredNavItems = navigationItems?.filter((item) => {
+        return (
+          item?.permissions?.length === 0 ||
+          item?.permissions?.some((permission) =>
+            adminPermissions?.includes(permission.trim())
+          )
+        );
+      });
+
+      setVisibleNavItems(filteredNavItems);
+    }
+  }, [singleAdmin]);
   const drawer = (
     <div style={{ position: "relative", height: "100%" }}>
       <Toolbar
@@ -229,7 +280,7 @@ const Layout = (props) => {
           },
         }}
       >
-        {subNavigation.map((item) => (
+        {visibleNavItems.map((item) => (
           <ListItem
             sx={{ paddingBottom: "10px" }}
             key={item.name}

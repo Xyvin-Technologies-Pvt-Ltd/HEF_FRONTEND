@@ -1,16 +1,14 @@
-import { Box, Grid, Stack, Typography } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { ReactComponent as FilterIcon } from "../../assets/icons/FilterIcon.svg";
 import StyledSearchbar from "../../ui/StyledSearchbar.jsx";
 import StyledTable from "../../ui/StyledTable.jsx";
-import { adminActivityColumns, userData } from "../../assets/json/TableData.js";
+import { adminActivityColumns } from "../../assets/json/TableData.js";
 import AdminFilter from "../../ui/AdminFilter.jsx";
 import { useListStore } from "../../store/listStore.js";
 import ActivityView from "./ActivityView.jsx";
 import { useAdminStore } from "../../store/adminStore.js";
 export default function AdminActivity() {
-  const navigate = useNavigate();
   const [filterOpen, setFilterOpen] = useState(false);
   const [pageNo, setPageNo] = useState(1);
   const [row, setRow] = useState(10);
@@ -93,6 +91,7 @@ export default function AdminActivity() {
               setPageNo={setPageNo}
               rowPerSize={row}
               setRowPerSize={setRow}
+              menu
               onView={async (id) => {
                 await fetchAdminActivity(id);
                 setPreview(true);

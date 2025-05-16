@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import StyledTable from "../../ui/StyledTable";
 import { usePaymentStore } from "../../store/paymentStore";
 import ParentSub from "./ParentSub";
-import { useListStore } from "../../store/listStore";
+import { useListStore } from "../../store/listStore"
 
 const ParentSubscription = () => {
   const [pageNo, setPageNo] = useState(1);

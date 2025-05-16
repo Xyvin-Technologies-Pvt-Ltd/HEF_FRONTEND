@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useProductStore } from "../../store/productStore";
 import ProductView from "./ProductView";
+import { useAdminStore } from "../../store/adminStore";
 
 const MemberProducts = ({ id }) => {
   const navigate = useNavigate();
@@ -20,6 +21,7 @@ const MemberProducts = ({ id }) => {
   const [selectedRows, setSelectedRows] = useState([]);
   const [row, setRow] = useState(10);
   const [preview, setPreview] = useState(false);
+  const { singleAdmin } = useAdminStore();
   const { deleteProduct, fetchProductById, product } = useProductStore();
   useEffect(() => {
     let filter = {};
@@ -65,18 +67,22 @@ const MemberProducts = ({ id }) => {
           <Stack direction={"row"} spacing={2}>
             {" "}
             <StyledSearchbar placeholder={"Search by name"} />
-            <StyledButton
-              variant={"primary"}
-              name={
-                <>
-                  <AddIcon />
-                  Add Product
-                </>
-              }
-              onClick={() => {
-                navigate(`/products/${id}`);
-              }}
-            />
+            {singleAdmin?.role?.permissions?.includes(
+              "businessManagement_modify"
+            ) && (
+              <StyledButton
+                variant={"primary"}
+                name={
+                  <>
+                    <AddIcon />
+                    Add Product
+                  </>
+                }
+                onClick={() => {
+                  navigate(`/products/${id}`);
+                }}
+              />
+            )}
           </Stack>
         </Stack>{" "}
         <Box
@@ -85,25 +91,49 @@ const MemberProducts = ({ id }) => {
           p={1}
           border={"1px solid rgba(0, 0, 0, 0.12)"}
         >
-          <StyledTable
-            columns={postColumns}
-            onSelectionChange={handleSelectionChange}
-            onDelete={handleDelete}
-            onDeleteRow={handleRowDelete}
-            onModify={(id) => {
-              navigate(`/products/${id}`, {
-                state: { productId: id, isUpdate: true },
-              });
-            }}
-            onView={async (id) => {
-              await fetchProductById(id);
-              setPreview(true);
-            }}
-            pageNo={pageNo}
-            setPageNo={setPageNo}
-            rowPerSize={row}
-            setRowPerSize={setRow}
-          />{" "}
+          {singleAdmin?.role?.permissions?.includes(
+            "businessManagement_modify"
+          ) ? (
+            <StyledTable
+              columns={postColumns}
+              onSelectionChange={handleSelectionChange}
+              onDelete={handleDelete}
+              onDeleteRow={handleRowDelete}
+              onModify={(id) => {
+                navigate(`/products/${id}`, {
+                  state: { productId: id, isUpdate: true },
+                });
+              }}
+              onView={async (id) => {
+                await fetchProductById(id);
+                setPreview(true);
+              }}
+              pageNo={pageNo}
+              setPageNo={setPageNo}
+              rowPerSize={row}
+              setRowPerSize={setRow}
+            />
+          ) : (
+            <StyledTable
+              columns={postColumns}
+              onSelectionChange={handleSelectionChange}
+              menu
+              onDeleteRow={handleRowDelete}
+              onModify={(id) => {
+                navigate(`/products/${id}`, {
+                  state: { productId: id, isUpdate: true },
+                });
+              }}
+              onView={async (id) => {
+                await fetchProductById(id);
+                setPreview(true);
+              }}
+              pageNo={pageNo}
+              setPageNo={setPageNo}
+              rowPerSize={row}
+              setRowPerSize={setRow}
+            />
+          )}{" "}
           <ProductView
             open={preview}
             onClose={() => setPreview(false)}

@@ -22,6 +22,7 @@ import ParentSub from "./ParentSub";
 import { usePaymentStore } from "../../store/paymentStore";
 import PaymentView from "./PaymentView";
 import { toast } from "react-toastify";
+import { useAdminStore } from "../../store/adminStore";
 
 const MemberPage = () => {
   const storedTab = localStorage.getItem("paymentTab");
@@ -30,13 +31,16 @@ const MemberPage = () => {
   const [search, setSearch] = useState("");
   const [selectedRows, setSelectedRows] = useState([]);
   const [row, setRow] = useState(10);
-  const [selectedTab, setSelectedTab] = useState(storedTab ? Number(storedTab) : 0);
+  const [selectedTab, setSelectedTab] = useState(
+    storedTab ? Number(storedTab) : 0
+  );
   const [open, setOpen] = useState(false);
   const [isChange, setIsChange] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [confirmationAction, setConfirmationAction] = useState("");
   const [paymentId, setPaymentId] = useState(null);
   const [openView, setOpenView] = useState(false);
+  const { singleAdmin } = useAdminStore();
   const { patchPayments, fetchSinglePayment, singlePayment, deletePayments } =
     usePaymentStore();
   const handleTabChange = (event, newValue) => {
@@ -86,27 +90,26 @@ const MemberPage = () => {
     }
   };
   useEffect(() => {
-    if (selectedTab === 3) return; 
-  
+    if (selectedTab === 3) return;
+
     let filter = {
       pageNo,
       limit: row,
     };
-  
+
     if (search) {
       filter.search = search;
       setPageNo(1);
     }
-  
+
     if (selectedTab === 1) {
       filter.status = "active";
     } else if (selectedTab === 2) {
       filter.status = "pending";
     }
-  
+
     fetchPayment(filter);
-  }, [pageNo, search, row, selectedTab !== 3 ? selectedTab : null, isChange]); 
-  
+  }, [pageNo, search, row, selectedTab !== 3 ? selectedTab : null, isChange]);
 
   return (
     <>
@@ -123,11 +126,19 @@ const MemberPage = () => {
             Payments
           </Typography>
         </Stack>
-        <Stack direction={"row"} spacing={2}>
-          {selectedTab === 3 && (
-            <StyledButton name="Add" variant="primary" onClick={handleParent} />
-          )}
-        </Stack>
+        {singleAdmin?.role?.permissions?.includes(
+          "memberManagement_modify"
+        ) && (
+          <Stack direction={"row"} spacing={2}>
+            {selectedTab === 3 && (
+              <StyledButton
+                name="Add"
+                variant="primary"
+                onClick={handleParent}
+              />
+            )}
+          </Stack>
+        )}
       </Stack>
       <Tabs
         value={selectedTab}
@@ -170,19 +181,37 @@ const MemberPage = () => {
             p={1}
             border={"1px solid rgba(0, 0, 0, 0.12)"}
           >
-            <StyledTable
-              columns={paymentColumns}
-              pageNo={pageNo}
-              payment
-              onSelectionChange={handleSelectionChange}
-              onDelete={handleDelete}
-              setPageNo={setPageNo}
-              rowPerSize={row}
-              setRowPerSize={setRow}
-              onModify={handleApprove}
-              onView={handleView}
-              onAction={handleReject}
-            />
+            {singleAdmin?.role?.permissions?.includes(
+              "memberManagement_modify"
+            ) ? (
+              <StyledTable
+                columns={paymentColumns}
+                pageNo={pageNo}
+                payment
+                onSelectionChange={handleSelectionChange}
+                onDelete={handleDelete}
+                setPageNo={setPageNo}
+                rowPerSize={row}
+                setRowPerSize={setRow}
+                onModify={handleApprove}
+                onView={handleView}
+                onAction={handleReject}
+              />
+            ) : (
+              <StyledTable
+                columns={paymentColumns}
+                pageNo={pageNo}
+                payment
+                menu
+                onSelectionChange={handleSelectionChange}               
+                setPageNo={setPageNo}
+                rowPerSize={row}
+                setRowPerSize={setRow}
+                onModify={handleApprove}
+                onView={handleView}
+                onAction={handleReject}
+              />
+            )}
           </Box>
         </Box>
       )}

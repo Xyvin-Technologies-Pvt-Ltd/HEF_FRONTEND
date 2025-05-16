@@ -36,19 +36,20 @@ const CircleButton = styled.span`
   }
 `;
 
-// List of permissions
 const permissionsList = [
-  { id: "roleManagement", name: "Role Management" },
-  { id: "adminManagement", name: "Admin Management" },
-  { id: "memberManagement", name: "Member Management" },
+  { id: "hierarchyManagement", name: "Level Management" },
+  { id: "memberManagement", name: "User Management" },
+  { id: "activityManagement", name: " Activity Management" },
+  { id: "businessManagement", name: "Business Management" },
   { id: "eventManagement", name: "Event Management" },
-  { id: "collegeManagement", name: "College Management" },
   { id: "newsManagement", name: "News Management" },
   { id: "promotionManagement", name: "Promotion Management" },
-  { id: "hierarchyManagement", name: "Hierarchy Management" },
-  { id: "activityManagement", name: " Activity Management" },
-  { id: "productManagement", name: "Product Management" },
+  { id: "reportManagement", name: "Reports Management" },
+  { id: "notificationManagement", name: "Notification Management" },
+  { id: "roleManagement", name: "Role Management" },
+  { id: "adminManagement", name: "Admin Management" },
 ];
+
 
 const AddRole = () => {
   const {

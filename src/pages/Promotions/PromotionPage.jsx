@@ -1,12 +1,12 @@
 import { Box, Grid, Stack, Typography } from "@mui/material";
-import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { StyledButton } from "../../ui/StyledButton";
 import PromotionItem from "./PromotionItem";
 import { ReactComponent as AddIcon } from "../../assets/icons/AddIcon.svg";
+import { useAdminStore } from "../../store/adminStore";
 export default function Promotionpage() {
   const navigate = useNavigate();
-
+  const { singleAdmin } = useAdminStore();
   return (
     <>
       {" "}
@@ -25,15 +25,19 @@ export default function Promotionpage() {
           </Grid>
           <Grid item xs={6} container justifyContent="flex-end" spacing={2}>
             <Grid item>
-              <StyledButton
-                name={
-                  <>
-                    <AddIcon /> Add Promotion
-                  </>
-                }
-                variant="primary"
-                onClick={() => navigate("/promotions/promotion")}
-              />
+              {singleAdmin?.role?.permissions?.includes(
+                "promotionManagement_modify"
+              ) && (
+                <StyledButton
+                  name={
+                    <>
+                      <AddIcon /> Add Promotion
+                    </>
+                  }
+                  variant="primary"
+                  onClick={() => navigate("/promotions/promotion")}
+                />
+              )}
             </Grid>
           </Grid>
         </Grid>

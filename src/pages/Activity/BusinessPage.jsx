@@ -27,11 +27,14 @@ import useActivityStore from "../../store/activityStore";
 import ActivityFilter from "../../components/Activity/ActivityFilter";
 import { generateExcel } from "../../utils/generateExcel";
 import { getBusinessDwld } from "../../api/activityapi";
+import { useAdminStore } from "../../store/adminStore";
 
 const BusinessPage = () => {
   const navigate = useNavigate();
-  const storedTab= localStorage.getItem("businessTab")
-  const [selectedTab, setSelectedTab] = useState(storedTab? Number(storedTab) : 0);
+  const storedTab = localStorage.getItem("businessTab");
+  const [selectedTab, setSelectedTab] = useState(
+    storedTab ? Number(storedTab) : 0
+  );
   const [pageNo, setPageNo] = useState(1);
   const [filterOpen, setFilterOpen] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
@@ -39,6 +42,7 @@ const BusinessPage = () => {
   const [search, setSearch] = useState();
   const [row, setRow] = useState(10);
   const { fetchActivity } = useListStore();
+  const { singleAdmin } = useAdminStore();
   const { removeActivity } = useActivityStore();
   const [filters, setFilters] = useState({
     type: "",
@@ -150,19 +154,22 @@ const BusinessPage = () => {
           </Typography>
         </Stack>
         <Stack direction={"row"} spacing={2} justifyContent={"flex-end"}>
-         
-          <StyledButton
-            variant={"primary"}
-            name={
-              <>
-                <AddIcon />
-                Create Activity
-              </>
-            }
-            onClick={() => {
-              navigate("/activity/activity");
-            }}
-          />
+          {singleAdmin?.role?.permissions?.includes(
+            "activityManagement_modify"
+          ) && (
+            <StyledButton
+              variant={"primary"}
+              name={
+                <>
+                  <AddIcon />
+                  Create Activity
+                </>
+              }
+              onClick={() => {
+                navigate("/activity/activity");
+              }}
+            />
+          )}
         </Stack>
       </Stack>
       <Tabs
@@ -207,11 +214,11 @@ const BusinessPage = () => {
           alignItems={"center"}
         >
           <Stack direction={"row"} spacing={2} mt={2}>
-          <StyledButton
-            variant={"primary"}
-            name={"Download"}
-            onClick={handleDownload}
-          />
+            <StyledButton
+              variant={"primary"}
+              name={"Download"}
+              onClick={handleDownload}
+            />
             <Tooltip title={hasActiveFilters ? "Active filters" : "Filter"}>
               <Badge
                 color="error"

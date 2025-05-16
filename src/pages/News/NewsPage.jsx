@@ -1,14 +1,14 @@
-import { Box, Grid, Stack, Tab, Tabs, Typography } from "@mui/material";
-import React, { useState } from "react";
+import { Box, Grid, Typography } from "@mui/material";
 import NewsDisplay from "./NewsDisplay";
 import { StyledButton } from "../../ui/StyledButton";
 
 import { ReactComponent as AddIcon } from "../../assets/icons/AddIcon.svg";
 import { useNavigate } from "react-router-dom";
+import { useAdminStore } from "../../store/adminStore";
 
 const Newspage = () => {
   const navigate = useNavigate();
-
+  const { singleAdmin } = useAdminStore();
   return (
     <>
       <Box
@@ -26,15 +26,19 @@ const Newspage = () => {
           </Grid>
           <Grid item xs={6} container justifyContent="flex-end" spacing={2}>
             <Grid item>
-              <StyledButton
-                name={
-                  <>
-                    <AddIcon /> Add News
-                  </>
-                }
-                variant="primary"
-                onClick={() => navigate("/news/add")}
-              />
+              {singleAdmin?.role?.permissions?.includes(
+                "newsManagement_modify"
+              ) && (
+                <StyledButton
+                  name={
+                    <>
+                      <AddIcon /> Add News
+                    </>
+                  }
+                  variant="primary"
+                  onClick={() => navigate("/news/add")}
+                />
+              )}
             </Grid>
           </Grid>
         </Grid>

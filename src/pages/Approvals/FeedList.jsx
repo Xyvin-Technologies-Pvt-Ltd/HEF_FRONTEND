@@ -18,6 +18,7 @@ import { useListStore } from "../../store/listStore";
 import { toast } from "react-toastify";
 import { StyledButton } from "../../ui/StyledButton";
 import FeedView from "../../components/Approve/FeedView";
+import { useAdminStore } from "../../store/adminStore";
 
 const FeedList = () => {
   const [rejectOpen, setRejectOpen] = useState(false);
@@ -33,6 +34,7 @@ const FeedList = () => {
   const { deleteFeeds } = useFeedStore();
   const { fetchFeedById, feeds } = useFeedStore();
   const [approvalId, setApprovalId] = useState(null);
+  const { singleAdmin } = useAdminStore();
   useEffect(() => {
     let filter = {};
     filter.pageNo = pageNo;
@@ -104,19 +106,38 @@ const FeedList = () => {
         p={1}
         border={"1px solid rgba(0, 0, 0, 0.12)"}
       >
-        <StyledTable
-          columns={feedColumns}
-          pageNo={pageNo}
-          onSelectionChange={handleSelectionChange}
-          setPageNo={setPageNo}
-          approve
-          onView={handleView}
-          onDelete={handleDelete}
-          onModify={handleApprove}
-          onAction={handleReject}
-          rowPerSize={row}
-          setRowPerSize={setRow}
-        />
+        {singleAdmin?.role?.permissions?.includes(
+          "businessManagement_modify"
+        ) ? (
+          <StyledTable
+            columns={feedColumns}
+            pageNo={pageNo}
+            onSelectionChange={handleSelectionChange}
+            setPageNo={setPageNo}
+            approve
+            onView={handleView}
+            onDelete={handleDelete}
+            onModify={handleApprove}
+            onAction={handleReject}
+            rowPerSize={row}
+            setRowPerSize={setRow}
+          />
+        ) : (
+          <StyledTable
+            columns={feedColumns}
+            pageNo={pageNo}
+            onSelectionChange={handleSelectionChange}
+            setPageNo={setPageNo}
+            approve
+            menu
+            onView={handleView}
+            onModify={handleApprove}
+            onAction={handleReject}
+            rowPerSize={row}
+            setRowPerSize={setRow}
+          />
+        )}
+
         <FeedReject
           open={rejectOpen}
           onClose={handleCloseReject}

@@ -12,12 +12,13 @@ import { ReactComponent as CloseIcon } from "../../assets/icons/CloseIcon.svg";
 import { StyledButton } from "../../ui/StyledButton";
 import { useNewsStore } from "../../store/newsStore";
 import { useState } from "react";
+import { useAdminStore } from "../../store/adminStore";
 
 const NewsPreview = ({ open, onClose, onChange, data, onEdit }) => {
   const { handleSubmit } = useForm();
   const { updateNews } = useNewsStore();
   const [loading, setLoading] = useState(false);
-
+  const { singleAdmin } = useAdminStore();
   const onSubmit = async () => {
     setLoading(true);
     try {
@@ -92,20 +93,27 @@ const NewsPreview = ({ open, onClose, onChange, data, onEdit }) => {
             </Typography>
           </Stack>{" "}
         </DialogContent>
-        <Stack direction={"row"} spacing={2} padding={2} justifyContent={"end"}>
-          <StyledButton
-            variant="secondary"
-            name="Edit"
-            onClick={(event) => handleEdit(event)}
-            disabled={loading}
-          />
-          <StyledButton
-            variant="primary"
-            name={data?.status === "published" ? "Unpublish" : "Publish"}
-            type="submit"
-            disabled={loading}
-          />
-        </Stack>
+        {singleAdmin?.role?.permissions?.includes("newsManagement_modify") && (
+          <Stack
+            direction={"row"}
+            spacing={2}
+            padding={2}
+            justifyContent={"end"}
+          >
+            <StyledButton
+              variant="secondary"
+              name="Edit"
+              onClick={(event) => handleEdit(event)}
+              disabled={loading}
+            />
+            <StyledButton
+              variant="primary"
+              name={data?.status === "published" ? "Unpublish" : "Publish"}
+              type="submit"
+              disabled={loading}
+            />
+          </Stack>
+        )}
       </form>
     </Dialog>
   );

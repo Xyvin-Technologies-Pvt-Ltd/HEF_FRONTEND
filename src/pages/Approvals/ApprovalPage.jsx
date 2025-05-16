@@ -9,12 +9,6 @@ import {
   Typography,
 } from "@mui/material";
 import FeedList from "./FeedList";
-import StyledTable from "../../ui/StyledTable";
-import FeedReject from "../../components/Approve/FeedReject";
-import FeedApproval from "../../components/Approve/FeedApproval";
-import { useListStore } from "../../store/listStore";
-import { feedColumns } from "../../assets/json/TableData";
-import StyledSearchbar from "../../ui/StyledSearchbar";
 import MembershipApproval from "./MembershipApproval";
 
 const ApprovalPage = () => {

@@ -25,6 +25,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { StyledButton } from "./StyledButton";
 import moment from "moment";
 import { useListStore } from "../store/listStore";
+import { useAdminStore } from "../store/adminStore";
 
 const StyledTableCell = styled(TableCell)`
   &.${tableCellClasses.head} {
@@ -83,6 +84,7 @@ const StyledTable = ({
   const [selectedIds, setSelectedIds] = useState([]);
   const [anchorEl, setAnchorEl] = useState(null);
   const [rowId, setRowId] = useState(null);
+  const { singleAdmin } = useAdminStore();
   const { lists, totalCount, rowChange, loading } = useListStore();
   const handleSelectAllClick = (event) => {
     const isChecked = event.target.checked;
@@ -425,7 +427,9 @@ const StyledTable = ({
                                       Delete
                                     </MenuItem>
                                     <MenuItem onClick={handleAction}>
-                                    {row.status === "suspended" ? "Unsuspend" : "Suspend"}
+                                      {row.status === "suspended"
+                                        ? "Unsuspend"
+                                        : "Suspend"}
                                     </MenuItem>
                                   </>
                                 )}
@@ -534,10 +538,16 @@ const StyledTable = ({
           // padding={2}
           component="div"
           direction={"row"}
-          justifyContent={selectedIds.length > 0 ? "space-between" : "flex-end"}
+          justifyContent={
+            selectedIds.length > 0
+              ? onDelete
+                ? "space-between"
+                : "flex-end"
+              : "flex-end"
+          }
           alignItems="center"
         >
-          {selectedIds.length > 0 && (
+          {selectedIds.length > 0 && onDelete && (
             <Stack direction="row" alignItems="center">
               <Typography paddingRight={3}>
                 {`${selectedIds.length} item${

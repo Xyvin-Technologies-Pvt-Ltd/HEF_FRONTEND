@@ -20,10 +20,12 @@ import TopMemberList from "../../components/Dashboard/TopMemberList";
 import { getDashboard } from "../../api/adminapi";
 import { useNavigate } from "react-router-dom";
 import { useMemberStore } from "../../store/Memberstore";
+import { useAdminStore } from "../../store/adminStore";
 
 const DashboardPage = () => {
   const [data, setData] = useState({});
   const navigate = useNavigate();
+  const { singleAdmin } = useAdminStore();
   const [month, setMonth] = useState(new Date().getMonth() + 1);
   const [year, setYear] = useState(new Date().getFullYear());
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -131,12 +133,16 @@ const DashboardPage = () => {
   const fetchInstalled = async () => {
     setMemStatus(null);
     setMemInstalled(true);
-    navigate(`/members`);
+    if (singleAdmin?.role?.permissions?.includes("memberManagement_view")) {
+      navigate(`/members`);
+    }
   };
   const fetchStatus = async (status) => {
     setMemStatus(status);
     setMemInstalled(null);
-    navigate(`/members`);
+    if (singleAdmin?.role?.permissions?.includes("memberManagement_view")) {
+      navigate(`/members`);
+    }
   };
   return (
     <>
@@ -173,11 +179,21 @@ const DashboardPage = () => {
           <Stack direction={"row"} spacing={2}>
             {" "}
             <Box
-              width={"100%"}
-              sx={{ cursor: "pointer" }}
-              onClick={() => {
-                navigate("/activity", { state: { tab: 1 } });
+              width="100%"
+              sx={{
+                cursor: singleAdmin?.role?.permissions?.includes(
+                  "activityManagement_view"
+                )
+                  ? "pointer"
+                  : "default",
               }}
+              onClick={
+                singleAdmin?.role?.permissions?.includes(
+                  "activityManagement_view"
+                )
+                  ? () => navigate("/activity", { state: { tab: 1 } })
+                  : undefined
+              }
             >
               {" "}
               <DashboardCard
@@ -188,10 +204,20 @@ const DashboardPage = () => {
             </Box>{" "}
             <Box
               width={"100%"}
-              sx={{ cursor: "pointer" }}
-              onClick={() => {
-                navigate("/activity", { state: { tab: 2 } });
+              sx={{
+                cursor: singleAdmin?.role?.permissions?.includes(
+                  "activityManagement_view"
+                )
+                  ? "pointer"
+                  : "default",
               }}
+              onClick={
+                singleAdmin?.role?.permissions?.includes(
+                  "activityManagement_view"
+                )
+                  ? () => navigate("/activity", { state: { tab: 2 } })
+                  : undefined
+              }
             >
               {" "}
               <DashboardCard
@@ -202,10 +228,20 @@ const DashboardPage = () => {
             </Box>
             <Box
               width={"100%"}
-              sx={{ cursor: "pointer" }}
-              onClick={() => {
-                navigate("/activity", { state: { tab: 3 } });
+              sx={{
+                cursor: singleAdmin?.role?.permissions?.includes(
+                  "activityManagement_view"
+                )
+                  ? "pointer"
+                  : "default",
               }}
+              onClick={
+                singleAdmin?.role?.permissions?.includes(
+                  "activityManagement_view"
+                )
+                  ? () => navigate("/activity", { state: { tab: 3 } })
+                  : undefined
+              }
             >
               {" "}
               <DashboardCard
@@ -251,17 +287,33 @@ const DashboardPage = () => {
               {" "}
               <Box
                 width={"100%"}
-                sx={{ cursor: "pointer" }}
-                onClick={() => {
-                  navigate("/members");
+                sx={{
+                  cursor: singleAdmin?.role?.permissions?.includes(
+                    "memberManagement_view"
+                  )
+                    ? "pointer"
+                    : "default",
                 }}
+                onClick={
+                  singleAdmin?.role?.permissions?.includes(
+                    "memberManagement_view"
+                  )
+                    ? () => navigate("/members")
+                    : undefined
+                }
               >
                 {" "}
                 <DashboardCard data={totalCount} height={"160px"} />{" "}
               </Box>{" "}
               <Box
                 width={"100%"}
-                sx={{ cursor: "pointer" }}
+                sx={{
+                  cursor: singleAdmin?.role?.permissions?.includes(
+                    "memberManagement_view"
+                  )
+                    ? "pointer"
+                    : "default",
+                }}
                 onClick={fetchInstalled}
               >
                 {" "}
@@ -276,20 +328,40 @@ const DashboardPage = () => {
               {" "}
               <Box
                 width={"100%"}
-                sx={{ cursor: "pointer" }}
-                onClick={() => {
-                  navigate("/events/list");
+                sx={{
+                  cursor: singleAdmin?.role?.permissions?.includes(
+                    "eventManagement_view"
+                  )
+                    ? "pointer"
+                    : "default",
                 }}
+                onClick={
+                  singleAdmin?.role?.permissions?.includes(
+                    "eventManagement_view"
+                  )
+                    ? () => navigate("/events/list")
+                    : undefined
+                }
               >
                 {" "}
                 <DashboardCard data={events} height={"160px"} />{" "}
               </Box>{" "}
               <Box
                 width={"100%"}
-                sx={{ cursor: "pointer" }}
-                onClick={() => {
-                  navigate("/news");
+                sx={{
+                  cursor: singleAdmin?.role?.permissions?.includes(
+                    "newsManagement_view"
+                  )
+                    ? "pointer"
+                    : "default",
                 }}
+                onClick={
+                  singleAdmin?.role?.permissions?.includes(
+                    "newsManagement_view"
+                  )
+                    ? () => navigate("/news")
+                    : undefined
+                }
               >
                 {" "}
                 <DashboardCard data={news} height={"160px"} />{" "}
@@ -299,20 +371,40 @@ const DashboardPage = () => {
               {" "}
               <Box
                 width={"100%"}
-                sx={{ cursor: "pointer" }}
-                onClick={() => {
-                  navigate("/notifications");
+                sx={{
+                  cursor: singleAdmin?.role?.permissions?.includes(
+                    "notificationManagement_view"
+                  )
+                    ? "pointer"
+                    : "default",
                 }}
+                onClick={
+                  singleAdmin?.role?.permissions?.includes(
+                    "notificationManagement_view"
+                  )
+                    ? () => navigate("/notifications")
+                    : undefined
+                }
               >
                 {" "}
                 <DashboardCard data={notifications} height={"160px"} />{" "}
               </Box>{" "}
               <Box
                 width={"100%"}
-                sx={{ cursor: "pointer" }}
-                onClick={() => {
-                  navigate("/promotions");
+                sx={{
+                  cursor: singleAdmin?.role?.permissions?.includes(
+                    "promotionManagement_view"
+                  )
+                    ? "pointer"
+                    : "default",
                 }}
+                onClick={
+                  singleAdmin?.role?.permissions?.includes(
+                    "promotionManagement_view"
+                  )
+                    ? () => navigate("/promotions")
+                    : undefined
+                }
               >
                 {" "}
                 <DashboardCard data={promotions} height={"160px"} />{" "}
@@ -322,16 +414,27 @@ const DashboardPage = () => {
               {" "}
               <Box
                 width={"100%"}
-                sx={{ cursor: "pointer" }}
+                sx={{
+                  cursor: singleAdmin?.role?.permissions?.includes(
+                    "memberManagement_view"
+                  )
+                    ? "pointer"
+                    : "default",
+                }}
                 onClick={() => fetchStatus("inactive")}
               >
-                
                 {" "}
                 <DashboardCard data={inactiveUsers} height={"160px"} />{" "}
               </Box>{" "}
               <Box
                 width={"100%"}
-                sx={{ cursor: "pointer" }}
+                sx={{
+                  cursor: singleAdmin?.role?.permissions?.includes(
+                    "memberManagement_view"
+                  )
+                    ? "pointer"
+                    : "default",
+                }}
                 onClick={() => fetchStatus("active")}
               >
                 {" "}

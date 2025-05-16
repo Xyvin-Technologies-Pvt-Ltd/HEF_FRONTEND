@@ -1,34 +1,28 @@
 import { Box, Stack } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import StyledSearchbar from "../../ui/StyledSearchbar";
+import { useEffect, useState } from "react";
 import StyledTable from "../../ui/StyledTable";
 import { useNavigate } from "react-router-dom";
 import { usePromotionStore } from "../../store/promotionstore";
 import { toast } from "react-toastify";
 import { useListStore } from "../../store/listStore";
+import { useAdminStore } from "../../store/adminStore";
 
 const StyledPosterTable = () => {
   const navigate = useNavigate();
-  const [filterOpen, setFilterOpen] = useState(false);
   const [isChange, setIsChange] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
   const { deletePromotions } = usePromotionStore();
   const { fetchPromotion } = useListStore();
   const [pageNo, setPageNo] = useState(1);
   const [row, setRow] = useState(10);
+  const { singleAdmin } = useAdminStore();
   useEffect(() => {
     let filter = { type: "poster" };
     filter.pageNo = pageNo;
     filter.limit = row;
     fetchPromotion(filter);
-  }, [isChange, pageNo,row]);
-  const handleOpenFilter = () => {
-    setFilterOpen(true);
-  };
+  }, [isChange, pageNo, row]);
 
-  const handleCloseFilter = () => {
-    setFilterOpen(false);
-  };
   const handleSelectionChange = (newSelectedIds) => {
     setSelectedRows(newSelectedIds);
   };
@@ -70,26 +64,41 @@ const StyledPosterTable = () => {
         justifyContent={"end"}
         paddingBottom={"15px"}
         alignItems={"center"}
-      >
-       
-      </Stack>{" "}
+      ></Stack>{" "}
       <Box
         borderRadius={"16px"}
         bgcolor={"white"}
         p={1}
         border={"1px solid rgba(0, 0, 0, 0.12)"}
       >
-        <StyledTable
-          columns={userColumns}
-          onSelectionChange={handleSelectionChange}
-          onDelete={handleDelete}
-          onDeleteRow={handleRowDelete}
-          onModify={handleEdit}
-          pageNo={pageNo}
-          setPageNo={setPageNo}
-          rowPerSize={row}
-          setRowPerSize={setRow}
-        />{" "}
+        {singleAdmin?.role?.permissions?.includes(
+          "promotionManagement_modify"
+        ) ? (
+          <StyledTable
+            columns={userColumns}
+            onSelectionChange={handleSelectionChange}
+            onDelete={handleDelete}
+            onDeleteRow={handleRowDelete}
+            onModify={handleEdit}
+            pageNo={pageNo}
+            setPageNo={setPageNo}
+            rowPerSize={row}
+            setRowPerSize={setRow}
+          />
+        ) : (
+          <StyledTable
+            columns={userColumns}
+            onSelectionChange={handleSelectionChange}
+            
+            onDeleteRow={handleRowDelete}
+            onModify={handleEdit}
+            pageNo={pageNo}
+            setPageNo={setPageNo}
+            rowPerSize={row}
+            menu
+            setRowPerSize={setRow}
+          />
+        )}
       </Box>
     </>
   );

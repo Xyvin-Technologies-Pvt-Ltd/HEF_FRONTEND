@@ -6,11 +6,12 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { StyledButton } from "../../ui/StyledButton";
 import EventView from "./EventView";
 import { useNavigate } from "react-router-dom";
+import { useAdminStore } from "../../store/adminStore";
 
 const EventListpage = () => {
   const navigate = useNavigate();
   const [selectedTab, setSelectedTab] = useState(0);
-
+  const { singleAdmin } = useAdminStore();
   return (
     <>
       <Stack
@@ -27,13 +28,17 @@ const EventListpage = () => {
           </Typography>
         </Stack>
         <Stack direction={"row"} spacing={2}>
-          <StyledButton
-            variant={"primary"}
-            name={"Add Event"}
-            onClick={() => {
-              navigate("/events/add");
-            }}
-          />
+          {singleAdmin?.role?.permissions?.includes(
+            "eventManagement_modify"
+          ) && (
+            <StyledButton
+              variant={"primary"}
+              name={"Add Event"}
+              onClick={() => {
+                navigate("/events/add");
+              }}
+            />
+          )}
         </Stack>
       </Stack>{" "}
       <Box padding="15px">
@@ -57,25 +62,29 @@ const EventListpage = () => {
               }}
             />
           </Box>
-          <Box
-            bgcolor={selectedTab === 1 ? "#FFF0E2" : "#FFFFFF"}
-            borderRadius="50%"
-            width="48px"
-            height="48px"
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            style={{ cursor: "pointer" }}
-            onClick={() => {
-              setSelectedTab(1);
-            }}
-          >
-            <CalendarMonthIcon
-              style={{
-                color: selectedTab === 0 ? "#292D32" : "#F58220",
+          {singleAdmin?.role?.permissions?.includes(
+            "eventManagement_modify"
+          ) && (
+            <Box
+              bgcolor={selectedTab === 1 ? "#FFF0E2" : "#FFFFFF"}
+              borderRadius="50%"
+              width="48px"
+              height="48px"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              style={{ cursor: "pointer" }}
+              onClick={() => {
+                setSelectedTab(1);
               }}
-            />
-          </Box>
+            >
+              <CalendarMonthIcon
+                style={{
+                  color: selectedTab === 0 ? "#292D32" : "#F58220",
+                }}
+              />
+            </Box>
+          )}
         </Stack>
         {selectedTab === 0 ? <EventList /> : <EventView />}
       </Box>
