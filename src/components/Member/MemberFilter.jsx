@@ -75,6 +75,7 @@ const MemberFilter = ({ open, onClose, onApply }) => {
 
     fetchStates();
   }, []);
+  console.log("installed", installed);
   
   const fetchData = async (type, id) => {
     try {
@@ -135,7 +136,8 @@ const MemberFilter = ({ open, onClose, onApply }) => {
       from,
       to,
       status: appliedStatus?.value || status?.value || "",
-      installed: appliedUser?.value || installed?.value || "",
+installed: appliedUser?.value ?? installed?.value ?? "",
+
       chapter: selectedChapter?.value || "",
     });
     onClose();
