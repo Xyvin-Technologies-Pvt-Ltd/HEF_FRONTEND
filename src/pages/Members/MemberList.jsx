@@ -93,11 +93,12 @@ const MemberList = () => {
     if (typeof filters.installed === "boolean") {
       filter.installed = filters.installed;
     }
-    if (typeof memberInstalled === "boolean") {
+    if (memberInstalled) {
       filter.installed = memberInstalled;
     }
-    filter.status = memberStatus;
-
+    if (memberStatus) {
+      filter.status = memberStatus;
+    }
     fetchMember(filter);
   }, [isChange, pageNo, search, row, filters, memberInstalled, memberStatus]);
   const handleDownload = async () => {
