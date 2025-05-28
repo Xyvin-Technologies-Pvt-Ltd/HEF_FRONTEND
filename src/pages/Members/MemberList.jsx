@@ -26,6 +26,7 @@ import { useAdminStore } from "../../store/adminStore";
 const MemberList = () => {
   const navigate = useNavigate();
   const { fetchMember } = useListStore();
+  const {} = useMemberStore();
   const [search, setSearch] = useState("");
   const [isChange, setIschange] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
@@ -34,7 +35,7 @@ const MemberList = () => {
   const [memberId, setMemberId] = useState(null);
   const [pageNo, setPageNo] = useState(1);
   const [selectedRows, setSelectedRows] = useState([]);
-  const { deleteMembers } = useMemberStore();
+  const { deleteMembers, memberInstalled, memberStatus } = useMemberStore();
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [selectedTab, setSelectedTab] = useState("All");
   const [row, setRow] = useState(10);
@@ -74,6 +75,8 @@ const MemberList = () => {
       }
     }
   };
+  console.log("memberStatus", memberStatus);
+
   useEffect(() => {
     let filter = {};
     filter.pageNo = pageNo;
@@ -90,8 +93,13 @@ const MemberList = () => {
     if (typeof filters.installed === "boolean") {
       filter.installed = filters.installed;
     }
+    if (typeof memberInstalled === "boolean") {
+      filter.installed = memberInstalled;
+    }
+    filter.status = memberStatus;
+
     fetchMember(filter);
-  }, [isChange, pageNo, search, row, filters]);
+  }, [isChange, pageNo, search, row, filters, memberInstalled, memberStatus]);
   const handleDownload = async () => {
     try {
       let filter = {};
