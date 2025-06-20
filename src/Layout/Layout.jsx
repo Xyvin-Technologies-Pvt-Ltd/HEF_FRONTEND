@@ -44,7 +44,9 @@ import {
 import { useAdminStore } from "../store/adminStore";
 const drawerWidth = 250;
 const navigationItems = [
-  { name: "Dashboard", to: "/dashboard", icon: <GridView />, permissions: [] },
+  { name: "Dashboard", to: "/dashboard", icon: <GridView />, permissions: [
+    "dashboardManagement_view", "dashboardManagement_modify"
+  ] },
   {
     name: "Levels",
     to: "/levels",

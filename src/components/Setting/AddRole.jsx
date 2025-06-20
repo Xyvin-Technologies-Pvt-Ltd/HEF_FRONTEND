@@ -37,6 +37,7 @@ const CircleButton = styled.span`
 `;
 
 const permissionsList = [
+  { id: "dashboardManagement", name: "Dashboard Management" },
   { id: "hierarchyManagement", name: "Level Management" },
   { id: "memberManagement", name: "User Management" },
   { id: "activityManagement", name: " Activity Management" },
