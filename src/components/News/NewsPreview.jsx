@@ -76,7 +76,13 @@ const NewsPreview = ({ open, onClose, onChange, data, onEdit }) => {
           </Box>
         </DialogTitle>
         <Divider />
-        <DialogContent sx={{ height: "auto", padding: 0 }}>
+        <DialogContent
+          sx={{
+            maxHeight: "70vh", 
+            overflowY: "auto",
+            padding: 0,
+          }}
+        >
           <Stack spacing={2} padding={2} justifyContent={"center"}>
             <Box display="flex" justifyContent="center">
               <img src={data?.media} width={"461px"} height={"262px"} />
