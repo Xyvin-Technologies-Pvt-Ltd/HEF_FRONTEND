@@ -8,6 +8,7 @@ import {
   getAdminActivity,
   getAdminById,
   getSingleAdmin,
+  resetAdminPassword,
 } from "../api/adminapi";
 
 const useAdminStore = create((set) => ({
@@ -36,6 +37,9 @@ const useAdminStore = create((set) => ({
   },
   deleteAdmins: async (id) => {
     await deleteAdmin(id);
+  },
+  resetAdminPassword: async (adminId, sendEmail = true) => {
+    await resetAdminPassword(adminId, sendEmail);
   },
   fetchAdminActivity: async (id) => {
     const response = await getActivityById(id);

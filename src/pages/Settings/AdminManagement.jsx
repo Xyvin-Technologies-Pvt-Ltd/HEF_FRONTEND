@@ -18,8 +18,17 @@ export default function AdminManagement() {
   const [pageNo, setPageNo] = useState(1);
   const [row, setRow] = useState(10);
   const [search, setSearch] = useState("");
-  const { deleteAdmins } = useAdminStore();
+  const { deleteAdmins, resetAdminPassword } = useAdminStore();
   const { singleAdmin } = useAdminStore();
+
+  const handlePasswordReset = async (id) => {
+    try {
+      await resetAdminPassword(id, true);
+      toast.success("Password reset successfully. New password sent to admin's email.");
+    } catch (error) {
+      toast.error(error.message || "Password reset failed");
+    }
+  };
 
   const handleSelectionChange = (newSelectedIds) => {
     setSelectedRows(newSelectedIds);
@@ -58,7 +67,7 @@ export default function AdminManagement() {
       filter.search = search;
     }
     getAdmins(filter);
-  }, [isChange, pageNo, search, row]);
+  }, [isChange, pageNo, search, row, getAdmins]);
   return (
     <>
       {" "}
@@ -114,6 +123,7 @@ export default function AdminManagement() {
             ) ? (
               <StyledTable
                 columns={adminColumns}
+                // onView={handleEdit}
                 onModify={handleEdit}
                 pageNo={pageNo}
                 setPageNo={setPageNo}
@@ -122,10 +132,12 @@ export default function AdminManagement() {
                 onSelectionChange={handleSelectionChange}
                 onDelete={handleDelete}
                 onDeleteRow={handleRowDelete}
+                onPasswordReset={handlePasswordReset}
               />
             ) : (
               <StyledTable
                 columns={adminColumns}
+                onView={handleEdit}
                 onModify={handleEdit}
                 pageNo={pageNo}
                 setPageNo={setPageNo}
@@ -134,6 +146,7 @@ export default function AdminManagement() {
                 onSelectionChange={handleSelectionChange}
                 menu
                 onDeleteRow={handleRowDelete}
+                onPasswordReset={handlePasswordReset}
               />
             )}
           </Box>
