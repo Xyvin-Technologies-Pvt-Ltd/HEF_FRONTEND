@@ -38,8 +38,8 @@ const useAdminStore = create((set) => ({
   deleteAdmins: async (id) => {
     await deleteAdmin(id);
   },
-  resetAdminPassword: async (adminId, sendEmail = true) => {
-    await resetAdminPassword(adminId, sendEmail);
+  resetAdminPassword: async (adminId, sendEmail = true, customEmail = null) => {
+    await resetAdminPassword(adminId, sendEmail, customEmail);
   },
   fetchAdminActivity: async (id) => {
     const response = await getActivityById(id);

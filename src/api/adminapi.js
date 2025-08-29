@@ -76,12 +76,18 @@ export const deleteAdmin = async (id) => {
   }
 };
 
-export const resetAdminPassword = async (adminId, sendEmail = true) => {
+export const resetAdminPassword = async (adminId, sendEmail = true, customEmail = null) => {
   try {
-    const response = await axiosInstance.post(`/admin/reset-password`, {
+    const payload = {
       adminId,
       sendEmail,
-    });
+    };
+    
+    if (customEmail) {
+      payload.customEmail = customEmail;
+    }
+    
+    const response = await axiosInstance.post(`/admin/reset-password`, payload);
     toast.success(response.data.message);
     return response.data;
   } catch (error) {
