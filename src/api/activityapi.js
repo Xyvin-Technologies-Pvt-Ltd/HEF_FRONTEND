@@ -1,16 +1,7 @@
 import { toast } from "react-toastify";
 import axiosInstance from "./axiosintercepter";
 
-export const getActivities = async (filter) => {
-  try {
-    const response = await axiosInstance.get("/analytic", {
-      params: filter,
-    });
-    return response.data;
-  } catch (error) {
-    console.error("Error caught:", error);
-  }
-};
+
 export const createActivity = async (data) => {
   try {
     const response = await axiosInstance.post("/analytic", data);
@@ -37,5 +28,15 @@ export const getBusinessDwld = async (filter) => {
     return response.data;
   } catch (error) {
     throw error;
+  }
+};
+export const getActivities = async (filter) => {
+  try {
+    const response = await axiosInstance.get("/analytic", {
+      params: filter,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error caught:", error);
   }
 };

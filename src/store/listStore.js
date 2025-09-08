@@ -49,13 +49,17 @@ const useListStore = create((set, get) => ({
     set({ totalCount: allData?.totalCount || 0 });
     set({ loading: false });
   },
-  fetchActivity: async (filter) => {
-    set({ loading: true });
-    const allData = await getActivities(filter);
-    set({ lists: allData?.data || [] });
-    set({ totalCount: allData?.totalCount || 0 });
-    set({ loading: false });
-  },
+  
+fetchActivity: async (filter) => {   
+  set({ loading: true });
+  const allData = await getActivities(filter);
+  set({ lists: allData?.data?.data || [] });
+  set({ totalCount: allData?.data?.count || 0 });
+  set({ loading: false });
+  return allData?.data?.data || [];
+},
+
+
   getActivity: async (filter) => {
     set({ loading: true });
     const allData = await getAdminActivity(filter);
@@ -64,7 +68,7 @@ const useListStore = create((set, get) => ({
     set({ loading: false });
   },
   fetchFeedByUser: async (id, filter) => {
-    set({ loading: true });
+    set({ loadifetchAng: true });
     const allData = await getFeedByUser(id, filter);
     set({ lists: allData?.data || [] });
     set({ totalCount: allData?.totalCount || 0 });

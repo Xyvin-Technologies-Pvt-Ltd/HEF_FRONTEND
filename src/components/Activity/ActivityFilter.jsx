@@ -21,6 +21,7 @@ const ActivityFilter = ({ open, onClose, onApply }) => {
   const [endDate, setEndDate] = useState("");
   const [status, setStatus] = useState(null);
   const [type, setType] = useState(null);
+  const [filter, setFilter] = useState(null); // ADD: Missing filter state
   const [stateOptions, setStateOptions] = useState([]);
   const [zoneOptions, setZoneOptions] = useState([]);
   const [districtOptions, setDistrictOptions] = useState([]);
@@ -29,12 +30,13 @@ const ActivityFilter = ({ open, onClose, onApply }) => {
   const [selectedZone, setSelectedZone] = useState(null);
   const [selectedDistrict, setSelectedDistrict] = useState(null);
   const [selectedChapter, setSelectedChapter] = useState(null);
-  
+
   const handleClear = (event) => {
     event.preventDefault();
     setType(null);
     setStartDate("");
     setEndDate("");
+    setFilter(null);
     setStatus(null);
     setSelectedState(null);
     setSelectedZone(null);
@@ -45,6 +47,7 @@ const ActivityFilter = ({ open, onClose, onApply }) => {
       startDate: "",
       endDate: "",
       status: "",
+      filter: "",
       chapter: "",
     });
     onClose();
@@ -131,6 +134,7 @@ const ActivityFilter = ({ open, onClose, onApply }) => {
       startDate,
       endDate,
       status: status?.value || "",
+      filter: filter?.value || "",
       chapter: selectedChapter?.value || "",
     });
     onClose();
@@ -142,6 +146,10 @@ const ActivityFilter = ({ open, onClose, onApply }) => {
   
   const handleTypeChange = (selectedOption) => {
     setType(selectedOption);
+  };
+
+  const handleFilterChange = (selectedOption) => {
+    setFilter(selectedOption);
   };
   
   return (
@@ -173,7 +181,7 @@ const ActivityFilter = ({ open, onClose, onApply }) => {
         </Box>
       </DialogTitle>
       <DialogContent sx={{ padding: 0, bgcolor: "#F9F9F9", pb: 3 }}>
-        <Grid container spacing={2} p={2} >
+        <Grid container spacing={2} p={2}>
           <Grid item xs={12}>
             <Grid container spacing={2}>
               <Grid item xs={6}>
@@ -251,7 +259,7 @@ const ActivityFilter = ({ open, onClose, onApply }) => {
           
           <Grid item xs={12} mb={15}>
             <Grid container spacing={2}>
-              <Grid item xs={6}>
+              <Grid item xs={4}>
                 <Typography mb={1}>Business Type</Typography>
                 <StyledSelectField
                   placeholder="Select Type"
@@ -264,7 +272,7 @@ const ActivityFilter = ({ open, onClose, onApply }) => {
                   onChange={handleTypeChange}
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={4}>
                 <Typography mb={1}>Status</Typography>
                 <StyledSelectField
                   placeholder="Select Status"
@@ -277,6 +285,18 @@ const ActivityFilter = ({ open, onClose, onApply }) => {
                   ]}
                   value={status}
                   onChange={handleStatusChange}
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <Typography mb={1}>Filter Type</Typography>
+                <StyledSelectField
+                  placeholder="Select Filter"
+                  options={[
+                    { value: "sent", label: "Sent" },
+                    { value: "received", label: "Received" },
+                  ]}
+                  value={filter}
+                  onChange={handleFilterChange}
                 />
               </Grid>
             </Grid>

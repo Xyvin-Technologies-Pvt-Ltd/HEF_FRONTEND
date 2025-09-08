@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -22,7 +22,7 @@ import { ReactComponent as ViewIcon } from "../assets/icons/ViewIcon.svg";
 import { ReactComponent as LeftIcon } from "../assets/icons/LeftIcon.svg";
 import { ReactComponent as RightIcon } from "../assets/icons/RightIcon.svg";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { StyledButton } from "./StyledButton";
+import { Button } from "@mui/material";
 import moment from "moment";
 import { useListStore } from "../store/listStore";
 import { useAdminStore } from "../store/adminStore";
@@ -68,6 +68,7 @@ const StyledTable = ({
   onDelete,
   onModify,
   onAction,
+  onPasswordReset,
   menu,
   news,
   pageNo,
@@ -85,13 +86,18 @@ const StyledTable = ({
   const [anchorEl, setAnchorEl] = useState(null);
   const [rowId, setRowId] = useState(null);
   const { singleAdmin } = useAdminStore();
-  const { lists, totalCount, rowChange, loading } = useListStore();
+  const { lists = [], totalCount = 0, loading } = useListStore();
+  
+  
   const handleSelectAllClick = (event) => {
     const isChecked = event.target.checked;
-    const newSelectedIds = isChecked ? lists.map((row) => row._id) : [];
+    const newSelectedIds = isChecked && Array.isArray(lists) 
+    ? lists.map((row) => row._id) 
+    : [];
     setSelectedIds(newSelectedIds);
     onSelectionChange(newSelectedIds);
   };
+  
   const handleRowCheckboxChange = (event, id) => {
     const isChecked = event.target.checked;
     const newSelectedIds = isChecked
@@ -100,10 +106,12 @@ const StyledTable = ({
     setSelectedIds(newSelectedIds);
     onSelectionChange(newSelectedIds);
   };
+  
   const handleRowDelete = (id) => {
     onDeleteRow(id);
     handleMenuClose();
   };
+  
   const handleMenuOpen = (event, id) => {
     setAnchorEl(event.currentTarget);
     setRowId(id);
@@ -115,27 +123,38 @@ const StyledTable = ({
   };
 
   const handleView = (rowId) => {
-    onView(rowId);
-    handleMenuClose();
+    if (onView) {
+      onView(rowId);
+      handleMenuClose();
+    }
   };
 
   const handleDelete = () => {
-    onDelete();
-    setSelectedIds([]);
-    handleMenuClose();
+    if (onDelete) {
+      onDelete();
+      setSelectedIds([]);
+      handleMenuClose();
+    }
   };
+  
   const handleAction = () => {
-    onAction(rowId);
-    handleMenuClose();
+    if (onAction) {
+      onAction(rowId);
+      handleMenuClose();
+    }
   };
 
   const handleModify = () => {
-    onModify(rowId);
-    handleMenuClose();
+    if (onModify) {
+      onModify(rowId);
+      handleMenuClose();
+    }
   };
 
   const handleRowClick = (id) => {
-    onView(id);
+    if (onView) {
+      onView(id);
+    }
   };
 
   const isSelected = (id) => selectedIds.includes(id);
@@ -263,8 +282,10 @@ const StyledTable = ({
                 </StyledTableCell>
               </StyledTableRow>
             ) : (
-              lists.map((row) => (
-                <StyledTableRow
+              
+              
+              (Array.isArray(lists) ? lists : []).map((row) => (
+              <StyledTableRow
                   role="checkbox"
                   key={row._id}
                   selected={isSelected(row._id)}
@@ -281,8 +302,8 @@ const StyledTable = ({
                     <StyledTableCell
                       key={column.field}
                       padding={column.padding || "normal"}
-                      sx={{ cursor: "pointer" }}
-                      onClick={() => handleRowClick(row._id)}
+                      sx={{ cursor: onView ? "pointer" : "default" }}
+                      onClick={() => onView && handleRowClick(row._id)}
                       $isEmail={
                         column.field === "email" ||
                         column.field === "apiEndpoint"
@@ -349,6 +370,37 @@ const StyledTable = ({
                       ) : typeof row[column.field] === "string" &&
                         row[column.field].length > 30 ? (
                         `${row[column.field].slice(0, 30)}...`
+                      ) : column.field === "actions" ? (
+                        <Box display="flex" gap={1}>
+                          
+                          {onPasswordReset && (
+                            <Button
+                              variant="contained"
+                              size="small"
+                              sx={{
+                                background: 'linear-gradient(135deg, #FF6B35 0%, #FF8E53 100%)',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '20px',
+                                padding: '6px 16px',
+                                fontSize: '12px',
+                                fontWeight: 600,
+                                textTransform: 'none',
+                                boxShadow: '0 2px 8px rgba(255, 107, 53, 0.3)',
+                                '&:hover': {
+                                  background: 'linear-gradient(135deg, #E55A2B 0%, #E57A42 100%)',
+                                  boxShadow: '0 4px 12px rgba(255, 107, 53, 0.4)',
+                                  transform: 'translateY(-1px)'
+                                },
+                                transition: 'all 0.2s ease-in-out',
+                                minWidth: 'auto'
+                              }}
+                              onClick={() => onPasswordReset(row._id)}
+                            >
+                              Reset Password
+                            </Button>
+                          )}
+                        </Box>
                       ) : (
                         row[column.field]
                       )}
@@ -378,154 +430,131 @@ const StyledTable = ({
                             <MoreVertIcon />
                           </IconButton>
                         )}
-                      <Menu
-                        id="row-menu"
-                        anchorEl={anchorEl}
-                        open={Boolean(anchorEl) && rowId === row._id}
-                        onClose={handleMenuClose}
-                      >
-                        {news
-                          ? [
-                              <>
-                                <MenuItem onClick={handleModify}>Edit</MenuItem>
-                                <MenuItem onClick={handleAction}>
-                                  Publish/Unpublish
-                                </MenuItem>
-                                <MenuItem
-                                  onClick={() => handleRowDelete(row._id)}
-                                  style={{ color: "red" }}
-                                >
-                                  Remove
-                                </MenuItem>
-                              </>,
-                            ]
-                          : report
-                          ? [
-                              <>
-                                {" "}
-                                <MenuItem onClick={handleModify}>
-                                  Report
-                                </MenuItem>
-                                <MenuItem
-                                  onClick={() => handleRowDelete(row._id)}
-                                  style={{ color: "red" }}
-                                >
-                                  Remove
-                                </MenuItem>
-                              </>,
-                            ]
-                          : member
-                          ? [
-                              <>
-                                <MenuItem onClick={handleModify}>Edit</MenuItem>
-                                {row.status !== "deleted" && (
-                                  <>
-                                    <MenuItem
-                                      onClick={() => handleRowDelete(row._id)}
-                                      style={{ color: "red" }}
-                                    >
-                                      Delete
-                                    </MenuItem>
-                                    <MenuItem onClick={handleAction}>
-                                      {row.status === "suspended"
-                                        ? "Unsuspend"
-                                        : "Suspend"}
-                                    </MenuItem>
-                                  </>
-                                )}
-                              </>,
-                            ]
-                          : payment
-                          ? [
-                              <>
-                                {row.status === "published" && (
-                                  <MenuItem onClick={handleAction}>
-                                    Reject
-                                  </MenuItem>
-                                )}
-                                {row.status === "unpublished" && (
-                                  <MenuItem onClick={handleModify}>
-                                    Approve
-                                  </MenuItem>
-                                )}
-                                {row.status !== "published" &&
-                                  row.status !== "unpublished" && (
-                                    <>
-                                      <MenuItem onClick={handleModify}>
-                                        Approve
-                                      </MenuItem>
-                                      {row.status !== "cancelled" && (
-                                        <MenuItem onClick={handleAction}>
-                                          Reject
-                                        </MenuItem>
-                                      )}
-                                    </>
-                                  )}
-                              </>,
-                            ]
-                          : approve
-                          ? [
-                              <>
-                                <MenuItem onClick={handleView}>
-                                  View Details
-                                </MenuItem>
 
-                                {row.status === "published" && (
-                                  <MenuItem onClick={handleAction}>
-                                    Unpublish
-                                  </MenuItem>
-                                )}
-                                {row.status === "unpublished" && (
-                                  <MenuItem onClick={handleModify}>
-                                    Publish
-                                  </MenuItem>
-                                )}
-                                {row.status !== "published" &&
-                                  row.status !== "unpublished" && (
-                                    <>
-                                      <MenuItem onClick={handleModify}>
-                                        Publish
-                                      </MenuItem>
-                                      {row.status !== "cancelled" && (
-                                        <MenuItem onClick={handleAction}>
-                                          Unpublish
-                                        </MenuItem>
-                                      )}
-                                    </>
-                                  )}
-                              </>,
-                            ]
-                          : college
-                          ? [
-                              <>
-                                <MenuItem onClick={handleView}>
-                                  View Details
-                                </MenuItem>
-                                <MenuItem onClick={handleAction}>
-                                  Add Member
-                                </MenuItem>
-                                <MenuItem onClick={handleModify}>Edit</MenuItem>
-                                <MenuItem
-                                  onClick={() => handleRowDelete(row._id)}
-                                  style={{ color: "red" }}
-                                >
-                                  Delete
-                                </MenuItem>
-                              </>,
-                            ]
-                          : [
-                              <>
-                                {" "}
-                                <MenuItem onClick={handleModify}>Edit</MenuItem>
-                                <MenuItem
-                                  onClick={() => handleRowDelete(row._id)}
-                                  style={{ color: "red" }}
-                                >
-                                  Remove
-                                </MenuItem>
-                              </>,
-                            ]}
-                      </Menu>
+                        <Menu
+               id="row-menu"
+               anchorEl={anchorEl}
+               open={Boolean(anchorEl) && rowId === row._id}
+               onClose={handleMenuClose}
+              >
+             {news
+             ? [
+           <MenuItem key="edit" onClick={handleModify}>Edit</MenuItem>,
+           <MenuItem key="publish" onClick={handleAction}>Publish/Unpublish</MenuItem>,
+           <MenuItem
+           key="remove"
+           onClick={() => handleRowDelete(row._id)}
+           style={{ color: "red" }}
+           >
+           Remove
+          </MenuItem>,
+           ]
+           : report
+           ? [
+        <MenuItem key="report" onClick={handleModify}>Report</MenuItem>,
+        <MenuItem
+          key="remove"
+          onClick={() => handleRowDelete(row._id)}
+          style={{ color: "red" }}
+        >
+          Remove
+        </MenuItem>,
+      ]
+    : member
+    ? [
+        <MenuItem key="edit" onClick={handleModify}>Edit</MenuItem>,
+        ...(row.status !== "deleted"
+          ? [
+              <MenuItem
+                key="delete"
+                onClick={() => handleRowDelete(row._id)}
+                style={{ color: "red" }}
+              >
+                Delete
+              </MenuItem>,
+              <MenuItem key="suspend" onClick={handleAction}>
+                {row.status === "suspended" ? "Unsuspend" : "Suspend"}
+              </MenuItem>,
+            ]
+          : []),
+      ]
+    : payment
+    ? [
+        row.status === "published" && (
+          <MenuItem key="reject" onClick={handleAction}>
+            Reject
+          </MenuItem>
+        ),
+        row.status === "unpublished" && (
+          <MenuItem key="approve" onClick={handleModify}>
+            Approve
+          </MenuItem>
+        ),
+        row.status !== "published" &&
+          row.status !== "unpublished" && [
+            <MenuItem key="approve2" onClick={handleModify}>
+              Approve
+            </MenuItem>,
+            row.status !== "cancelled" && (
+              <MenuItem key="reject2" onClick={handleAction}>
+                Reject
+              </MenuItem>
+            ),
+          ],
+      ]
+    : approve
+    ? [
+        <MenuItem key="view" onClick={handleView}>
+          View Details
+        </MenuItem>,
+        row.status === "published" && (
+          <MenuItem key="unpublish" onClick={handleAction}>
+            Unpublish
+          </MenuItem>
+        ),
+        row.status === "unpublished" && (
+          <MenuItem key="publish" onClick={handleModify}>
+            Publish
+          </MenuItem>
+        ),
+        row.status !== "published" &&
+          row.status !== "unpublished" && [
+            <MenuItem key="publish2" onClick={handleModify}>
+              Publish
+            </MenuItem>,
+            row.status !== "cancelled" && (
+              <MenuItem key="unpublish2" onClick={handleAction}>
+                Unpublish
+              </MenuItem>
+            ),
+          ],
+      ]
+    : college
+    ? [
+                <MenuItem key="view" onClick={handleView}>View Details</MenuItem>,
+                <MenuItem key="addMember" onClick={handleAction}>Add Member</MenuItem>,
+                <MenuItem key="edit" onClick={handleModify}>Edit</MenuItem>,
+                <MenuItem
+                key="delete"
+                onClick={() => handleRowDelete(row._id)}
+                style={{ color: "red" }}
+               >
+          Delete
+        </MenuItem>,
+      ]
+    : [
+                <MenuItem key="edit" onClick={handleModify}>Edit</MenuItem>,
+                 <MenuItem
+                 key="remove"
+                 onClick={() => handleRowDelete(row._id)}
+                 style={{ color: "red" }}
+                 >
+              Remove
+         </MenuItem>,
+        ]}
+    </Menu>
+
+                     
                     </Box>
                   </StyledTableCell>
                 </StyledTableRow>
@@ -535,7 +564,6 @@ const StyledTable = ({
         </Table>
         <Divider />
         <Stack
-          // padding={2}
           component="div"
           direction={"row"}
           justifyContent={
@@ -554,11 +582,19 @@ const StyledTable = ({
                   selectedIds.length > 1 ? "s" : ""
                 } selected`}
               </Typography>
-              <StyledButton
-                variant="primary"
-                name="Delete"
+              <Button
+                variant="contained"
+                sx={{
+                  backgroundColor: '#f58220',
+                  color: 'white',
+                  '&:hover': {
+                    backgroundColor: '#e0751a'
+                  }
+                }}
                 onClick={() => handleDelete(selectedIds)}
-              />
+              >
+                Delete
+              </Button>
             </Stack>
           )}
           <Stack
@@ -567,14 +603,18 @@ const StyledTable = ({
             justifyContent="space-between"
           >
             <Box display="flex" alignItems="center">
+              
               <TablePagination
                 component="div"
+                 count={totalCount || 0}       //valid data
+                 page={pageNo - 1}
                 rowsPerPage={rowPerSize}
                 labelDisplayedRows={({ from, to }) =>
                   `${pageNo}-${Math.ceil(
                     totalCount / rowPerSize
                   )} of ${totalCount}`
                 }
+                onPageChange={(event, newPage) => setPageNo(newPage + 1)}
                 onRowsPerPageChange={handleChangeRowsPerPage}
                 ActionsComponent={({ onPageChange }) => (
                   <Stack

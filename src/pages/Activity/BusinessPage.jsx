@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import {
   Badge,
   Box,
-  Divider,
-  Grid,
   Stack,
   Tab,
   Tabs,
@@ -12,14 +10,9 @@ import {
 } from "@mui/material";
 
 import StyledTable from "../../ui/StyledTable";
-import { activityColumns } from "../../assets/json/TableData";
-
 import { ReactComponent as FilterIcon } from "../../assets/icons/FilterIcon.svg";
-
-import StyledSearchbar from "../../ui/StyledSearchbar";
 import { useListStore } from "../../store/listStore";
 import { StyledButton } from "../../ui/StyledButton";
-
 import { ReactComponent as AddIcon } from "../../assets/icons/AddIcon.svg";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -32,9 +25,7 @@ import { useAdminStore } from "../../store/adminStore";
 const BusinessPage = () => {
   const navigate = useNavigate();
   const storedTab = localStorage.getItem("businessTab");
-  const [selectedTab, setSelectedTab] = useState(
-    storedTab ? Number(storedTab) : 0
-  );
+  const [selectedTab, setSelectedTab] = useState(storedTab ? Number(storedTab) : 0);
   const [pageNo, setPageNo] = useState(1);
   const [filterOpen, setFilterOpen] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
@@ -50,9 +41,12 @@ const BusinessPage = () => {
     startDate: "",
     endDate: "",
     chapter: "",
+    filter: "",
   });
+
   const location = useLocation();
   const { tab } = location.state || {};
+
   useEffect(() => {
     if (tab !== undefined) {
       setSelectedTab(tab);
@@ -61,14 +55,18 @@ const BusinessPage = () => {
 
   const handleApplyFilter = (newFilters) => {
     setFilters(newFilters);
+    setPageNo(1);
   };
+
   const handleChange = (event, newValue) => {
     localStorage.setItem("businessTab", newValue);
     setSelectedTab(newValue);
   };
+
   const handleSelectionChange = (newSelectedIds) => {
     setSelectedRows(newSelectedIds);
   };
+
   const handleDelete = async () => {
     if (selectedRows.length > 0) {
       try {
@@ -84,15 +82,22 @@ const BusinessPage = () => {
 
   useEffect(() => {
     let filter = {};
+    
     if (search) {
       filter.search = search;
       setPageNo(1);
     }
+    
     if (filters.chapter) filter.chapter = filters.chapter;
     if (filters.status) filter.status = filters.status;
     if (filters.startDate) filter.startDate = filters.startDate;
     if (filters.endDate) filter.endDate = filters.endDate;
     if (filters.type) filter.type = filters.type;
+    if (filters.filter) filter.filter = filters.filter;
+    
+    // ALWAYS sort by amount (top performers first)
+    filter.sortByAmount = "true";
+
     if (selectedTab === 1) {
       filter.type = "Business";
     } else if (selectedTab === 2) {
@@ -100,46 +105,55 @@ const BusinessPage = () => {
     } else if (selectedTab === 3) {
       filter.type = "Referral";
     }
+
     filter.pageNo = pageNo;
     filter.limit = row;
+    
     fetchActivity(filter);
-  }, [isChange, pageNo, search, row, selectedTab, filters]);
+  }, [isChange, pageNo, search, row, selectedTab, filters, fetchActivity]);
+
   const hasActiveFilters = Object.values(filters).some((value) => value);
+
   const activityColumns = [
     { title: "Date", field: "createdAt", padding: "none" },
     { title: "Business giver", field: "senderName" },
     { title: "Business receiver", field: "memberName" },
     { title: "Request Type", field: "type" },
     { title: "Status", field: "status" },
-    ...(selectedTab === 3
-      ? [{ title: "Referral", field: "referralName" }]
-      : []),
+    { 
+      title: "Amount ↓", 
+      field: "amount",
+      render: (value) => value ? `₹${value.toLocaleString()}` : "N/A"
+    },
+    ...(selectedTab === 3 ? [{ title: "Referral", field: "referralName" }] : []),
   ];
+
   const handleDownload = async () => {
     try {
       let filter = {};
-
       if (filters.chapter) filter.chapter = filters.chapter;
       if (filters.status) filter.status = filters.status;
       if (filters.startDate) filter.startDate = filters.startDate;
       if (filters.endDate) filter.endDate = filters.endDate;
       if (filters.type) filter.type = filters.type;
+      if (filters.filter) filter.filter = filters.filter;
+      // Always include sorting for download as well
+      filter.sortByAmount = "true";
+      
       const data = await getBusinessDwld(filter);
       const csvData = data.data;
       if (csvData && csvData.headers && csvData.body) {
         generateExcel(csvData.headers, csvData.body, "Business");
       } else {
-        console.error(
-          "Error: Missing headers or data in the downloaded content"
-        );
+        console.error("Error: Missing headers or data in the downloaded content");
       }
     } catch (error) {
       console.error("Error downloading users:", error);
     }
   };
+
   return (
     <>
-      {" "}
       <Stack
         direction={"row"}
         padding={"10px"}
@@ -154,9 +168,7 @@ const BusinessPage = () => {
           </Typography>
         </Stack>
         <Stack direction={"row"} spacing={2} justifyContent={"flex-end"}>
-          {singleAdmin?.role?.permissions?.includes(
-            "activityManagement_modify"
-          ) && (
+          {singleAdmin?.role?.permissions?.includes("activityManagement_modify") && (
             <StyledButton
               variant={"primary"}
               name={
@@ -172,6 +184,7 @@ const BusinessPage = () => {
           )}
         </Stack>
       </Stack>
+
       <Tabs
         value={selectedTab}
         onChange={handleChange}
@@ -206,6 +219,7 @@ const BusinessPage = () => {
         <Tab label="1 on 1 meeting" />
         <Tab label="Referrals" />
       </Tabs>
+
       <Box padding={"15px"}>
         <Stack
           direction={"row"}
@@ -268,6 +282,7 @@ const BusinessPage = () => {
             </Tooltip>
           </Stack>
         </Stack>
+
         <Box
           borderRadius={"16px"}
           bgcolor={"white"}
@@ -285,10 +300,12 @@ const BusinessPage = () => {
             setRowPerSize={setRow}
           />
         </Box>
+
         <ActivityFilter
           open={filterOpen}
           onClose={() => setFilterOpen(false)}
           onApply={handleApplyFilter}
+          currentFilters={filters}
         />
       </Box>
     </>

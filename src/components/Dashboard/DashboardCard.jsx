@@ -85,6 +85,35 @@ export const DashboardCard = ({
           </Typography>
         )}
       </Stack>
+         {data?.sent !== undefined && data?.received !== undefined && (
+        <Stack direction="row" spacing={4} mt={2}>
+    <Typography
+      fontSize={isMobile ? "14px" : "16px"}
+      fontWeight={600}
+      color="primary"
+      sx={{
+        cursor: "pointer",
+        "&:hover": { textDecoration: "underline" },
+      }}
+      onClick={() => handleSentClick(data.type)}
+    >
+      Sent: {data.sent}
+    </Typography>
+
+    <Typography
+      fontSize={isMobile ? "14px" : "16px"}
+      fontWeight={600}
+      color="secondary"
+      sx={{
+        cursor: "pointer",
+        "&:hover": { textDecoration: "underline" },
+      }}
+      onClick={() => handleReceivedClick(data.type)}
+    >
+      Received: {data.received}
+    </Typography>
+  </Stack>
+)}
     </Stack>
   );
 };

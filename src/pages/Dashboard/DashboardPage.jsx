@@ -35,22 +35,38 @@ const DashboardPage = () => {
     amount: `₹ ${data?.memberShipRevenue ? data?.memberShipRevenue : 0}`,
     icon: RevenueIcon,
   };
+const getTotalByType = (type) => {
+  return data?.totals?.find((t) => t.type === type) || {};
+};
 
-  const activeMember = {
-    title: "Business",
-    amount: data?.businessCount,
-    icon: ActiveMemberIcon,
-  };
-  const premiumMember = {
-    title: "1 on 1 meetings",
-    amount: data?.oneVOneMeetingCount,
-    icon: PremiumIcon,
-  };
-  const frozenMember = {
-    title: "Referrals",
-    amount: data?.referralsCount,
-    icon: FrozenIcon,
-  };
+const activeMemberTotals = getTotalByType("Business");
+const premiumMemberTotals = getTotalByType("One v One Meeting");
+const frozenMemberTotals = getTotalByType("Referral");
+
+const activeMember = {
+  title: "Business",
+  amount: activeMemberTotals.total || 0,  
+  sent: activeMemberTotals.sent || 0,
+  received: activeMemberTotals.received || 0,
+  icon: ActiveMemberIcon,
+};
+
+const premiumMember = {
+  title: "1 on 1 meetings",
+  amount: premiumMemberTotals.total || 0,  
+  sent: premiumMemberTotals.sent || 0,
+  received: premiumMemberTotals.received || 0,
+  icon: PremiumIcon,
+};
+
+const frozenMember = {
+  title: "Referrals",
+  amount: frozenMemberTotals.total || 0,   
+  sent: frozenMemberTotals.sent || 0,
+  received: frozenMemberTotals.received || 0,
+  icon: FrozenIcon,
+};
+
   const events = {
     title: "Events",
     amount: data?.eventCount,
@@ -144,6 +160,7 @@ const DashboardPage = () => {
       navigate(`/members`);
     }
   };
+
   return (
     <>
       <Box
