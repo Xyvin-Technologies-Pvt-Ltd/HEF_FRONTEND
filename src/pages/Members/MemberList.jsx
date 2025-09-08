@@ -18,11 +18,14 @@ import { useListStore } from "../../store/listStore";
 import SuspendProfile from "../../components/Member/SuspendProfile";
 import { ReactComponent as FilterIcon } from "../../assets/icons/FilterIcon.svg";
 import MemberFilter from "../../components/Member/MemberFilter";
+import DownloadPopup from "../../components/Member/DownloadPopup";
 import { getDwld } from "../../api/adminapi";
 import { generateExcel } from "../../utils/generateExcel";
+import { generatePDF } from "../../utils/generatePDF";
 import { toast } from "react-toastify";
 import { useMemberStore } from "../../store/Memberstore";
 import { useAdminStore } from "../../store/adminStore";
+
 const MemberList = () => {
   const navigate = useNavigate();
   const { fetchMember } = useListStore();
@@ -41,6 +44,8 @@ const MemberList = () => {
   const [row, setRow] = useState(10);
   const { singleAdmin } = useAdminStore();
   const [loading, setLoading] = useState(false);
+  const [downloadPopupOpen, setDownloadPopupOpen] = useState(false);
+  const [downloadLoading, setDownloadLoading] = useState(false);
   const [filters, setFilters] = useState({
     name: "",
     membershipId: "",
@@ -50,9 +55,11 @@ const MemberList = () => {
     to: "",
     chapter: "",
   });
+
   const handleSelectionChange = (newSelectedIds) => {
     setSelectedRows(newSelectedIds);
   };
+
   const handleDelete = () => {
     if (selectedRows.length > 0) {
       setConfirmDeleteOpen(true);
@@ -75,6 +82,7 @@ const MemberList = () => {
       }
     }
   };
+
   console.log("memberStatus", memberStatus);
 
   useEffect(() => {
@@ -101,7 +109,13 @@ const MemberList = () => {
     }
     fetchMember(filter);
   }, [isChange, pageNo, search, row, filters, memberInstalled, memberStatus]);
-  const handleDownload = async () => {
+
+  const handleDownload = () => {
+    setDownloadPopupOpen(true);
+  };
+
+  const handleDownloadExcel = async () => {
+    setDownloadLoading(true);
     try {
       let filter = {};
 
@@ -114,17 +128,77 @@ const MemberList = () => {
       if (typeof filters.installed === "boolean") {
         filter.installed = filters.installed;
       }
+      
+      console.log("Excel Download - Filters:", filter);
       const data = await getDwld(filter);
+      console.log("Excel Download - API Response:", data);
+      
       const csvData = data.data;
+      console.log("Excel Download - CSV Data:", csvData);
+      
       if (csvData && csvData.headers && csvData.body) {
+        console.log("Excel Download - Headers:", csvData.headers);
+        console.log("Excel Download - Body sample:", csvData.body.slice(0, 2));
+        
         generateExcel(csvData.headers, csvData.body, "Members");
+        toast.success("Excel file downloaded successfully!");
       } else {
         console.error(
-          "Error: Missing headers or data in the downloaded content"
+          "Error: Missing headers or data in the downloaded content",
+          { csvData, hasHeaders: !!csvData?.headers, hasBody: !!csvData?.body }
         );
+        toast.error("Error downloading Excel file - Invalid data structure");
       }
     } catch (error) {
-      console.error("Error downloading users:", error);
+      console.error("Error downloading Excel:", error);
+      toast.error(`Error downloading Excel file: ${error.message}`);
+    } finally {
+      setDownloadLoading(false);
+      setDownloadPopupOpen(false);
+    }
+  };
+
+  const handleDownloadPDF = async () => {
+    setDownloadLoading(true);
+    try {
+      let filter = {};
+
+      if (filters.name) filter.name = filters.name;
+      if (filters.membershipId) filter.membershipId = filters.membershipId;
+      if (filters.status) filter.status = filters.status;
+      if (filters.from) filter.from = filters.from;
+      if (filters.to) filter.to = filters.to;
+      if (filters.chapter) filter.chapter = filters.chapter;
+      if (typeof filters.installed === "boolean") {
+        filter.installed = filters.installed;
+      }
+      
+      console.log("PDF Download - Filters:", filter);
+      const data = await getDwld(filter);
+      console.log("PDF Download - API Response:", data);
+      
+      const csvData = data.data;
+      console.log("PDF Download - CSV Data:", csvData);
+      
+      if (csvData && csvData.headers && csvData.body) {
+        console.log("PDF Download - Headers:", csvData.headers);
+        console.log("PDF Download - Body sample:", csvData.body.slice(0, 2));
+        
+        generatePDF(csvData.headers, csvData.body, "Members");
+        toast.success("PDF file downloaded successfully!");
+      } else {
+        console.error(
+          "Error: Missing headers or data in the downloaded content",
+          { csvData, hasHeaders: !!csvData?.headers, hasBody: !!csvData?.body }
+        );
+        toast.error("Error downloading PDF file - Invalid data structure");
+      }
+    } catch (error) {
+      console.error("Error downloading PDF:", error);
+      toast.error(`Error downloading PDF file: ${error.message}`);
+    } finally {
+      setDownloadLoading(false);
+      setDownloadPopupOpen(false);
     }
   };
 
@@ -132,24 +206,30 @@ const MemberList = () => {
     setMemberId(id);
     setDeleteOpen(true);
   };
+
   const handleCloseDelete = () => {
     setMemberId(null);
     setDeleteOpen(false);
   };
+
   const handleSuspend = (id) => {
     setMemberId(id);
     setSuspendOpen(true);
   };
+
   const handleCloseSuspend = () => {
     setMemberId(null);
     setSuspendOpen(false);
   };
+
   const handleChange = () => {
     setIschange(!isChange);
   };
+
   const handleTabChange = (tab) => {
     setSelectedTab(tab);
   };
+
   return (
     <>
       <Box padding={"15px"}>
@@ -314,6 +394,13 @@ const MemberList = () => {
           onClose={() => setFilterOpen(false)}
           onApply={(filters) => setFilters(filters)}
         />
+        <DownloadPopup
+          open={downloadPopupOpen}
+          onClose={() => setDownloadPopupOpen(false)}
+          onDownloadExcel={handleDownloadExcel}
+          onDownloadPDF={handleDownloadPDF}
+          loading={downloadLoading}
+        />
       </Box>
       <Dialog
         open={confirmDeleteOpen}
@@ -324,7 +411,6 @@ const MemberList = () => {
       >
         <DialogContent sx={{ height: "auto", width: "330px" }}>
           <Stack
-            // direction={"row"}
             spacing={2}
             paddingTop={2}
             justifyContent={"center"}
