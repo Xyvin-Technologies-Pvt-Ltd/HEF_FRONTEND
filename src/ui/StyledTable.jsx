@@ -86,14 +86,11 @@ const StyledTable = ({
   const [anchorEl, setAnchorEl] = useState(null);
   const [rowId, setRowId] = useState(null);
   const { singleAdmin } = useAdminStore();
-  const { lists = [], totalCount = 0, loading } = useListStore();
-  
+  const { lists, totalCount, loading } = useListStore();
   
   const handleSelectAllClick = (event) => {
     const isChecked = event.target.checked;
-    const newSelectedIds = isChecked && Array.isArray(lists) 
-    ? lists.map((row) => row._id) 
-    : [];
+    const newSelectedIds = isChecked && lists ? lists.map((row) => row._id) : [];
     setSelectedIds(newSelectedIds);
     onSelectionChange(newSelectedIds);
   };
@@ -273,7 +270,7 @@ const StyledTable = ({
                   </StyledTableCell>
                 </StyledTableRow>
               ))
-            ) : lists.length === 0 ? (
+            ) : !lists || lists.length === 0 ? (
               <StyledTableRow>
                 <StyledTableCell colSpan={columns.length + 2}>
                   <Typography variant="h7" textAlign="center">

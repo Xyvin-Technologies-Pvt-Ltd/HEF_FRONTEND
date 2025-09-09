@@ -75,6 +75,25 @@ export const deleteAdmin = async (id) => {
     throw error.response.data;
   }
 };
+
+export const resetAdminPassword = async (adminId, sendEmail = true, customEmail = null) => {
+  try {
+    const payload = {
+      adminId,
+      sendEmail,
+    };
+    
+    if (customEmail) {
+      payload.customEmail = customEmail;
+    }
+    
+    const response = await axiosInstance.post(`/admin/reset-password`, payload);
+    toast.success(response.data.message);
+    return response.data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};
 export const getAdminActivity = async (filter) => {
   try {
     const response = await axiosInstance.get(`/admin/log-activities`, {

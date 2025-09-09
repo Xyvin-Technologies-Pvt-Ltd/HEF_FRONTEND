@@ -100,6 +100,7 @@ export const adminColumns = [
   { title: "Phone Number", field: "phone" },
   { title: "Email", field: "email" },
   { title: "Status", field: "status" },
+  { title: "Actions", field: "actions", padding: "none" },
 ];
 export const roleColumns = [
   { title: "Role Name", field: "roleName", padding: "none" },

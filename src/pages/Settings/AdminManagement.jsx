@@ -9,17 +9,62 @@ import { useListStore } from "../../store/listStore.js";
 import { ReactComponent as AddIcon } from "../../assets/icons/AddIcon.svg";
 import { toast } from "react-toastify";
 import { useAdminStore } from "../../store/adminStore.js";
+import PasswordResetDialog from "../../ui/PasswordResetDialog.jsx";
 
 export default function AdminManagement() {
   const navigate = useNavigate();
   const [selectedRows, setSelectedRows] = useState([]);
   const [isChange, setIsChange] = useState(false);
-  const { getAdmins } = useListStore();
+  const { getAdmins, lists } = useListStore();
   const [pageNo, setPageNo] = useState(1);
   const [row, setRow] = useState(10);
   const [search, setSearch] = useState("");
-  const { deleteAdmins } = useAdminStore();
+  const { deleteAdmins, resetAdminPassword } = useAdminStore();
   const { singleAdmin } = useAdminStore();
+  
+  // Password reset dialog state
+  const [passwordResetDialog, setPasswordResetDialog] = useState({
+    open: false,
+    adminData: null,
+  });
+  const [resetLoading, setResetLoading] = useState(false);
+
+  const handlePasswordReset = async (id) => {
+    // Find the admin data from the current list
+    const adminData = lists?.find(admin => admin._id === id);
+    if (adminData) {
+      setPasswordResetDialog({
+        open: true,
+        adminData,
+      });
+    }
+  };
+
+  const handlePasswordResetConfirm = async (adminId, sendEmail, customEmail) => {
+    try {
+      setResetLoading(true);
+      const response = await resetAdminPassword(adminId, sendEmail, customEmail);
+      
+      let message;
+      if (customEmail) {
+        message = `Admin account updated successfully! New email: ${customEmail}, new password sent. Admin can now login with the new email and password.`;
+      } else {
+        message = "Password reset successfully. New password sent to admin's email.";
+      }
+      
+      toast.success(message);
+      setPasswordResetDialog({ open: false, adminData: null });
+      setIsChange(!isChange); // Refresh the list
+    } catch (error) {
+      toast.error(error.message || "Password reset failed");
+    } finally {
+      setResetLoading(false);
+    }
+  };
+
+  const handlePasswordResetClose = () => {
+    setPasswordResetDialog({ open: false, adminData: null });
+  };
 
   const handleSelectionChange = (newSelectedIds) => {
     setSelectedRows(newSelectedIds);
@@ -58,7 +103,7 @@ export default function AdminManagement() {
       filter.search = search;
     }
     getAdmins(filter);
-  }, [isChange, pageNo, search, row]);
+  }, [isChange, pageNo, search, row, getAdmins]);
   return (
     <>
       {" "}
@@ -114,6 +159,7 @@ export default function AdminManagement() {
             ) ? (
               <StyledTable
                 columns={adminColumns}
+                // onView={handleEdit}
                 onModify={handleEdit}
                 pageNo={pageNo}
                 setPageNo={setPageNo}
@@ -122,10 +168,12 @@ export default function AdminManagement() {
                 onSelectionChange={handleSelectionChange}
                 onDelete={handleDelete}
                 onDeleteRow={handleRowDelete}
+                onPasswordReset={handlePasswordReset}
               />
             ) : (
               <StyledTable
                 columns={adminColumns}
+                onView={handleEdit}
                 onModify={handleEdit}
                 pageNo={pageNo}
                 setPageNo={setPageNo}
@@ -134,11 +182,21 @@ export default function AdminManagement() {
                 onSelectionChange={handleSelectionChange}
                 menu
                 onDeleteRow={handleRowDelete}
+                onPasswordReset={handlePasswordReset}
               />
             )}
           </Box>
         </Grid>
       </>
+      
+      {/* Password Reset Dialog */}
+      <PasswordResetDialog
+        open={passwordResetDialog.open}
+        onClose={handlePasswordResetClose}
+        onConfirm={handlePasswordResetConfirm}
+        adminData={passwordResetDialog.adminData}
+        loading={resetLoading}
+      />
     </>
   );
 }
