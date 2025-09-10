@@ -287,18 +287,7 @@ const ActivityFilter = ({ open, onClose, onApply }) => {
                   onChange={handleStatusChange}
                 />
               </Grid>
-              <Grid item xs={4}>
-                <Typography mb={1}>Filter Type</Typography>
-                <StyledSelectField
-                  placeholder="Select Filter"
-                  options={[
-                    { value: "sent", label: "Sent" },
-                    { value: "received", label: "Received" },
-                  ]}
-                  value={filter}
-                  onChange={handleFilterChange}
-                />
-              </Grid>
+              
             </Grid>
           </Grid>
         </Grid>

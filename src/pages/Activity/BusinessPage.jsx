@@ -32,7 +32,7 @@ const BusinessPage = () => {
   const [isChange, setIsChange] = useState(false);
   const [search, setSearch] = useState();
   const [row, setRow] = useState(10);
-  const { fetchActivity } = useListStore();
+  const {  lists, totalCount, fetchActivity } = useListStore();
   const { singleAdmin } = useAdminStore();
   const { removeActivity } = useActivityStore();
   const [filters, setFilters] = useState({
@@ -291,6 +291,7 @@ const BusinessPage = () => {
         >
           <StyledTable
             columns={activityColumns}
+            data={lists} 
             pageNo={pageNo}
             menu
             setPageNo={setPageNo}

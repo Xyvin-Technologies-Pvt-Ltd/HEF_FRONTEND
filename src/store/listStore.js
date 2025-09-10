@@ -52,10 +52,10 @@ const useListStore = create((set, get) => ({
   fetchActivity: async (filter) => {   
   set({ loading: true });
   const allData = await getActivities(filter);
-  set({ lists: allData?.data?.data || [] });
-  set({ totalCount: allData?.data?.count || 0 });
+  set({ lists: allData?.data || [] });          
+  set({ totalCount: allData?.totalCount || 0 }); 
   set({ loading: false });
-  return allData?.data?.data || [];
+  return allData?.data || [];
 },
   getActivity: async (filter) => {
     set({ loading: true });
