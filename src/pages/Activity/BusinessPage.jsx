@@ -21,6 +21,8 @@ import ActivityFilter from "../../components/Activity/ActivityFilter";
 import { generateExcel } from "../../utils/generateExcel";
 import { getBusinessDwld } from "../../api/activityapi";
 import { useAdminStore } from "../../store/adminStore";
+import { generatePDF } from "../../utils/generatePDF";
+import DownloadPopup from "../../components/Member/DownloadPopup";
 
 const BusinessPage = () => {
   const navigate = useNavigate();
@@ -46,6 +48,10 @@ const BusinessPage = () => {
 
   const location = useLocation();
   const { tab } = location.state || {};
+
+  const [downloadPopupOpen, setDownloadPopupOpen] = useState(false);
+  const [downloadLoading, setDownloadLoading] = useState(false);
+
 
   useEffect(() => {
     if (tab !== undefined) {
@@ -128,30 +134,56 @@ const BusinessPage = () => {
     ...(selectedTab === 3 ? [{ title: "Referral", field: "referralName" }] : []),
   ];
 
-  const handleDownload = async () => {
+  const handleDownloadExcel = async () => {
+    setDownloadLoading(true);
     try {
-      let filter = {};
-      if (filters.chapter) filter.chapter = filters.chapter;
-      if (filters.status) filter.status = filters.status;
-      if (filters.startDate) filter.startDate = filters.startDate;
-      if (filters.endDate) filter.endDate = filters.endDate;
-      if (filters.type) filter.type = filters.type;
-      if (filters.filter) filter.filter = filters.filter;
-      // Always include sorting for download as well
-      filter.sortByAmount = "true";
-      
+      let filter = { ...filters, sortByAmount: "true" };
       const data = await getBusinessDwld(filter);
       const csvData = data.data;
-      if (csvData && csvData.headers && csvData.body) {
+    
+      if (csvData?.headers && csvData?.body) {
+        
+      const sortedBody = csvData.body.sort((a, b) => (b.amount || 0) - (a.amount || 0));
+
+      // File name with chapter and date
+      const dateStr = new Date().toISOString().split('T')[0];
+      const fileName = `${filters.chapter || 'AllChapters'}_${dateStr}`;
+
         generateExcel(csvData.headers, csvData.body, "Business");
-      } else {
-        console.error("Error: Missing headers or data in the downloaded content");
-      }
+        toast.success("Excel downloaded successfully!");
+      } else toast.error("Invalid data for Excel download");
     } catch (error) {
-      console.error("Error downloading users:", error);
+      console.error("Excel download error:", error);
+      toast.error("Failed to download Excel");
+    } finally {
+      setDownloadLoading(false);
+      setDownloadPopupOpen(false);
     }
   };
-
+   const handleDownloadPDF = async () => {
+    setDownloadLoading(true);
+    try {
+      let filter = { ...filters, sortByAmount: "true" };
+      const data = await getBusinessDwld(filter);
+      const csvData = data.data;
+      if (csvData?.headers && csvData?.body) 
+        {
+      const sortedBody = csvData.body.sort((a, b) => (b.amount || 0) - (a.amount || 0));
+      const dateStr = new Date().toISOString().split('T')[0];
+      const fileName = `${filters.chapter || 'AllChapters'}_${dateStr}`;
+      
+        generatePDF(csvData.headers, csvData.body, "Business");
+        toast.success("PDF downloaded successfully!");
+      } else toast.error("Invalid data for PDF download");
+    } catch (error) {
+      console.error("PDF download error:", error);
+      toast.error("Failed to download PDF");
+    } finally {
+      setDownloadLoading(false);
+      setDownloadPopupOpen(false);
+    }
+  };
+  
   return (
     <>
       <Stack
@@ -229,9 +261,9 @@ const BusinessPage = () => {
         >
           <Stack direction={"row"} spacing={2} mt={2}>
             <StyledButton
-              variant={"primary"}
-              name={"Download"}
-              onClick={handleDownload}
+            variant={"primary"}
+            name={"Download"}
+            onClick={() => setDownloadPopupOpen(true)}
             />
             <Tooltip title={hasActiveFilters ? "Active filters" : "Filter"}>
               <Badge
@@ -308,6 +340,14 @@ const BusinessPage = () => {
           onApply={handleApplyFilter}
           currentFilters={filters}
         />
+        <DownloadPopup
+       open={downloadPopupOpen}
+       onClose={() => setDownloadPopupOpen(false)}
+       onDownloadExcel={handleDownloadExcel}
+       onDownloadPDF={handleDownloadPDF}
+      loading={downloadLoading}
+       />
+
       </Box>
     </>
   );
