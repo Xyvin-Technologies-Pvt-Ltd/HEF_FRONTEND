@@ -34,7 +34,7 @@ const BusinessPage = () => {
   const [isChange, setIsChange] = useState(false);
   const [search, setSearch] = useState();
   const [row, setRow] = useState(10);
-  const {  lists, totalCount, fetchActivity } = useListStore();
+  const { lists, totalCount, fetchActivity } = useListStore();
   const { singleAdmin } = useAdminStore();
   const { removeActivity } = useActivityStore();
   const [filters, setFilters] = useState({
@@ -88,19 +88,19 @@ const BusinessPage = () => {
 
   useEffect(() => {
     let filter = {};
-    
+
     if (search) {
       filter.search = search;
       setPageNo(1);
     }
-    
+
     if (filters.chapter) filter.chapter = filters.chapter;
     if (filters.status) filter.status = filters.status;
     if (filters.startDate) filter.startDate = filters.startDate;
     if (filters.endDate) filter.endDate = filters.endDate;
     if (filters.type) filter.type = filters.type;
     if (filters.filter) filter.filter = filters.filter;
-    
+
     // ALWAYS sort by amount (top performers first)
     filter.sortByAmount = "true";
 
@@ -114,7 +114,7 @@ const BusinessPage = () => {
 
     filter.pageNo = pageNo;
     filter.limit = row;
-    
+
     fetchActivity(filter);
   }, [isChange, pageNo, search, row, selectedTab, filters, fetchActivity]);
 
@@ -126,8 +126,8 @@ const BusinessPage = () => {
     { title: "Business receiver", field: "memberName" },
     { title: "Request Type", field: "type" },
     { title: "Status", field: "status" },
-    { 
-      title: "Amount ↓", 
+    {
+      title: "Amount ↓",
       field: "amount",
       render: (value) => value ? `₹${value.toLocaleString()}` : "N/A"
     },
@@ -140,14 +140,10 @@ const BusinessPage = () => {
       let filter = { ...filters, sortByAmount: "true" };
       const data = await getBusinessDwld(filter);
       const csvData = data.data;
-    
-      if (csvData?.headers && csvData?.body) {
-        
-      const sortedBody = csvData.body.sort((a, b) => (b.amount || 0) - (a.amount || 0));
 
-      // File name with chapter and date
-      const dateStr = new Date().toISOString().split('T')[0];
-      const fileName = `${filters.chapter || 'AllChapters'}_${dateStr}`;
+      if (csvData?.headers && csvData?.body) {
+
+        const sortedBody = csvData.body.sort((a, b) => (b.amount || 0) - (a.amount || 0));
 
         generateExcel(csvData.headers, csvData.body, "Business");
         toast.success("Excel downloaded successfully!");
@@ -160,18 +156,14 @@ const BusinessPage = () => {
       setDownloadPopupOpen(false);
     }
   };
-   const handleDownloadPDF = async () => {
+  const handleDownloadPDF = async () => {
     setDownloadLoading(true);
     try {
       let filter = { ...filters, sortByAmount: "true" };
       const data = await getBusinessDwld(filter);
       const csvData = data.data;
-      if (csvData?.headers && csvData?.body) 
-        {
-      const sortedBody = csvData.body.sort((a, b) => (b.amount || 0) - (a.amount || 0));
-      const dateStr = new Date().toISOString().split('T')[0];
-      const fileName = `${filters.chapter || 'AllChapters'}_${dateStr}`;
-      
+      if (csvData?.headers && csvData?.body) {
+        const sortedBody = csvData.body.sort((a, b) => (b.amount || 0) - (a.amount || 0));
         generatePDF(csvData.headers, csvData.body, "Business");
         toast.success("PDF downloaded successfully!");
       } else toast.error("Invalid data for PDF download");
@@ -183,7 +175,7 @@ const BusinessPage = () => {
       setDownloadPopupOpen(false);
     }
   };
-  
+
   return (
     <>
       <Stack
@@ -261,9 +253,9 @@ const BusinessPage = () => {
         >
           <Stack direction={"row"} spacing={2} mt={2}>
             <StyledButton
-            variant={"primary"}
-            name={"Download"}
-            onClick={() => setDownloadPopupOpen(true)}
+              variant={"primary"}
+              name={"Download"}
+              onClick={() => setDownloadPopupOpen(true)}
             />
             <Tooltip title={hasActiveFilters ? "Active filters" : "Filter"}>
               <Badge
@@ -323,7 +315,7 @@ const BusinessPage = () => {
         >
           <StyledTable
             columns={activityColumns}
-            data={lists} 
+            data={lists}
             pageNo={pageNo}
             menu
             setPageNo={setPageNo}
@@ -341,12 +333,12 @@ const BusinessPage = () => {
           currentFilters={filters}
         />
         <DownloadPopup
-       open={downloadPopupOpen}
-       onClose={() => setDownloadPopupOpen(false)}
-       onDownloadExcel={handleDownloadExcel}
-       onDownloadPDF={handleDownloadPDF}
-      loading={downloadLoading}
-       />
+          open={downloadPopupOpen}
+          onClose={() => setDownloadPopupOpen(false)}
+          onDownloadExcel={handleDownloadExcel}
+          onDownloadPDF={handleDownloadPDF}
+          loading={downloadLoading}
+        />
 
       </Box>
     </>

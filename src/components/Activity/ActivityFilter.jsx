@@ -127,7 +127,7 @@ const ActivityFilter = ({ open, onClose, onApply }) => {
   const handleChapterChange = (chapterId) => {
     setSelectedChapter(chapterId);
   };
-  
+
   const handleApply = () => {
     onApply({
       type: type?.value || "",
@@ -139,11 +139,11 @@ const ActivityFilter = ({ open, onClose, onApply }) => {
     });
     onClose();
   };
-  
+
   const handleStatusChange = (selectedOption) => {
     setStatus(selectedOption);
   };
-  
+
   const handleTypeChange = (selectedOption) => {
     setType(selectedOption);
   };
@@ -151,7 +151,7 @@ const ActivityFilter = ({ open, onClose, onApply }) => {
   const handleFilterChange = (selectedOption) => {
     setFilter(selectedOption);
   };
-  
+
   return (
     <Dialog
       open={open}
@@ -201,11 +201,11 @@ const ActivityFilter = ({ open, onClose, onApply }) => {
             </Grid>
           </Grid>
           <Grid item xs={12}>
-            <Paper 
-              elevation={0} 
-              sx={{ 
-                p: 2, 
-                borderRadius: '12px', 
+            <Paper
+              elevation={0}
+              sx={{
+                p: 2,
+                borderRadius: '12px',
                 border: '1px solid rgba(0, 0, 0, 0.12)',
                 backgroundColor: '#fff'
               }}
@@ -256,7 +256,7 @@ const ActivityFilter = ({ open, onClose, onApply }) => {
               </Grid>
             </Paper>
           </Grid>
-          
+
           <Grid item xs={12} mb={15}>
             <Grid container spacing={2}>
               <Grid item xs={4}>
@@ -287,7 +287,7 @@ const ActivityFilter = ({ open, onClose, onApply }) => {
                   onChange={handleStatusChange}
                 />
               </Grid>
-              
+
             </Grid>
           </Grid>
         </Grid>

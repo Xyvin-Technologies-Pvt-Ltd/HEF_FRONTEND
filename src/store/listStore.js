@@ -49,14 +49,14 @@ const useListStore = create((set, get) => ({
     set({ totalCount: allData?.totalCount || 0 });
     set({ loading: false });
   },
-  fetchActivity: async (filter) => {   
-  set({ loading: true });
-  const allData = await getActivities(filter);
-  set({ lists: allData?.data || [] });          
-  set({ totalCount: allData?.totalCount || 0 }); 
-  set({ loading: false });
-  return allData?.data || [];
-},
+  fetchActivity: async (filter) => {
+    set({ loading: true });
+    const allData = await getActivities(filter);
+    set({ lists: allData?.data || [] });
+    set({ totalCount: allData?.totalCount || 0 });
+    set({ loading: false });
+    return allData?.data || [];
+  },
   getActivity: async (filter) => {
     set({ loading: true });
     const allData = await getAdminActivity(filter);

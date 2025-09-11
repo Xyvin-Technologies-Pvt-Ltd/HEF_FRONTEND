@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Grid,  Stack, Typography } from "@mui/material";
+import { Box, Grid, Stack, Typography } from "@mui/material";
 import AddActivity from "../../components/Activity/AddActivity";
 
 const AddActivityPage = () => {
@@ -21,7 +21,7 @@ const AddActivityPage = () => {
       </Stack>
       <Grid container padding={"15px"}>
         <Grid item xs={12} md={8}>
-       <AddActivity/>
+          <AddActivity />
         </Grid>
       </Grid>
     </>
