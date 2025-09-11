@@ -35,20 +35,32 @@ const DashboardPage = () => {
     amount: `₹ ${data?.memberShipRevenue ? data?.memberShipRevenue : 0}`,
     icon: RevenueIcon,
   };
+  const getTotalByType = (type) => {
+    return data?.totals?.find((t) => t.type === type) || {};
+  };
 
+  const activeMemberTotals = getTotalByType("Business");
+  const premiumMemberTotals = getTotalByType("One v One Meeting");
+  const frozenMemberTotals = getTotalByType("Referral");
   const activeMember = {
     title: "Business",
-    amount: data?.businessCount,
+    amount: activeMemberTotals.total || 0,
+    sent: activeMemberTotals.sent || 0,
+    received: activeMemberTotals.received || 0,
     icon: ActiveMemberIcon,
   };
   const premiumMember = {
     title: "1 on 1 meetings",
-    amount: data?.oneVOneMeetingCount,
+    amount: premiumMemberTotals.total || 0,
+    sent: premiumMemberTotals.sent || 0,
+    received: premiumMemberTotals.received || 0,
     icon: PremiumIcon,
   };
   const frozenMember = {
     title: "Referrals",
-    amount: data?.referralsCount,
+    amount: frozenMemberTotals.total || 0,
+    sent: frozenMemberTotals.sent || 0,
+    received: frozenMemberTotals.received || 0,
     icon: FrozenIcon,
   };
   const events = {
