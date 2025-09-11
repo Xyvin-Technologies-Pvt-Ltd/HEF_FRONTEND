@@ -28,6 +28,9 @@ import ActivityFilter from "../../components/Activity/ActivityFilter";
 import { generateExcel } from "../../utils/generateExcel";
 import { getBusinessDwld } from "../../api/activityapi";
 import { useAdminStore } from "../../store/adminStore";
+import { generatePDF } from "../../utils/generatePDF";
+import DownloadPopup from "../../components/Member/DownloadPopup";
+
 
 const BusinessPage = () => {
   const navigate = useNavigate();
@@ -44,6 +47,8 @@ const BusinessPage = () => {
   const { fetchActivity } = useListStore();
   const { singleAdmin } = useAdminStore();
   const { removeActivity } = useActivityStore();
+  const [downloadPopupOpen, setDownloadPopupOpen] = useState(false);
+  const [downloadLoading, setDownloadLoading] = useState(false);
   const [filters, setFilters] = useState({
     type: "",
     status: "",
@@ -93,6 +98,7 @@ const BusinessPage = () => {
     if (filters.startDate) filter.startDate = filters.startDate;
     if (filters.endDate) filter.endDate = filters.endDate;
     if (filters.type) filter.type = filters.type;
+    filter.sortByAmount = "true";
     if (selectedTab === 1) {
       filter.type = "Business";
     } else if (selectedTab === 2) {
@@ -111,30 +117,47 @@ const BusinessPage = () => {
     { title: "Business receiver", field: "memberName" },
     { title: "Request Type", field: "type" },
     { title: "Status", field: "status" },
+    { title: "Amount ↓", field: "amount", render: (value) => value ? `₹${value.toLocaleString()}` : "N/A" },
     ...(selectedTab === 3
       ? [{ title: "Referral", field: "referralName" }]
       : []),
   ];
-  const handleDownload = async () => {
+  const handleDownloadExcel = async () => {
+    setDownloadLoading(true);
     try {
-      let filter = {};
-
-      if (filters.chapter) filter.chapter = filters.chapter;
-      if (filters.status) filter.status = filters.status;
-      if (filters.startDate) filter.startDate = filters.startDate;
-      if (filters.endDate) filter.endDate = filters.endDate;
-      if (filters.type) filter.type = filters.type;
+      let filter = { ...filters, sortByAmount: "true" };
       const data = await getBusinessDwld(filter);
       const csvData = data.data;
-      if (csvData && csvData.headers && csvData.body) {
+      if (csvData?.headers && csvData?.body) {
+        const sortedBody = csvData.body.sort((a, b) => (b.amount || 0) - (a.amount || 0));
         generateExcel(csvData.headers, csvData.body, "Business");
-      } else {
-        console.error(
-          "Error: Missing headers or data in the downloaded content"
-        );
-      }
+        toast.success("Excel downloaded successfully!");
+      } else toast.error("Invalid data for Excel download");
     } catch (error) {
-      console.error("Error downloading users:", error);
+      console.error("Excel download error:", error);
+      toast.error("Failed to download Excel");
+    } finally {
+      setDownloadLoading(false);
+      setDownloadPopupOpen(false);
+    }
+  };
+  const handleDownloadPDF = async () => {
+    setDownloadLoading(true);
+    try {
+      let filter = { ...filters, sortByAmount: "true" };
+      const data = await getBusinessDwld(filter);
+      const csvData = data.data;
+      if (csvData?.headers && csvData?.body) {
+        const sortedBody = csvData.body.sort((a, b) => (b.amount || 0) - (a.amount || 0));
+        generatePDF(csvData.headers, csvData.body, "Business");
+        toast.success("PDF downloaded successfully!");
+      } else toast.error("Invalid data for PDF download");
+    } catch (error) {
+      console.error("PDF download error:", error);
+      toast.error("Failed to download PDF");
+    } finally {
+      setDownloadLoading(false);
+      setDownloadPopupOpen(false);
     }
   };
   return (
@@ -157,19 +180,19 @@ const BusinessPage = () => {
           {singleAdmin?.role?.permissions?.includes(
             "activityManagement_modify"
           ) && (
-            <StyledButton
-              variant={"primary"}
-              name={
-                <>
-                  <AddIcon />
-                  Create Activity
-                </>
-              }
-              onClick={() => {
-                navigate("/activity/activity");
-              }}
-            />
-          )}
+              <StyledButton
+                variant={"primary"}
+                name={
+                  <>
+                    <AddIcon />
+                    Create Activity
+                  </>
+                }
+                onClick={() => {
+                  navigate("/activity/activity");
+                }}
+              />
+            )}
         </Stack>
       </Stack>
       <Tabs
@@ -217,7 +240,7 @@ const BusinessPage = () => {
             <StyledButton
               variant={"primary"}
               name={"Download"}
-              onClick={handleDownload}
+              onClick={() => setDownloadPopupOpen(true)}
             />
             <Tooltip title={hasActiveFilters ? "Active filters" : "Filter"}>
               <Badge
@@ -289,6 +312,13 @@ const BusinessPage = () => {
           open={filterOpen}
           onClose={() => setFilterOpen(false)}
           onApply={handleApplyFilter}
+        />
+        <DownloadPopup
+          open={downloadPopupOpen}
+          onClose={() => setDownloadPopupOpen(false)}
+          onDownloadExcel={handleDownloadExcel}
+          onDownloadPDF={handleDownloadPDF}
+          loading={downloadLoading}
         />
       </Box>
     </>
