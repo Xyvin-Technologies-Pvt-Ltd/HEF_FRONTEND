@@ -20,7 +20,9 @@ import useHierarchyStore from "../../store/hierarchyStore";
 import { toast } from "react-toastify";
 import { getchapterList } from "../../api/hierarchyapi";
 import { generateExcel } from "../../utils/generateExcel";
+import { generatePDF } from "../../utils/generatePDF"
 import { useAdminStore } from "../../store/adminStore";
+import DownloadPopup from "../../components/Member/DownloadPopup";
 const tabMapping = {
   state: 0,
   zone: 1,
@@ -43,6 +45,8 @@ const LevelPage = () => {
     storedTab !== null ? Number(storedTab) : tabMapping[type] ?? 0
   );
   const { singleAdmin } = useAdminStore();
+  const [downloadPopupOpen, setDownloadPopupOpen] = useState(false);
+  const [downloadLoading, setDownloadLoading] = useState(false);
   useEffect(() => {
     if (type && tabMapping.hasOwnProperty(type)) {
       setSelectedTab(tabMapping[type]);
@@ -130,19 +134,80 @@ const LevelPage = () => {
       toast.error(error.message);
     }
   };
-  const handleDownload = async () => {
+  const handleDownloadExcel = async () => {
+    setDownloadLoading(true);
     try {
-      const data = await getchapterList();
+      let filter = {};
+      if (search) filter.search = search;
+      let type;
+      if (selectedTab === 0) type = "state";
+      else if (selectedTab === 1) type = "zone";
+      else if (selectedTab === 2) type = "district";
+      else if (selectedTab === 3) type = "chapter";
+
+      filter.type = type;
+
+      console.log("Excel Download - Filters:", filter);
+
+      const data = await getchapterList(filter);
+      console.log("Excel Download - API Response:", data);
+
       const csvData = data?.data;
       if (csvData && csvData.headers && csvData.body) {
-        generateExcel(csvData.headers, csvData.body, "Chapter");
+        generateExcel(csvData.headers, csvData.body, "Levels");
+        toast.success("Excel file downloaded successfully!");
       } else {
-        console.error(
-          "Error: Missing headers or data in the downloaded content"
-        );
+        console.error("Error: Missing headers or data in downloaded content", {
+          csvData,
+          hasHeaders: !!csvData?.headers,
+          hasBody: !!csvData?.body,
+        });
+        toast.error("Error downloading Excel file - Invalid data");
       }
     } catch (error) {
-      console.error("Error downloading users:", error);
+      console.error("Error downloading Excel:", error);
+      toast.error(`Error downloading Excel file: ${error.message}`);
+    } finally {
+      setDownloadLoading(false);
+      setDownloadPopupOpen(false);
+    }
+  };
+  const handleDownloadPDF = async () => {
+    setDownloadLoading(true);
+    try {
+      let filter = {};
+      if (search) filter.search = search;
+      let type;
+      if (selectedTab === 0) type = "state";
+      else if (selectedTab === 1) type = "zone";
+      else if (selectedTab === 2) type = "district";
+      else if (selectedTab === 3) type = "chapter";
+
+      filter.type = type;
+
+      console.log("PDF Download - Filters:", filter);
+
+      const data = await getchapterList(filter); 
+      console.log("PDF Download - API Response:", data);
+
+      const csvData = data?.data;
+      if (csvData && csvData.headers && csvData.body) {
+        generatePDF(csvData.headers, csvData.body, "Levels");
+        toast.success("PDF file downloaded successfully!");
+      } else {
+        console.error("Error: Missing headers or data in downloaded content", {
+          csvData,
+          hasHeaders: !!csvData?.headers,
+          hasBody: !!csvData?.body,
+        });
+        toast.error("Error downloading PDF file - Invalid data");
+      }
+    } catch (error) {
+      console.error("Error downloading PDF:", error);
+      toast.error(`Error downloading PDF file: ${error.message}`);
+    } finally {
+      setDownloadLoading(false);
+      setDownloadPopupOpen(false);
     }
   };
   return (
@@ -166,16 +231,16 @@ const LevelPage = () => {
           {singleAdmin?.role?.permissions?.includes(
             "hierarchyManagement_modify"
           ) && (
-            <StyledButton
-              name={
-                <>
-                  <AddIcon /> Add Level
-                </>
-              }
-              variant="primary"
-              onClick={() => navigate("/levels/level")}
-            />
-          )}
+              <StyledButton
+                name={
+                  <>
+                    <AddIcon /> Add Level
+                  </>
+                }
+                variant="primary"
+                onClick={() => navigate("/levels/level")}
+              />
+            )}
         </Stack>
       </Box>
       <Tabs
@@ -229,9 +294,9 @@ const LevelPage = () => {
             />
             {selectedTab === 3 && (
               <StyledButton
-                name={"Download csv"}
-                variant="primary"
-                onClick={handleDownload}
+                variant={"primary"}
+                name={"Download"}
+                onClick={() => setDownloadPopupOpen(true)}
               />
             )}
           </Stack>
@@ -269,6 +334,13 @@ const LevelPage = () => {
               onModify={handleEdit}
             />
           )}
+          <DownloadPopup
+                    open={downloadPopupOpen}
+                    onClose={() => setDownloadPopupOpen(false)}
+                    onDownloadExcel={handleDownloadExcel}
+                    onDownloadPDF={handleDownloadPDF}
+                    loading={downloadLoading}
+                  />
         </Box>
       </Box>
     </>
