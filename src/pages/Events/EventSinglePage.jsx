@@ -9,6 +9,7 @@ import { StyledButton } from "../../ui/StyledButton";
 import EventCard from "../../ui/EventCard";
 import { useEventStore } from "../../store/eventStore";
 import OrganinserCard from "../../components/Event/OrganinserCard";
+import GuestTable from "../../components/Event/GuestTable";
 
 const EventSinglePage = () => {
   const [selectedTab, setSelectedTab] = useState(0);
@@ -128,6 +129,7 @@ const EventSinglePage = () => {
         >
           <Tab label="Speaker List" />
           <Tab label="RSVP list" />
+          <Tab label="Guest list" />
         </Tabs>
       </Box>{" "}
       <Box padding="15px" paddingTop={0} marginBottom={4}>
@@ -139,6 +141,12 @@ const EventSinglePage = () => {
         {selectedTab === 1 && (
           <Grid>
             <RsvpTable data={event?.rsvp} />
+          </Grid>
+        )}
+
+        {selectedTab === 2 && (
+          <Grid>
+            <GuestTable data={event?.guests} />
           </Grid>
         )}
       </Box>{" "}

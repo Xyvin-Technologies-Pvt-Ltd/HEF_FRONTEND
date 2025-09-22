@@ -6,7 +6,7 @@ const RsvpTable = ({ data }) => {
   const userColumns = [
     { title: "Name", field: "name", padding: "none" },
     { title: "Phone", field: "phone" },
-    { title: "Member Id", field: "memberId" },
+    { title: "Chapter", field: "chaptername" },
     
   ];
   return (

@@ -50,3 +50,13 @@ export const updateEventById = async (id, data) => {
     throw error.response.data;
   }
 };
+export const getEventsDownload = async (filter = {}) => {
+  try {
+    const response = await axiosInstance.get(`/event/download`, {
+      params: filter,
+    });
+    return response.data; // { headers, body }
+  } catch (error) {
+    throw error;
+  }
+};
