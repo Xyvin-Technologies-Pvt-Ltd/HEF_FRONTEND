@@ -25,7 +25,7 @@ export const generatePDF = (headers = [], body = [], fileName) => {
 
     doc.setFontSize(7); // Reduced from 8
     doc.setFont('helvetica', 'normal');
-    doc.text(fileName, margin.left, 17); // Adjusted Y position
+    doc.text('Member Management System', margin.left, 17); // Adjusted Y position
 
     // Keep date variables for filename but don't display them
     const date = new Date();
