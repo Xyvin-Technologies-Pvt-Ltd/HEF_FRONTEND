@@ -1,6 +1,5 @@
-import React, { useEffect,useState} from "react";
+import { useState } from "react";
 import { Box, Stack, Badge, Tooltip } from "@mui/material";
-import StyledTable from "../../ui/StyledTable";
 import { StyledButton } from "../../ui/StyledButton";
 import { getGuestsDownload } from "../../api/eventapi";
 import DownloadPopup from "../../components/Member/DownloadPopup";
@@ -9,17 +8,16 @@ import { generatePDF } from "../../utils/generatePDF";
 import { toast } from "react-toastify";
 import EventTable from "../../ui/EventTable";
 
-const GuestTable = ({ eventId }) => {
-  console.log(eventId);
+const GuestTable = ({ eventId, data }) => {
   const [downloadPopupOpen, setDownloadPopupOpen] = useState(false);
   const [downloadLoading, setDownloadLoading] = useState(false);
-  
+
   const handleDownloadExcel = async () => {
     setDownloadLoading(true);
     try {
-      const res = await getGuestsDownload(eventId, filters.filterMode);
-      if (res.headers && res.body) {
-        generateExcel(res.headers, res.body, "Guests");
+      const res = await getGuestsDownload(eventId);
+      if (res?.data?.headers && res?.data?.body) {
+        generateExcel(res?.data?.headers, res?.data.body, "Guests");
         toast.success("Excel downloaded successfully!");
       } else {
         toast.error("No data available for download");
@@ -36,9 +34,11 @@ const GuestTable = ({ eventId }) => {
   const handleDownloadPDF = async () => {
     setDownloadLoading(true);
     try {
-      const res = await getGuestsDownload(eventId, filters.filterMode);
-      if (res.headers && res.body) {
-        generatePDF(res.headers, res.body, "Guests");
+      const res = await getGuestsDownload(eventId);
+      console.log("res", res?.data);
+
+      if (res?.data?.headers && res?.data?.body) {
+        generatePDF(res?.data?.headers, res?.data?.body, "Guests");
         toast.success("PDF downloaded successfully!");
       } else {
         toast.error("No data available for download");
@@ -59,7 +59,6 @@ const GuestTable = ({ eventId }) => {
     { title: "C/O Member", field: "addedBy" },
   ];
 
-  
   return (
     <Box padding="15px">
       <Stack direction="row" justifyContent="end" spacing={2} mb={2}>
@@ -68,10 +67,9 @@ const GuestTable = ({ eventId }) => {
           name="Download"
           onClick={() => setDownloadPopupOpen(true)}
         />
-        
       </Stack>
 
-      <EventTable columns={guestColumns} data={eventId} />
+      <EventTable columns={guestColumns} data={data} />
 
       <DownloadPopup
         open={downloadPopupOpen}

@@ -145,7 +145,7 @@ const EventSinglePage = () => {
         )}
         {selectedTab === 2 && (
           <Grid>
-             <GuestTable eventId={event?.guests}  />
+             <GuestTable data={event?.guests} eventId={id} />
           </Grid>
         )}
       </Box>{" "}
