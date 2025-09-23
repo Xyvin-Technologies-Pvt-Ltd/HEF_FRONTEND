@@ -60,3 +60,13 @@ export const getEventsDownload = async (filter = {}) => {
     throw error;
   }
 };
+export const getGuests = async (eventId, filterMode = "full") => {
+  try {
+    const response = await axiosInstance.get(`/event/${eventId}/getguest`, {
+      params: { filterMode },
+    });
+    return response.data; 
+  } catch (error) {
+    throw error;
+  }
+};
