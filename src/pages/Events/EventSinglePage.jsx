@@ -143,10 +143,9 @@ const EventSinglePage = () => {
             <RsvpTable data={event?.rsvp} />
           </Grid>
         )}
-
         {selectedTab === 2 && (
           <Grid>
-            <GuestTable data={event?.guests} />
+            <GuestTable eventId={event?._id} />
           </Grid>
         )}
       </Box>{" "}

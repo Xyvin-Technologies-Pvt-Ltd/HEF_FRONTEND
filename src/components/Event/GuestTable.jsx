@@ -8,6 +8,7 @@ import { generateExcel } from "../../utils/generateExcel";
 import { generatePDF } from "../../utils/generatePDF";
 import { toast } from "react-toastify";
 import { ReactComponent as FilterIcon } from "../../assets/icons/FilterIcon.svg";
+import EventTable from "../../ui/EventTable";
 
 const GuestTable = ({ eventId }) => {
   const [guests, setGuests] = useState([]);
@@ -16,19 +17,19 @@ const GuestTable = ({ eventId }) => {
   });
   const [downloadPopupOpen, setDownloadPopupOpen] = useState(false);
   const [downloadLoading, setDownloadLoading] = useState(false);
-
   // Fetch guests from backend
   const fetchGuests = async () => {
     if (!eventId) return;
     try {
       const res = await getGuests(eventId, filters.filterMode);
-      setGuests(res.body || []);
+      // console.table(res);
+      setGuests(res.data || []);
     } catch (error) {
       console.error("Error fetching guests:", error);
       toast.error("Failed to fetch guests");
     }
   };
-
+  console.log("guests", guests);
   useEffect(() => {
     fetchGuests();
   }, [filters, eventId]);
@@ -86,8 +87,8 @@ const GuestTable = ({ eventId }) => {
       filters.filterMode === "full"
         ? "guestOnly"
         : filters.filterMode === "guestOnly"
-          ? "guestWithCoMember"
-          : "full";
+        ? "guestWithCoMember"
+        : "full";
     setFilters({ filterMode: nextMode });
   };
 
@@ -139,7 +140,7 @@ const GuestTable = ({ eventId }) => {
         </Tooltip>
       </Stack>
 
-      <StyledTable columns={guestColumns} data={guests} />
+      <EventTable columns={guestColumns} data={guests} />
 
       <DownloadPopup
         open={downloadPopupOpen}
