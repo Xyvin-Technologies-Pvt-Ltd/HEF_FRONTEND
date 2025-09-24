@@ -217,7 +217,7 @@ export default function AddEvent({ isUpdate }) {
         startTime: data?.startTime,
         endDate: data?.endDate,
         eventDate: data?.eventDate,
-        ...(data?.eventEndDate && { eventEndDate: data?.eventEndDate }),
+        // ...(data?.eventEndDate && { eventEndDate: data?.eventEndDate }),
         endTime: data?.endTime,
         speakers: speakersData,
         description: data?.description,
