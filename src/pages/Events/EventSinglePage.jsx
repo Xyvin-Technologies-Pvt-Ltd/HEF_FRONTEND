@@ -140,12 +140,12 @@ const EventSinglePage = () => {
         )}{" "}
         {selectedTab === 1 && (
           <Grid>
-            <RsvpTable data={event?.rsvp} />
+            <RsvpTable data={event?.rsvp} eventId={id} />
           </Grid>
         )}
         {selectedTab === 2 && (
           <Grid>
-             <GuestTable data={event?.guests} eventId={id} />
+            <GuestTable data={event?.guests} eventId={id} />
           </Grid>
         )}
       </Box>{" "}
