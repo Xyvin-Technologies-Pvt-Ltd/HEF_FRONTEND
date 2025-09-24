@@ -122,17 +122,39 @@ const BusinessPage = () => {
       ? [{ title: "Referral", field: "referralName" }]
       : []),
   ];
+  const getReportTitle = () => {
+    if (selectedTab === 1) return "Business Report";
+    if (selectedTab === 2) return "One-on-One Meetings Report";
+    if (selectedTab === 3) return "Referral Report";
+    return "All Activities Report";
+  };
+
   const handleDownloadExcel = async () => {
     setDownloadLoading(true);
     try {
+      // ✅ Build filter with selectedTab
       let filter = { ...filters, sortByAmount: "true" };
+
+      if (selectedTab === 1) {
+        filter.type = "Business";
+      } else if (selectedTab === 2) {
+        filter.type = "One v One Meeting";
+      } else if (selectedTab === 3) {
+        filter.type = "Referral";
+      }
+
       const data = await getBusinessDwld(filter);
       const csvData = data.data;
+
       if (csvData?.headers && csvData?.body) {
-        const sortedBody = csvData.body.sort((a, b) => (b.amount || 0) - (a.amount || 0));
-        generateExcel(csvData.headers, csvData.body, "Business");
+        const sortedBody = csvData.body.sort(
+          (a, b) => (b.amount || 0) - (a.amount || 0)
+        );
+        generateExcel(csvData.headers, sortedBody, getReportTitle());
         toast.success("Excel downloaded successfully!");
-      } else toast.error("Invalid data for Excel download");
+      } else {
+        toast.error("Invalid data for Excel download");
+      }
     } catch (error) {
       console.error("Excel download error:", error);
       toast.error("Failed to download Excel");
@@ -141,17 +163,49 @@ const BusinessPage = () => {
       setDownloadPopupOpen(false);
     }
   };
+
+  // PDF Download
   const handleDownloadPDF = async () => {
     setDownloadLoading(true);
     try {
+      // ✅ Build filter with selectedTab
       let filter = { ...filters, sortByAmount: "true" };
+
+      if (selectedTab === 1) {
+        filter.type = "Business";
+      } else if (selectedTab === 2) {
+        filter.type = "One v One Meeting";
+      } else if (selectedTab === 3) {
+        filter.type = "Referral";
+      }
+
       const data = await getBusinessDwld(filter);
       const csvData = data.data;
+
       if (csvData?.headers && csvData?.body) {
-        const sortedBody = csvData.body.sort((a, b) => (b.amount || 0) - (a.amount || 0));
-        generatePDF(csvData.headers, csvData.body, "Business");
+        const sortedBody = csvData.body.sort(
+          (a, b) => (b.amount || 0) - (a.amount || 0)
+        );
+
+        // ✅ Custom headers for Business page (UI-like)
+        const customHeaders = [
+          { header: "Date", key: "createdAt" },
+          { header: "Business Giver", key: "senderName" },
+          { header: "Business Receiver", key: "memberName" },
+          { header: "Request Type", key: "type" },
+          { header: "Status", key: "status" },
+          { header: "Amount", key: "amount" },
+        ];
+
+        if (selectedTab === 3) {
+          customHeaders.push({ header: "Referral", key: "referralName" });
+        }
+
+        generatePDF(customHeaders, sortedBody, getReportTitle());
         toast.success("PDF downloaded successfully!");
-      } else toast.error("Invalid data for PDF download");
+      } else {
+        toast.error("Invalid data for PDF download");
+      }
     } catch (error) {
       console.error("PDF download error:", error);
       toast.error("Failed to download PDF");

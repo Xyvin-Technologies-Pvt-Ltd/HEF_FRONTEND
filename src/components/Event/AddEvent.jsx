@@ -6,6 +6,7 @@ import {
   Stack,
   LinearProgress,
   FormHelperText,
+  Switch,
 } from "@mui/material";
 import { StyledButton } from "../../ui/StyledButton.jsx";
 import StyledInput from "../../ui/StyledInput.jsx";
@@ -42,6 +43,7 @@ export default function AddEvent({ isUpdate }) {
           image: "",
         },
       ],
+      allowGuestRegistration: false,
     },
   });
   const { id } = useParams();
@@ -60,9 +62,9 @@ export default function AddEvent({ isUpdate }) {
   const users =
     user && Array.isArray(user)
       ? user.map((i) => ({
-          value: i._id,
-          label: i.name,
-        }))
+        value: i._id,
+        label: i.name,
+      }))
       : [];
   const { fields, append, remove, replace } = useFieldArray({
     control,
@@ -94,6 +96,7 @@ export default function AddEvent({ isUpdate }) {
       setValue("description", event.description);
       setValue("organiserName", event.organiserName);
       setValue("limit", event.limit);
+      setValue("allowGuestRegistration", event.allowGuestRegistration || false);
       const selectedplatform = option.find(
         (item) => item.value === event.platform
       );
@@ -225,6 +228,7 @@ export default function AddEvent({ isUpdate }) {
         limit: data?.limit,
         status: status,
         coordinator: data?.coordinator?.map((coordinator) => coordinator.value),
+        allowGuestRegistration: data.allowGuestRegistration,
       };
 
       if (type === "Online") {
@@ -781,6 +785,28 @@ export default function AddEvent({ isUpdate }) {
                   )}
                 />
               </Grid>
+              <Grid item xs={6}>
+                <Typography
+                  sx={{ marginBottom: 1 }}
+                  variant="h6"
+                  color="textSecondary"
+                >
+                  Allow Members to Add Guests
+                </Typography>
+                <Controller
+                  name="allowGuestRegistration"
+                  control={control}
+                  defaultValue={false}
+                  render={({ field }) => (
+                    <Switch
+                      checked={field.value}
+                      onChange={(e) => field.onChange(e.target.checked)}
+                      color="primary"
+                    />
+                  )}
+                />
+              </Grid>
+
               <Grid item xs={12}>
                 <Typography
                   sx={{ marginBottom: 1 }}

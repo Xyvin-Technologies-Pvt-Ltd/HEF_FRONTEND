@@ -1,6 +1,7 @@
 import { Box, Stack } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import StyledSearchbar from "../../ui/StyledSearchbar";
+import { StyledButton } from "../../ui/StyledButton";
 import StyledTable from "../../ui/StyledTable";
 import { eventList, userData } from "../../assets/json/TableData";
 import { useNavigate } from "react-router-dom";
@@ -8,6 +9,10 @@ import { useEventStore } from "../../store/eventStore";
 import { toast } from "react-toastify";
 import { useListStore } from "../../store/listStore";
 import { useAdminStore } from "../../store/adminStore";
+import DownloadPopup from "../../components/Member/DownloadPopup";
+import { generateExcel } from "../../utils/generateExcel";
+import { generatePDF } from "../../utils/generatePDF";
+import { getEventsDownload  } from "../../api/eventapi"; 
 
 const EventList = () => {
   const navigate = useNavigate();
@@ -19,6 +24,8 @@ const EventList = () => {
   const { fetchEvent } = useListStore();
   const [pageNo, setPageNo] = useState(1);
   const { singleAdmin } = useAdminStore();
+  const [downloadPopupOpen, setDownloadPopupOpen] = useState(false);
+  const [downloadLoading, setDownloadLoading] = useState(false);
   useEffect(() => {
     let filter = {};
     if (search) {
@@ -52,6 +59,51 @@ const EventList = () => {
       toast.error(error.message);
     }
   };
+
+  const handleDownloadExcel = async () => {
+    setDownloadLoading(true);
+    try {
+      const data = await getEventsDownload({}); // Fetch all events
+      const eventData = data.data;
+
+      if (eventData?.headers && eventData?.body) {
+        generateExcel(eventData.headers, eventData.body, "Events");
+        toast.success("Excel file downloaded successfully!");
+      } else {
+        toast.error("Error downloading Excel - invalid data");
+      }
+    } catch (error) {
+      console.error("Excel download error:", error);
+      toast.error(`Error downloading Excel: ${error.message}`);
+    } finally {
+      setDownloadLoading(false);
+      setDownloadPopupOpen(false);
+    }
+  };
+
+  const handleDownloadPDF = async () => {
+    setDownloadLoading(true);
+    try {
+      const data = await getEventsDownload({});
+      console.log("event data",data)
+      const eventData = data.data;
+      console.log("event data",eventData);
+      if (eventData?.headers && eventData?.body) {
+        generatePDF(eventData.headers, eventData.body, "Events");
+        toast.success("PDF file downloaded successfully!");
+      } else {
+        toast.error("Error downloading PDF - invalid data");
+      }
+    } catch (error) {
+      console.error("PDF download error:", error);
+      toast.error(`Error downloading PDF: ${error.message}`);
+    } finally {
+      setDownloadLoading(false);
+      setDownloadPopupOpen(false);
+    }
+  };
+
+
   return (
     <Box>
       <Stack
@@ -67,6 +119,12 @@ const EventList = () => {
               setSearch(e.target.value);
               setPageNo(1);
             }}
+          />
+          {/* Download Button */}
+          <StyledButton
+            variant="primary"
+            name="Download"
+            onClick={() => setDownloadPopupOpen(true)}
           />
         </Stack>
       </Stack>
@@ -112,6 +170,15 @@ const EventList = () => {
           />
         )}
       </Box>
+
+      {/* Download Popup */}
+      <DownloadPopup
+        open={downloadPopupOpen}
+        onClose={() => setDownloadPopupOpen(false)}
+        onDownloadExcel={handleDownloadExcel}
+        onDownloadPDF={handleDownloadPDF}
+        loading={downloadLoading}
+      />
     </Box>
   );
 };

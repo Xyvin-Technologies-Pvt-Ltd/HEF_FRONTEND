@@ -1,35 +1,37 @@
 import { Box, Stack } from "@mui/material";
 import React, { useState } from "react";
-import StyledSearchbar from "../../ui/StyledSearchbar";
 import EventTable from "../../ui/EventTable";
 const RsvpTable = ({ data }) => {
   const userColumns = [
     { title: "Name", field: "name", padding: "none" },
     { title: "Phone", field: "phone" },
-    { title: "Member Id", field: "memberId" },
-    
-  ];
+     { title: "Chapter", field: "chaptername" },
+  ]
+  
+
   return (
-    <>
-      <Stack
-        direction={"row"}
-        justifyContent={"end"}
-        paddingBottom={'15px'}
-        alignItems={"center"}
-      >
-        {/* <Stack direction={"row"} spacing={2}>
-          <StyledSearchbar />
-        </Stack> */}
-      </Stack>{" "}
-      <Box
-        borderRadius={"16px"}
-        bgcolor={"white"}
-        p={1}
-        border={"1px solid rgba(0, 0, 0, 0.12)"}
-      >
-        <EventTable columns={userColumns} data={data} menu />{" "}
-      </Box>
-    </>
+    <Box padding="15px">
+      {/* Download Button */}
+      <Stack direction="row" justifyContent="end" spacing={2} mb={2}>
+        <StyledButton
+          variant="primary"
+          name="Download"
+          onClick={() => setDownloadPopupOpen(true)}
+        />
+      </Stack>
+
+      {/* RSVP Table */}
+      <EventTable columns={userColumns} data={data} menu />
+
+      {/* Download Popup */}
+      <DownloadPopup
+        open={downloadPopupOpen}
+        onClose={() => setDownloadPopupOpen(false)}
+        onDownloadExcel={handleDownloadExcel}
+        onDownloadPDF={handleDownloadPDF}
+        loading={downloadLoading}
+      />
+    </Box>
   );
 };
 

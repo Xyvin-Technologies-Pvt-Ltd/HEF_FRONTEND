@@ -50,3 +50,30 @@ export const updateEventById = async (id, data) => {
     throw error.response.data;
   }
 };
+export const getEventsDownload = async (filter = {}) => {
+  try {
+    const response = await axiosInstance.get(`/event/download`, {
+      params: filter,
+    });
+    return response.data; // { headers, body }
+  } catch (error) {
+    throw error;
+  }
+};
+export const getGuestsDownload = async (eventId) => {
+  try {
+    const response = await axiosInstance.get(`/event/${eventId}/download`);
+    return response.data; // { headers, body }
+  } catch (error) {
+    throw error;
+  }
+};
+export const getRsvpDownload = async (eventId) => {
+  try {
+    const response = await axiosInstance.get(`/event/${eventId}/download-rsvp`);
+    return response.data; // { headers, body }
+  } catch (error) {
+    throw error;
+  }
+};
+
