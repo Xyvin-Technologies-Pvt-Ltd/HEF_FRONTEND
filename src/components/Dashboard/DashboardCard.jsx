@@ -91,11 +91,6 @@ export const DashboardCard = ({
             fontSize={isMobile ? "14px" : "16px"}
             fontWeight={600}
             color="primary"
-            sx={{
-              cursor: "pointer",
-              "&:hover": { textDecoration: "underline" },
-            }}
-            onClick={() => handleSentClick(data.type)}
           >
             Sent: {data.sent}
           </Typography>
@@ -104,11 +99,6 @@ export const DashboardCard = ({
             fontSize={isMobile ? "14px" : "16px"}
             fontWeight={600}
             color="secondary"
-            sx={{
-              cursor: "pointer",
-              "&:hover": { textDecoration: "underline" },
-            }}
-            onClick={() => handleReceivedClick(data.type)}
           >
             Received: {data.received}
           </Typography>

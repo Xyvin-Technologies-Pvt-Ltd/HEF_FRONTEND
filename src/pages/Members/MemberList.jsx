@@ -21,7 +21,7 @@ import MemberFilter from "../../components/Member/MemberFilter";
 import DownloadPopup from "../../components/Member/DownloadPopup";
 import { getDwld } from "../../api/adminapi";
 import { generateExcel } from "../../utils/generateExcel";
-import { generatePDF } from "../../utils/generatePDF";
+import { generateMemberPDF } from "../../utils/generatememberPDF";
 import { toast } from "react-toastify";
 import { useMemberStore } from "../../store/Memberstore";
 import { useAdminStore } from "../../store/adminStore";
@@ -29,7 +29,7 @@ import { useAdminStore } from "../../store/adminStore";
 const MemberList = () => {
   const navigate = useNavigate();
   const { fetchMember } = useListStore();
-  const {} = useMemberStore();
+  const { } = useMemberStore();
   const [search, setSearch] = useState("");
   const [isChange, setIschange] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
@@ -128,18 +128,18 @@ const MemberList = () => {
       if (typeof filters.installed === "boolean") {
         filter.installed = filters.installed;
       }
-      
+
       console.log("Excel Download - Filters:", filter);
       const data = await getDwld(filter);
       console.log("Excel Download - API Response:", data);
-      
+
       const csvData = data.data;
       console.log("Excel Download - CSV Data:", csvData);
-      
+
       if (csvData && csvData.headers && csvData.body) {
         console.log("Excel Download - Headers:", csvData.headers);
         console.log("Excel Download - Body sample:", csvData.body.slice(0, 2));
-        
+
         generateExcel(csvData.headers, csvData.body, "Members");
         toast.success("Excel file downloaded successfully!");
       } else {
@@ -172,19 +172,19 @@ const MemberList = () => {
       if (typeof filters.installed === "boolean") {
         filter.installed = filters.installed;
       }
-      
+
       console.log("PDF Download - Filters:", filter);
       const data = await getDwld(filter);
       console.log("PDF Download - API Response:", data);
-      
+
       const csvData = data.data;
       console.log("PDF Download - CSV Data:", csvData);
-      
+
       if (csvData && csvData.headers && csvData.body) {
         console.log("PDF Download - Headers:", csvData.headers);
         console.log("PDF Download - Body sample:", csvData.body.slice(0, 2));
-        
-        generatePDF(csvData.headers, csvData.body, "Members");
+
+        generateMemberPDF(csvData.headers, csvData.body, "Members");
         toast.success("PDF file downloaded successfully!");
       } else {
         console.error(
@@ -297,24 +297,24 @@ const MemberList = () => {
                   transition: "all 0.3s ease",
                   boxShadow:
                     filters.name ||
-                    filters.membershipId ||
-                    filters.from ||
-                    filters.to ||
-                    filters.status ||
-                    filters.chapter ||
-                    (filters.installed !== undefined &&
-                      filters.installed !== "")
+                      filters.membershipId ||
+                      filters.from ||
+                      filters.to ||
+                      filters.status ||
+                      filters.chapter ||
+                      (filters.installed !== undefined &&
+                        filters.installed !== "")
                       ? "0 0 8px rgba(245, 130, 32, 0.6)"
                       : "none",
                   borderColor:
                     filters.name ||
-                    filters.membershipId ||
-                    filters.from ||
-                    filters.to ||
-                    filters.status ||
-                    filters.chapter ||
-                    (filters.installed !== undefined &&
-                      filters.installed !== "")
+                      filters.membershipId ||
+                      filters.from ||
+                      filters.to ||
+                      filters.status ||
+                      filters.chapter ||
+                      (filters.installed !== undefined &&
+                        filters.installed !== "")
                       ? "#F58220"
                       : "rgba(0, 0, 0, 0.12)",
                 }}
