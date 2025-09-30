@@ -2,7 +2,7 @@ import { Box, Stack } from "@mui/material";
 import React, { useState } from "react";
 import EventTable from "../../ui/EventTable";
 import { StyledButton } from "../../ui/StyledButton";
-import { getRsvpDownload } from "../../api/eventapi";
+import { getRsvpDownload, getEventById } from "../../api/eventapi";
 import DownloadPopup from "../../components/Member/DownloadPopup";
 import { generateExcel } from "../../utils/generateExcel";
 import { generatePDF } from "../../utils/generatePDF";
@@ -35,7 +35,20 @@ const RsvpTable = ({ eventId, data }) => {
     try {
       const res = await getRsvpDownload(eventId);
       if (res?.data?.headers && res?.data?.body) {
-        generatePDF(res?.data?.headers, res?.data?.body, "Rsvp");
+        // get event details separately
+        const eventRes = await getEventById(eventId);
+        const eventInfo = {
+          eventName: eventRes?.data?.eventName,
+          eventDateTime: new Date(eventRes?.data?.startDate).toLocaleString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+        };
+
+        generatePDF(res?.data?.headers, res?.data?.body, "RSVP List", eventInfo);
         toast.success("PDF downloaded successfully!");
       } else {
         toast.error("No data available for download");
@@ -52,6 +65,7 @@ const RsvpTable = ({ eventId, data }) => {
     { title: "Name", field: "name", padding: "none" },
     { title: "Phone", field: "phone" },
     { title: "Chapter", field: "chaptername" },
+    { title: "Registration Date", field: "registeredDate" },
   ]
   
 

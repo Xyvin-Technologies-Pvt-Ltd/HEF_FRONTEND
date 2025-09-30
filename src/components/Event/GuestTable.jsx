@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Box, Stack, Badge, Tooltip } from "@mui/material";
 import { StyledButton } from "../../ui/StyledButton";
-import { getGuestsDownload } from "../../api/eventapi";
+import { getGuestsDownload , getEventById } from "../../api/eventapi";
 import DownloadPopup from "../../components/Member/DownloadPopup";
 import { generateExcel } from "../../utils/generateExcel";
 import { generatePDF } from "../../utils/generatePDF";
@@ -35,10 +35,21 @@ const GuestTable = ({ eventId, data }) => {
     setDownloadLoading(true);
     try {
       const res = await getGuestsDownload(eventId);
-      console.log("res", res?.data);
-
       if (res?.data?.headers && res?.data?.body) {
-        generatePDF(res?.data?.headers, res?.data?.body, "Guests");
+
+        const eventRes = await getEventById(eventId);
+        const eventInfo = {
+          eventName: eventRes?.data?.eventName,
+          eventDateTime: new Date(eventRes?.data?.startDate).toLocaleString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+        };
+
+        generatePDF(res?.data?.headers, res?.data?.body, "Guests List", eventInfo);
         toast.success("PDF downloaded successfully!");
       } else {
         toast.error("No data available for download");
@@ -57,6 +68,7 @@ const GuestTable = ({ eventId, data }) => {
     { title: "Contact", field: "contact" },
     { title: "Category", field: "category" },
     { title: "C/O Member", field: "addedBy" },
+    { title: "Registration Date", field: "registrationDate" },
   ];
 
   return (
