@@ -81,7 +81,7 @@ const GuestTable = ({ eventId, data }) => {
         />
       </Stack>
 
-      <EventTable columns={guestColumns} data={data} />
+      <EventTable columns={guestColumns} data={data} menu  /> 
 
       <DownloadPopup
         open={downloadPopupOpen}
