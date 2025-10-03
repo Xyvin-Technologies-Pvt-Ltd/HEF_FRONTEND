@@ -31,14 +31,14 @@ const EventListpage = () => {
           {singleAdmin?.role?.permissions?.includes(
             "eventManagement_modify"
           ) && (
-            <StyledButton
-              variant={"primary"}
-              name={"Add Event"}
-              onClick={() => {
-                navigate("/events/add");
-              }}
-            />
-          )}
+              <StyledButton
+                variant={"primary"}
+                name={"Add Event"}
+                onClick={() => {
+                  navigate("/events/add");
+                }}
+              />
+            )}
         </Stack>
       </Stack>{" "}
       <Box padding="15px">
@@ -57,34 +57,30 @@ const EventListpage = () => {
             }}
           >
             <MenuIcon
-              style={{
-                color: selectedTab === 1 ? "#292D32" : "#F58220",
-              }}
+              sx={{ color: selectedTab === 0 ? "#F58220" : "#292D32" }}
             />
           </Box>
           {singleAdmin?.role?.permissions?.includes(
             "eventManagement_modify"
           ) && (
-            <Box
-              bgcolor={selectedTab === 1 ? "#FFF0E2" : "#FFFFFF"}
-              borderRadius="50%"
-              width="48px"
-              height="48px"
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              style={{ cursor: "pointer" }}
-              onClick={() => {
-                setSelectedTab(1);
-              }}
-            >
-              <CalendarMonthIcon
-                style={{
-                  color: selectedTab === 0 ? "#292D32" : "#F58220",
+              <Box
+                bgcolor={selectedTab === 1 ? "#FFF0E2" : "#FFFFFF"}
+                borderRadius="50%"
+                width="48px"
+                height="48px"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                style={{ cursor: "pointer" }}
+                onClick={() => {
+                  setSelectedTab(1);
                 }}
-              />
-            </Box>
-          )}
+              >
+                <CalendarMonthIcon
+                  sx={{ color: selectedTab === 1 ? "#F58220" : "#292D32" }}
+                />
+              </Box>
+            )}
         </Stack>
         {selectedTab === 0 ? <EventList /> : <EventView />}
       </Box>

@@ -80,7 +80,7 @@ const RsvpTable = ({ eventId, data }) => {
         />
       </Stack>
 
-      <EventTable columns={userColumns} data={data} />
+      <EventTable columns={userColumns} data={data} menu/> 
 
       <DownloadPopup
         open={downloadPopupOpen}
