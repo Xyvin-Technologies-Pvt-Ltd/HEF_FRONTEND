@@ -269,7 +269,7 @@ export default function LevelAdd() {
               variant="h6"
               color="textSecondary"
             >
-              Choose type
+              Choose type <span style={{ color: "red" }}>*</span>
             </Typography>
             <Controller
               name="type"

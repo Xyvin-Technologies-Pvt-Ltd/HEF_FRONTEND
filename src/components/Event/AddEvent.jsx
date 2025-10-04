@@ -388,7 +388,7 @@ export default function AddEvent({ isUpdate }) {
                   variant="h6"
                   color="textSecondary"
                 >
-                  Type of event
+                  Type of event <span style={{ color: "red" }}>*</span>
                 </Typography>
                 <Controller
                   name="type"
@@ -421,7 +421,7 @@ export default function AddEvent({ isUpdate }) {
                   variant="h6"
                   color="textSecondary"
                 >
-                  Name of event
+                  Name of event <span style={{ color: "red" }}>*</span>
                 </Typography>
                 <Controller
                   name="eventName"
@@ -479,7 +479,7 @@ export default function AddEvent({ isUpdate }) {
                   variant="h6"
                   color="textSecondary"
                 >
-                  Description
+                  Description <span style={{ color: "red" }}>*</span>
                 </Typography>
                 <Controller
                   name="description"
@@ -509,7 +509,7 @@ export default function AddEvent({ isUpdate }) {
                       variant="h6"
                       color="textSecondary"
                     >
-                      Virtual platform
+                      Virtual platform <span style={{ color: "red" }}>*</span>
                     </Typography>
                     <Controller
                       name="platform"
@@ -532,7 +532,7 @@ export default function AddEvent({ isUpdate }) {
                       variant="h6"
                       color="textSecondary"
                     >
-                      Link to the event
+                      Link to the event <span style={{ color: "red" }}>*</span>
                     </Typography>
                     <Controller
                       name="link"
@@ -563,7 +563,7 @@ export default function AddEvent({ isUpdate }) {
                     variant="h6"
                     color="textSecondary"
                   >
-                    Venue
+                    Venue <span style={{ color: "red" }}>*</span>
                   </Typography>
                   <Controller
                     name="venue"
@@ -591,7 +591,7 @@ export default function AddEvent({ isUpdate }) {
                   variant="h6"
                   color="textSecondary"
                 >
-                  Event Start Date
+                  Event Start Date <span style={{ color: "red" }}>*</span>
                 </Typography>
                 <Controller
                   name="startDate"
@@ -616,7 +616,7 @@ export default function AddEvent({ isUpdate }) {
                   variant="h6"
                   color="textSecondary"
                 >
-                  Event End Date
+                  Event End Date <span style={{ color: "red" }}>*</span>
                 </Typography>
                 <Controller
                   name="endDate"
@@ -641,7 +641,7 @@ export default function AddEvent({ isUpdate }) {
                   variant="h6"
                   color="textSecondary"
                 >
-                  Event Visibility Start Date
+                  Event Visibility Start Date <span style={{ color: "red" }}>*</span>
                 </Typography>
                 <Controller
                   name="eventDate"
@@ -666,7 +666,7 @@ export default function AddEvent({ isUpdate }) {
                   variant="h6"
                   color="textSecondary"
                 >
-                  Event Visibility End Date
+                  Event Visibility End Date <span style={{ color: "red" }}>*</span>
                 </Typography>
                 <Controller
                   name="eventEndDate"
@@ -685,7 +685,7 @@ export default function AddEvent({ isUpdate }) {
                   variant="h6"
                   color="textSecondary"
                 >
-                  Start Time
+                  Start Time <span style={{ color: "red" }}>*</span>
                 </Typography>
                 <Controller
                   name="startTime"
@@ -710,7 +710,7 @@ export default function AddEvent({ isUpdate }) {
                   variant="h6"
                   color="textSecondary"
                 >
-                  End Time
+                  End Time <span style={{ color: "red" }}>*</span>
                 </Typography>
                 <Controller
                   name="endTime"
@@ -735,7 +735,7 @@ export default function AddEvent({ isUpdate }) {
                   variant="h6"
                   color="textSecondary"
                 >
-                  Organiser Name
+                  Organiser Name <span style={{ color: "red" }}>*</span>
                 </Typography>
                 <Controller
                   name="organiserName"
@@ -763,7 +763,7 @@ export default function AddEvent({ isUpdate }) {
                   variant="h6"
                   color="textSecondary"
                 >
-                  Members Limit
+                  Members Limit <span style={{ color: "red" }}>*</span>
                 </Typography>
                 <Controller
                   name="limit"
@@ -813,7 +813,7 @@ export default function AddEvent({ isUpdate }) {
                   variant="h6"
                   color="textSecondary"
                 >
-                  Coordinator
+                  Coordinator <span style={{ color: "red" }}>*</span>
                 </Typography>
                 <Controller
                   name="coordinator"

@@ -12,7 +12,6 @@ import {
   Stack,
   TablePagination,
   IconButton,
-  Checkbox,
   Menu,
   MenuItem,
   Typography,
@@ -22,7 +21,7 @@ import { ReactComponent as ViewIcon } from "../assets/icons/ViewIcon.svg";
 import { ReactComponent as LeftIcon } from "../assets/icons/LeftIcon.svg";
 import { ReactComponent as RightIcon } from "../assets/icons/RightIcon.svg";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { StyledButton } from "./StyledButton";
+
 import moment from "moment";
 
 const StyledTableCell = styled(TableCell)`
@@ -59,9 +58,7 @@ const StyledTableRow = styled(TableRow)`
 
 const EventTable = ({
   columns,
-  onSelectionChange,
   onView,
-  onDelete,
   onModify,
   onAction,
   menu,
@@ -76,20 +73,7 @@ const EventTable = ({
   const [anchorEl, setAnchorEl] = useState(null);
   const [rowId, setRowId] = useState(null);
 
-  const handleSelectAllClick = (event) => {
-    const isChecked = event.target.checked;
-    const newSelectedIds = isChecked ? data.map((row) => row._id) : [];
-    setSelectedIds(newSelectedIds);
-    onSelectionChange(newSelectedIds);
-  };
-  const handleRowCheckboxChange = (event, id) => {
-    const isChecked = event.target.checked;
-    const newSelectedIds = isChecked
-      ? [...selectedIds, id]
-      : selectedIds.filter((selectedId) => selectedId !== id);
-    setSelectedIds(newSelectedIds);
-    onSelectionChange(newSelectedIds);
-  };
+
   const handleRowDelete = (id) => {
     onDeleteRow(id);
     handleMenuClose();
@@ -109,11 +93,6 @@ const EventTable = ({
     handleMenuClose();
   };
 
-  const handleDelete = () => {
-    onDelete();
-    setSelectedIds([]);
-    handleMenuClose();
-  };
   const handleAction = () => {
     onAction(rowId);
     handleMenuClose();
@@ -176,16 +155,7 @@ const EventTable = ({
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
           <TableHead>
             <TableRow>
-              <StyledTableCell padding="checkbox">
-                <Checkbox
-                  checked={
-                    data &&
-                    data.length > 0 &&
-                    selectedIds.length === data.length
-                  }
-                  onChange={handleSelectAllClick}
-                />
-              </StyledTableCell>
+
               {columns.map((column) => (
                 <StyledTableCell
                   key={column.field}
@@ -242,14 +212,7 @@ const EventTable = ({
                   key={row._id}
                   selected={isSelected(row._id)}
                 >
-                  <StyledTableCell padding="checkbox">
-                    <Checkbox
-                      checked={isSelected(row._id)}
-                      onChange={(event) =>
-                        handleRowCheckboxChange(event, row._id)
-                      }
-                    />
-                  </StyledTableCell>
+
                   {columns.map((column) => (
                     <StyledTableCell
                       key={column.field}
@@ -267,19 +230,19 @@ const EventTable = ({
                       ].includes(column.field) ? (
                         formatIndianDate(row[column.field])
                       ) : [
-                          "startTime",
-                          "endtime",
-                          "time",
-                          "updatedAt",
-                        ].includes(column.field) ? (
+                        "startTime",
+                        "endtime",
+                        "time",
+                        "updatedAt",
+                      ].includes(column.field) ? (
                         formatTime(row[column.field])
                       ) : [
-                          "banner_image_url",
-                          "image",
-                          "event image",
-                          "speaker_image",
-                          "media",
-                        ].includes(column.field) ? (
+                        "banner_image_url",
+                        "image",
+                        "event image",
+                        "speaker_image",
+                        "media",
+                      ].includes(column.field) ? (
                         <>
                           <img
                             src={row[column.field]}
@@ -305,12 +268,12 @@ const EventTable = ({
                             }}
                           >
                             {row[column.field] === true ||
-                            row[column.field] === "activated"
+                              row[column.field] === "activated"
                               ? "active"
                               : row[column.field] === false ||
                                 row[column.field] === "deactivated"
-                              ? "inactive"
-                              : row[column.field]}
+                                ? "inactive"
+                                : row[column.field]}
                           </span>
                         </Box>
                       ) : (
@@ -349,21 +312,21 @@ const EventTable = ({
                       >
                         {news
                           ? [
-                              <>
-                                <MenuItem onClick={handleModify}>Edit</MenuItem>
-                                <MenuItem onClick={handleAction}>
-                                  Publish/Unpublish
-                                </MenuItem>
-                                <MenuItem
-                                  onClick={() => handleRowDelete(row._id)}
-                                  style={{ color: "red" }}
-                                >
-                                  Remove
-                                </MenuItem>
-                              </>,
-                            ]
+                            <>
+                              <MenuItem onClick={handleModify}>Edit</MenuItem>
+                              <MenuItem onClick={handleAction}>
+                                Publish/Unpublish
+                              </MenuItem>
+                              <MenuItem
+                                onClick={() => handleRowDelete(row._id)}
+                                style={{ color: "red" }}
+                              >
+                                Remove
+                              </MenuItem>
+                            </>,
+                          ]
                           : member
-                          ? [
+                            ? [
                               <>
                                 <MenuItem onClick={handleView}>
                                   View Details
@@ -377,47 +340,47 @@ const EventTable = ({
                                 </MenuItem>
                               </>,
                             ]
-                          : payment
-                          ? [
-                              <>
-                                <MenuItem onClick={handleModify}>
-                                  Approve
-                                </MenuItem>
-                                <MenuItem onClick={handleAction}>
-                                  Reject
-                                </MenuItem>
-                              </>,
-                            ]
-                          : college
-                          ? [
-                              <>
-                                <MenuItem onClick={handleView}>
-                                  View Details
-                                </MenuItem>
-                                <MenuItem onClick={handleAction}>
-                                  Add Member
-                                </MenuItem>
-                                <MenuItem onClick={handleModify}>Edit</MenuItem>
-                                <MenuItem
-                                  onClick={() => handleRowDelete(row._id)}
-                                  style={{ color: "red" }}
-                                >
-                                  Delete
-                                </MenuItem>
-                              </>,
-                            ]
-                          : [
-                              <>
-                                {" "}
-                                <MenuItem onClick={handleModify}>Edit</MenuItem>
-                                <MenuItem
-                                  onClick={() => handleRowDelete(row._id)}
-                                  style={{ color: "red" }}
-                                >
-                                  Remove
-                                </MenuItem>
-                              </>,
-                            ]}
+                            : payment
+                              ? [
+                                <>
+                                  <MenuItem onClick={handleModify}>
+                                    Approve
+                                  </MenuItem>
+                                  <MenuItem onClick={handleAction}>
+                                    Reject
+                                  </MenuItem>
+                                </>,
+                              ]
+                              : college
+                                ? [
+                                  <>
+                                    <MenuItem onClick={handleView}>
+                                      View Details
+                                    </MenuItem>
+                                    <MenuItem onClick={handleAction}>
+                                      Add Member
+                                    </MenuItem>
+                                    <MenuItem onClick={handleModify}>Edit</MenuItem>
+                                    <MenuItem
+                                      onClick={() => handleRowDelete(row._id)}
+                                      style={{ color: "red" }}
+                                    >
+                                      Delete
+                                    </MenuItem>
+                                  </>,
+                                ]
+                                : [
+                                  <>
+                                    {" "}
+                                    <MenuItem onClick={handleModify}>Edit</MenuItem>
+                                    <MenuItem
+                                      onClick={() => handleRowDelete(row._id)}
+                                      style={{ color: "red" }}
+                                    >
+                                      Remove
+                                    </MenuItem>
+                                  </>,
+                                ]}
                       </Menu>
                     </Box>
                   </StyledTableCell>
@@ -431,23 +394,10 @@ const EventTable = ({
           // padding={2}
           component="div"
           direction={"row"}
-          justifyContent={selectedIds.length > 0 ? "space-between" : "flex-end"}
+          justifyContent={"flex-end"}
           alignItems="center"
         >
-          {selectedIds.length > 0 && (
-            <Stack direction="row" alignItems="center">
-              <Typography paddingRight={3}>
-                {`${selectedIds.length} item${
-                  selectedIds.length > 1 ? "s" : ""
-                } selected`}
-              </Typography>
-              <StyledButton
-                variant="primary"
-                name="Delete"
-                onClick={() => handleDelete(selectedIds)}
-              />
-            </Stack>
-          )}
+
           <Stack
             direction="row"
             alignItems="center"
@@ -459,7 +409,7 @@ const EventTable = ({
                 count={data ? data.length : 0}
                 rowsPerPage={10}
                 page={0}
-                onPageChange={() => {}}
+                onPageChange={() => { }}
                 ActionsComponent={({ onPageChange }) => (
                   <Stack
                     direction="row"

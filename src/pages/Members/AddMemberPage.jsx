@@ -23,7 +23,7 @@ const AddMemberPage = () => {
           width={"100%"}
         >
           <Typography variant="h4" color="textSecondary">
-            Member
+            Add Member
           </Typography>
           <StyledButton
             name={bulk ? "Single Add " : "Bulk Upload"}
