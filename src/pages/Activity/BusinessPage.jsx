@@ -103,6 +103,7 @@ const BusinessPage = () => {
       filter.type = "Business";
     } else if (selectedTab === 2) {
       filter.type = "One v One Meeting";
+      filter.sortByAmount = "false";
     } else if (selectedTab === 3) {
       filter.type = "Referral";
     }
