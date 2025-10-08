@@ -93,19 +93,23 @@ const BusinessPage = () => {
       filter.search = search;
       setPageNo(1);
     }
+    filter.sortByAmount = "true";
     if (filters.chapter) filter.chapter = filters.chapter;
     if (filters.status) filter.status = filters.status;
     if (filters.startDate) filter.startDate = filters.startDate;
     if (filters.endDate) filter.endDate = filters.endDate;
-    if (filters.type) filter.type = filters.type;
-    filter.sortByAmount = "true";
-    if (selectedTab === 1) {
-      filter.type = "Business";
-    } else if (selectedTab === 2) {
-      filter.type = "One v One Meeting";
-      filter.sortByAmount = "false";
-    } else if (selectedTab === 3) {
-      filter.type = "Referral";
+
+    if (filters.type) {
+      filter.type = filters.type;
+    } else {
+      if (selectedTab === 1) {
+        filter.type = "Business";
+      } else if (selectedTab === 2) {
+        filter.type = "One v One Meeting";
+        filter.sortByAmount = "false";
+      } else if (selectedTab === 3) {
+        filter.type = "Referral";
+      }
     }
     filter.pageNo = pageNo;
     filter.limit = row;
