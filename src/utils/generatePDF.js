@@ -2,7 +2,7 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import logo from "../assets/images/logo.png"; // imported once
 
-export const generatePDF = (headers = [], body = [], fileName = "Report", eventInfo = null) => {
+export const generatePDF = (headers = [], body = [], fileName = "Report", eventInfo = null, chapterName = "") => {
   try {
     if (!headers || headers.length === 0) throw new Error("Headers are required");
     if (!body || !Array.isArray(body)) throw new Error("Body data must be an array");
@@ -151,7 +151,8 @@ export const generatePDF = (headers = [], body = [], fileName = "Report", eventI
     const now = new Date();
     const newDate = now.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
     const time = now.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" });
-    doc.save(`${fileName}_Report(${newDate}, ${time}).pdf`);
+    const safeChapterName = chapterName.replace(/[^a-z0-9]/gi, "_") || "All_Chapters";
+    doc.save(`${fileName}_${safeChapterName}_Report(${newDate}, ${time}).pdf`);
 
   } catch (error) {
     console.error("PDF generation failed:", error);

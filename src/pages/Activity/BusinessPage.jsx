@@ -55,6 +55,7 @@ const BusinessPage = () => {
     startDate: "",
     endDate: "",
     chapter: "",
+    chapterLabel: "All Chapters",
   });
   const location = useLocation();
   const { tab } = location.state || {};
@@ -206,7 +207,7 @@ const BusinessPage = () => {
           customHeaders.push({ header: "Referral", key: "referralName" });
         }
 
-        generatePDF(customHeaders, sortedBody, getReportTitle());
+        generatePDF(customHeaders, sortedBody, getReportTitle(), null, filters.chapterLabel);
         toast.success("PDF downloaded successfully!");
       } else {
         toast.error("Invalid data for PDF download");

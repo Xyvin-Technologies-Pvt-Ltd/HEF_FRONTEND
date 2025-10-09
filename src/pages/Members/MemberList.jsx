@@ -184,7 +184,7 @@ const MemberList = () => {
         console.log("PDF Download - Headers:", csvData.headers);
         console.log("PDF Download - Body sample:", csvData.body.slice(0, 2));
 
-        generateMemberPDF(csvData.headers, csvData.body, "Members");
+        generateMemberPDF(csvData.headers, csvData.body, "Members", filters.chapterName || "All Chapters");
         toast.success("PDF file downloaded successfully!");
       } else {
         console.error(
