@@ -2,7 +2,7 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import logo from "../assets/images/logo.png";
 
-export const generateMemberPDF = (headers = [], body = [], fileName) => {
+export const generateMemberPDF = (headers = [], body = [], fileName, chapterName = "All Chapters") => {
   try {
     console.log('generatePDF called with:', { headers, body: body?.length, fileName });
 
@@ -428,7 +428,8 @@ export const generateMemberPDF = (headers = [], body = [], fileName) => {
     }
 
     // Save the PDF
-    doc.save(`${fileName}_Report(${newDate},${time}).pdf`);
+    const safeChapterName = (chapterName || "All Chapters").replace(/[^a-z0-9]/gi, "_");
+    doc.save(`${fileName}_Report(${chapterName},${newDate},${time}).pdf`);
   } catch (error) {
     console.error('Error generating PDF:', error);
     throw new Error(`PDF generation failed: ${error.message}`);

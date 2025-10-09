@@ -136,9 +136,10 @@ const MemberFilter = ({ open, onClose, onApply }) => {
       from,
       to,
       status: appliedStatus?.value || status?.value || "",
-installed: appliedUser?.value ?? installed?.value ?? "",
+      installed: appliedUser?.value ?? installed?.value ?? "",
 
       chapter: selectedChapter?.value || "",
+      chapterName: selectedChapter?.label || "All Chapters"
     });
     onClose();
   };

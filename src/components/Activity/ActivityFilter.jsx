@@ -126,12 +126,14 @@ const ActivityFilter = ({ open, onClose, onApply }) => {
   };
   
   const handleApply = () => {
+    const chapterLabel = selectedChapter?.label || "All Chapters";
     onApply({
       type: type?.value || "",
       startDate,
       endDate,
       status: status?.value || "",
       chapter: selectedChapter?.value || "",
+      chapterLabel,
     });
     onClose();
   };
