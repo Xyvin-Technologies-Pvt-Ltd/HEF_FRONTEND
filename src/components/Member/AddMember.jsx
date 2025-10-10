@@ -388,10 +388,11 @@ const AddMember = () => {
                           setImageFile(file);
                           onChange(file);
                         }}
+                        ratio={16 / 9}
                         value={value}
                       />
                       <FormHelperText style={{ color: "#888" }}>
-                        File size limit: 1 MB
+                        File size limit: 1 MB | Recommended aspect ratio: 16:9
                       </FormHelperText>
                     </>
                   )}
@@ -557,7 +558,7 @@ const AddMember = () => {
                     color: "#004797",
                     marginTop: 1,
                     fontSize: "0.9rem",
-                    cursor: "pointer", 
+                    cursor: "pointer",
                     "&:hover": { textDecoration: "underline" },
                   }}
                   onClick={() =>
@@ -765,11 +766,11 @@ const AddMember = () => {
                       placeholder="Enter tags"
                       options={
                         inputValue &&
-                        !options.some((option) => option?.label === inputValue)
+                          !options.some((option) => option?.label === inputValue)
                           ? [
-                              ...options,
-                              { label: inputValue, value: inputValue },
-                            ]
+                            ...options,
+                            { label: inputValue, value: inputValue },
+                          ]
                           : options
                       }
                       onInputChange={(value) => setInputValue(value)}
