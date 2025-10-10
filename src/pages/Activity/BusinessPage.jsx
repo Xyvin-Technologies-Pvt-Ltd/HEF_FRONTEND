@@ -87,6 +87,12 @@ const BusinessPage = () => {
       }
     }
   };
+  useEffect(() => {
+    if (filters.type === "Business") setSelectedTab(1);
+    else if (filters.type === "One v One Meeting") setSelectedTab(2);
+    else if (filters.type === "Referral") setSelectedTab(3);
+    else setSelectedTab(0);
+  }, [filters.type]);
 
   useEffect(() => {
     let filter = {};

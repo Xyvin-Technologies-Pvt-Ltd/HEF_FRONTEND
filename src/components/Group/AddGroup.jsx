@@ -205,7 +205,7 @@ const AddGroup = () => {
               variant="h6"
               color="textSecondary"
             >
-              Group Name
+              Group Name  <span style={{ color: "red" }}>*</span>
             </Typography>
             <Controller
               name="groupName"
@@ -230,7 +230,7 @@ const AddGroup = () => {
               variant="h6"
               color="textSecondary"
             >
-              Group Information
+              Group Information <span style={{ color: "red" }}>*</span>
             </Typography>
             <Controller
               name="groupInfo"
@@ -254,7 +254,7 @@ const AddGroup = () => {
               variant="h6"
               color="textSecondary"
             >
-              Participants
+              Participants <span style={{ color: "red" }}>*</span>
             </Typography>
           </Grid>
           <Grid item xs={6}>

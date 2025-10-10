@@ -177,7 +177,7 @@ export default function AddNews({ isUpdate, setSelectedTab }) {
               variant="h6"
               color="textSecondary"
             >
-              Choose category
+              Choose category <span style={{ color: "red" }}>*</span>
             </Typography>
             <Controller
               name="category"
@@ -205,7 +205,7 @@ export default function AddNews({ isUpdate, setSelectedTab }) {
               variant="h6"
               color="textSecondary"
             >
-              Title
+              Title <span style={{ color: "red" }}>*</span>
             </Typography>
             <Controller
               name="title"

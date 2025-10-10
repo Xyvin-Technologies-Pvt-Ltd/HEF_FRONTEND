@@ -194,7 +194,7 @@ export default function Promotionform({ isUpdate }) {
               variant="h6"
               color="textSecondary"
             >
-              Choose type
+              Choose type <span style={{ color: "red" }}>*</span>
             </Typography>
             <Controller
               name="type"
@@ -358,7 +358,7 @@ export default function Promotionform({ isUpdate }) {
               variant="h6"
               color="textSecondary"
             >
-              Start Date
+              Start Date <span style={{ color: "red" }}>*</span>
             </Typography>
             <Controller
               name="startDate"
@@ -386,7 +386,7 @@ export default function Promotionform({ isUpdate }) {
               variant="h6"
               color="textSecondary"
             >
-              End Date
+              End Date  <span style={{ color: "red" }}>*</span>
             </Typography>
             <Controller
               name="endDate"
