@@ -175,7 +175,7 @@ const AddActivity = () => {
                 variant="h6"
                 color="textSecondary"
               >
-                Type
+                Type <span style={{ color: "red" }}>*</span>
               </Typography>
               <Controller
                 name="type"
@@ -408,7 +408,7 @@ const AddActivity = () => {
                 variant="h6"
                 color="textSecondary"
               >
-                Title
+                Title <span style={{ color: "red" }}>*</span>
               </Typography>
               <Controller
                 name="title"
@@ -433,7 +433,7 @@ const AddActivity = () => {
                 variant="h6"
                 color="textSecondary"
               >
-                Amount
+                Amount <span style={{ color: "red" }}>*</span>
               </Typography>
               <Controller
                 name="amount"

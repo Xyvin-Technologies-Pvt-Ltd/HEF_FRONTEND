@@ -141,7 +141,7 @@ const AddRole = () => {
               variant="h6"
               color="textSecondary"
             >
-              Role Name
+              Role Name <span style={{ color: "red" }}>*</span>
             </Typography>
             <Controller
               name="roleName"
@@ -171,7 +171,7 @@ const AddRole = () => {
               variant="h6"
               color="textSecondary"
             >
-              Role Description
+              Role Description <span style={{ color: "red" }}>*</span>
             </Typography>
             <Controller
               name="description"

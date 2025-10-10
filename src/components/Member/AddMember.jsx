@@ -557,6 +557,8 @@ const AddMember = () => {
                     color: "#004797",
                     marginTop: 1,
                     fontSize: "0.9rem",
+                    cursor: "pointer", 
+                    "&:hover": { textDecoration: "underline" },
                   }}
                   onClick={() =>
                     append({

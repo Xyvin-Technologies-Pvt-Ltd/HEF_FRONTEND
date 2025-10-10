@@ -391,7 +391,7 @@ export default function LevelAdd() {
               variant="h6"
               color="textSecondary"
             >
-              Name
+              Name  <span style={{ color: "red" }}>*</span>
             </Typography>
             <Controller
               name="name"
