@@ -272,7 +272,7 @@ export default function AddEvent({ isUpdate }) {
       setValue(`speakers.${index}.name`, "");
       setValue(`speakers.${index}.designation`, "");
       setValue(`speakers.${index}.role`, "");
-      setValue(`speakers.${index}.image`, "");
+      setValue(`speakers.${index}.image`, "",null);
     }
   };
 
@@ -346,7 +346,7 @@ export default function AddEvent({ isUpdate }) {
                   <StyledEventUpload
                     label="Upload speaker image"
                     onChange={(file) => field.onChange(file)}
-                    value={field.value}
+                    value={field.value||null}
                   />
                 )}
               />

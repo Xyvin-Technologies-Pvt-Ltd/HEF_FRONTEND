@@ -513,10 +513,7 @@ const StyledTable = ({
                           : approve
                           ? [
                               <>
-                                <MenuItem onClick={handleView}>
-                                  View Details
-                                </MenuItem>
-
+                               
                                 {row.status === "published" && (
                                   <MenuItem onClick={handleAction}>
                                     Unpublish
