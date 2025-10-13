@@ -12,7 +12,7 @@ import {
 import { Controller, useForm } from "react-hook-form";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import Phone from "@mui/icons-material/Phone";
+import Email from "@mui/icons-material/Email";
 import Lock from "@mui/icons-material/Lock";
 import { useNavigate } from "react-router-dom";
 import { getLogin } from "../api/adminapi";
@@ -92,7 +92,7 @@ function LoginPage() {
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
-                          <Phone color="action" />
+                          <Email color="action" />
                         </InputAdornment>
                       ),
                       sx: {

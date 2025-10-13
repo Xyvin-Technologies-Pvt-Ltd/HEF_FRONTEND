@@ -121,7 +121,7 @@ const AddProduct = () => {
               fontWeight={500}
               color={"#333333"}
             >
-              Name of the product
+              Name of the product <span style={{ color: "red" }}>*</span>
             </Typography>
             <Controller
               name="productname"
@@ -261,7 +261,7 @@ const AddProduct = () => {
               fontWeight={500}
               color={"#333333"}
             >
-              Moq
+              Moq <span style={{ color: "red" }}>*</span>
             </Typography>
             <Controller
               name="moq"
@@ -311,7 +311,7 @@ const AddProduct = () => {
               fontWeight={500}
               color={"#333333"}
             >
-              Per Unit
+              Per Unit <span style={{ color: "red" }}>*</span>
             </Typography>
             <Controller
               name="units"
