@@ -260,14 +260,14 @@ const Layout = (props) => {
       </Toolbar>
       <List
         sx={{
-          height: "calc(100vh - 118px)",
+          height: "600px",
           overflowY: "auto",
           display: "flex",
           flexDirection: "column",
           gap: "5px",
           padding: 0,
           "&::-webkit-scrollbar": {
-            width: "6px",
+            width: "0px",
           },
           "&::-webkit-scrollbar-track": {
             backgroundColor: "#f1f1f1",
@@ -430,7 +430,7 @@ const Layout = (props) => {
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
               width: drawerWidth,
-              overflow: "auto",
+              overflow: "hidden",
             },
           }}
         >
@@ -443,7 +443,7 @@ const Layout = (props) => {
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
               width: drawerWidth,
-              overflow: "auto",
+              overflow: "hidden",
             },
           }}
           open
