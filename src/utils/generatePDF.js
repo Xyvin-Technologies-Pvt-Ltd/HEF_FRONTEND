@@ -97,6 +97,13 @@ export const generatePDF = (headers = [], body = [], fileName = "Report", eventI
         doc.setFontSize(12);
         doc.text(fileName.replace(/_/g, " ").toUpperCase(), pageWidth / 2, textY, { align: "center" });
 
+        if (chapterName) {
+          textY += 14; // spacing below file name
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(11);
+          doc.setTextColor(255);
+          doc.text(`Chapter: ${chapterName}`, pageWidth / 2, textY, { align: "center" });
+        }
         if (eventInfo) {
           textY += 16;
           doc.setFont("helvetica", "bold");

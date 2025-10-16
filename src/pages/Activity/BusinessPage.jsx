@@ -162,7 +162,8 @@ const BusinessPage = () => {
         const sortedBody = csvData.body.sort(
           (a, b) => (b.amount || 0) - (a.amount || 0)
         );
-        generateExcel(csvData.headers, sortedBody, getReportTitle());
+        const chapterName = filters.chapterLabel || "All_Chapters";
+        generateExcel(csvData.headers, sortedBody, getReportTitle(), chapterName);
         toast.success("Excel downloaded successfully!");
       } else {
         toast.error("Invalid data for Excel download");
