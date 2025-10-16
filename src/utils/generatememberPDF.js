@@ -13,10 +13,10 @@ export const generateMemberPDF = (headers = [], body = [], fileName, chapterName
     const pageHeight = doc.internal.pageSize.height;
     const margin = { top: 15, right: 12, bottom: 25, left: 12 }; // Reduced margins
     const contentWidth = pageWidth - margin.left - margin.right;
-
+    const headerHeight = 30;
     // Add company header with logo placeholder
     doc.setFillColor(41, 128, 185);
-    doc.rect(0, 0, pageWidth, 20, 'F'); // Reduced height from 28
+    doc.rect(0, 0, pageWidth, headerHeight, 'F'); // Reduced height from 28
 
 
     // Add logo on the left of blue header
@@ -36,7 +36,10 @@ export const generateMemberPDF = (headers = [], body = [], fileName, chapterName
     doc.setFont('helvetica', 'normal');
     doc.text('Member Management System', pageWidth / 2, 17, { align: 'center' });
 
-
+    doc.setFontSize(7);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(255, 255, 255);
+    doc.text(`Chapter: ${chapterName}`, pageWidth / 2, 22, { align: 'center' });
     // Keep date variables for filename but don't display them
     const date = new Date();
     const newDate = date.toLocaleDateString('en-US', {
@@ -107,12 +110,14 @@ export const generateMemberPDF = (headers = [], body = [], fileName, chapterName
 
     console.log('Processed table data sample:', tableData.slice(0, 2));
 
+    const headerSpacing = 90;
+    const tableStartY = headerHeight + headerSpacing;
     // Create professional table with scaled sizing and alignment
     try {
       doc.autoTable({
         head: [filteredHeaders],
         body: tableData,
-        startY: 25, // Reduced from 72 to minimize white space
+        startY: tableStartY,
         styles: {
           fontSize: 5, // Further reduced from 6
           cellPadding: 1, // Further reduced from 2

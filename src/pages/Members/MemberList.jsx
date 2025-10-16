@@ -140,7 +140,8 @@ const MemberList = () => {
         console.log("Excel Download - Headers:", csvData.headers);
         console.log("Excel Download - Body sample:", csvData.body.slice(0, 2));
 
-        generateExcel(csvData.headers, csvData.body, "Members");
+         const chapterName = filters.chapterName || "All_Chapters";
+        generateExcel(csvData.headers, csvData.body, "Members", chapterName)
         toast.success("Excel file downloaded successfully!");
       } else {
         console.error(
