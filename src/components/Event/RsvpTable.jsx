@@ -10,12 +10,18 @@ const RsvpTable = ({ eventId, data }) => {
 
   const [downloadPopupOpen, setDownloadPopupOpen] = useState(false);
   const [downloadLoading, setDownloadLoading] = useState(false);
+  const sortedData = [...data].sort((a, b) =>
+    a.name?.toLowerCase().localeCompare(b.name?.toLowerCase())
+  );
 
   const handleDownloadExcel = async () => {
     setDownloadLoading(true);
     try {
       const res = await getRsvpDownload(eventId);
       if (res?.data?.headers && res?.data?.body) {
+        const sortedBody = [...res.data.body].sort((a, b) =>
+          a.name?.toLowerCase().localeCompare(b.name?.toLowerCase())
+        );
         generateExcel(res?.data?.headers, res?.data.body, "Rsvp");
         toast.success("Excel downloaded successfully!");
       } else {
@@ -35,6 +41,10 @@ const RsvpTable = ({ eventId, data }) => {
     try {
       const res = await getRsvpDownload(eventId);
       if (res?.data?.headers && res?.data?.body) {
+        const sortedBody = [...res.data.body].sort((a, b) =>
+          a.name?.toLowerCase().localeCompare(b.name?.toLowerCase())
+        );
+
         // get event details separately
         const eventRes = await getEventById(eventId);
         const eventInfo = {
@@ -80,7 +90,7 @@ const RsvpTable = ({ eventId, data }) => {
         />
       </Stack>
 
-      <EventTable columns={userColumns} data={data} menu/> 
+      <EventTable columns={userColumns} data={sortedData} menu />
 
       <DownloadPopup
         open={downloadPopupOpen}
