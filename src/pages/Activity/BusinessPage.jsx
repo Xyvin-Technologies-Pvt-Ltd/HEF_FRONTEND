@@ -34,10 +34,6 @@ import DownloadPopup from "../../components/Member/DownloadPopup";
 
 const BusinessPage = () => {
   const navigate = useNavigate();
-  const storedTab = localStorage.getItem("businessTab");
-  const [selectedTab, setSelectedTab] = useState(
-    storedTab ? Number(storedTab) : 0
-  );
   const [pageNo, setPageNo] = useState(1);
   const [filterOpen, setFilterOpen] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
@@ -59,12 +55,18 @@ const BusinessPage = () => {
   });
   const location = useLocation();
   const { tab } = location.state || {};
+  const storedTab = localStorage.getItem("businessTab");
+
+  const [selectedTab, setSelectedTab] = useState(() => {
+    if (tab !== undefined) return tab;
+    if (storedTab) return Number(storedTab);
+    return 0;
+  });
   useEffect(() => {
     if (tab !== undefined) {
       setSelectedTab(tab);
     }
-  }, [tab]);
-
+  }, []);
   const handleApplyFilter = (newFilters) => {
     setFilters(newFilters);
   };
@@ -91,7 +93,7 @@ const BusinessPage = () => {
     if (filters.type === "Business") setSelectedTab(1);
     else if (filters.type === "One v One Meeting") setSelectedTab(2);
     else if (filters.type === "Referral") setSelectedTab(3);
-    else setSelectedTab(0);
+    else if (filters.type !== "") setSelectedTab(0);
   }, [filters.type]);
 
   useEffect(() => {
