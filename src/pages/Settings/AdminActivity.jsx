@@ -12,6 +12,7 @@ export default function AdminActivity() {
   const [filterOpen, setFilterOpen] = useState(false);
   const [pageNo, setPageNo] = useState(1);
   const [row, setRow] = useState(10);
+  const [search, setSearch] = useState("");
   const [preview, setPreview] = useState(false);
   const { getActivity } = useListStore();
   const { activity, fetchAdminActivity } = useAdminStore();
@@ -28,9 +29,9 @@ export default function AdminActivity() {
     if (filters.type) filter.method = filters.type;
     if (filters.status) filter.status = filters.status;
     if (filters.date) filter.date = filters.date;
-
+    if (search) filter.search = search;
     getActivity(filter);
-  }, [pageNo, row, filters]);
+  }, [pageNo, row, filters,search]);
   const handleOpenFilter = () => {
     setFilterOpen(true);
   };
@@ -56,7 +57,10 @@ export default function AdminActivity() {
             spacing={2}
           >
             <Grid item>
-              <StyledSearchbar placeholder={"Search"} />
+              <StyledSearchbar placeholder={"Search by Endpoint"} 
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              />
             </Grid>
             <Grid item>
               <Box

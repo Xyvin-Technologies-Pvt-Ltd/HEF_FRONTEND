@@ -21,7 +21,7 @@ import MemberFilter from "../../components/Member/MemberFilter";
 import DownloadPopup from "../../components/Member/DownloadPopup";
 import { getDwld } from "../../api/adminapi";
 import { generateExcel } from "../../utils/generateExcel";
-import { generateMemberPDF } from "../../utils/generatememberPDF";
+import { generatePDF } from "../../utils/generatePDF";
 import { toast } from "react-toastify";
 import { useMemberStore } from "../../store/Memberstore";
 import { useAdminStore } from "../../store/adminStore";
@@ -184,8 +184,8 @@ const MemberList = () => {
       if (csvData && csvData.headers && csvData.body) {
         console.log("PDF Download - Headers:", csvData.headers);
         console.log("PDF Download - Body sample:", csvData.body.slice(0, 2));
-
-        generateMemberPDF(csvData.headers, csvData.body, "Members", filters.chapterName || "All Chapters");
+        const chapterName = filters.chapterName || "All_Chapters";
+        generatePDF(csvData.headers, csvData.body, "Members", null, chapterName);
         toast.success("PDF file downloaded successfully!");
       } else {
         console.error(
