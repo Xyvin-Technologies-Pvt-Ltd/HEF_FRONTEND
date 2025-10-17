@@ -23,7 +23,7 @@ const GuestTable = ({ eventId, data }) => {
         const sortedBody = [...res.data.body].sort((a, b) =>
           a.name?.toLowerCase().localeCompare(b.name?.toLowerCase())
         );
-        generateExcel(res?.data?.headers, res?.data.body, "Guests");
+        generateExcel(res?.data?.headers, res?.data.body, sortedBody,"Guests");
         toast.success("Excel downloaded successfully!");
       } else {
         toast.error("No data available for download");
@@ -58,7 +58,7 @@ const GuestTable = ({ eventId, data }) => {
           }),
         };
 
-        generatePDF(res?.data?.headers, res?.data?.body, "Guests List", eventInfo);
+        generatePDF(res?.data?.headers, res?.data?.body, sortedBody, "Guests List", eventInfo);
         toast.success("PDF downloaded successfully!");
       } else {
         toast.error("No data available for download");

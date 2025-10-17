@@ -51,7 +51,10 @@ const EventListpage = () => {
             display="flex"
             alignItems="center"
             justifyContent="center"
-            style={{ cursor: "pointer" }}
+            style={{
+              cursor: "pointer",
+              border: selectedTab === 0 ? "1px solid red" : "1px solid transparent",
+            }}
             onClick={() => {
               setSelectedTab(0);
             }}
@@ -71,7 +74,10 @@ const EventListpage = () => {
                 display="flex"
                 alignItems="center"
                 justifyContent="center"
-                style={{ cursor: "pointer" }}
+                style={{
+                  cursor: "pointer",
+                  border: selectedTab === 1 ? "1px solid red" : "1px solid transparent",
+                }}
                 onClick={() => {
                   setSelectedTab(1);
                 }}

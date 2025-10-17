@@ -22,7 +22,7 @@ const RsvpTable = ({ eventId, data }) => {
         const sortedBody = [...res.data.body].sort((a, b) =>
           a.name?.toLowerCase().localeCompare(b.name?.toLowerCase())
         );
-        generateExcel(res?.data?.headers, res?.data.body, "Rsvp");
+        generateExcel(res?.data?.headers, res?.data.body, sortedBody, "Rsvp");
         toast.success("Excel downloaded successfully!");
       } else {
         toast.error("No data available for download");
@@ -58,7 +58,7 @@ const RsvpTable = ({ eventId, data }) => {
           }),
         };
 
-        generatePDF(res?.data?.headers, res?.data?.body, "RSVP List", eventInfo);
+        generatePDF(res?.data?.headers, res?.data?.body, sortedBody, "RSVP List", eventInfo);
         toast.success("PDF downloaded successfully!");
       } else {
         toast.error("No data available for download");
@@ -77,7 +77,7 @@ const RsvpTable = ({ eventId, data }) => {
     { title: "Chapter", field: "chaptername" },
     { title: "Registration Date", field: "registeredDate" },
   ]
-  
+
 
   return (
     <Box padding="15px">
