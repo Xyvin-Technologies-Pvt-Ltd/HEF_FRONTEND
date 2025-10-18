@@ -39,7 +39,7 @@ const MemberView = () => {
   tabs.push("Analytics");
   components.push(
     <Grid container item xs={12} key="analytics">
-      <MemberAnalytics />
+      <MemberAnalytics data={member} />
     </Grid>
   );
 
