@@ -126,7 +126,7 @@ const BusinessPage = () => {
   }, [isChange, pageNo, search, row, selectedTab, filters]);
   const hasActiveFilters = Object.values(filters).some((value) => value);
   const activityColumns = [
-    { title: "Date", field: "createdAt", padding: "none" },
+    { title: "Date", field: "date", padding: "none" },
     { title: "Business giver", field: "senderName" },
     { title: "Business receiver", field: "memberName" },
     { title: "Request Type", field: "type" },
