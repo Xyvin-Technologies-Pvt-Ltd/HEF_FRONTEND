@@ -2,12 +2,12 @@ import { Grid } from '@mui/material'
 import React from 'react'
 import AnalyticCard from '../../ui/AnalyticCard'
 
-const MemberAnalytics = () => {
+const MemberAnalytics = ({ data }) => {
   const eventsData = [
-    { title: 'Total Groups', value: '23',color: '#34C759' },
-    { title: 'Profile Shares', value: '10', color: '#686465' },
-    { title: 'No of posts', value: '05',  color: '#686465' },
-    
+    { title: 'Total Groups', value: data.totalGroups || 0, color: '#34C759' },
+    { title: 'No of Requirements', value: data?.businessRequirements, color: '#686465' },
+    { title: 'No of Business posts', value: data?.businessPosts, color: '#686465' },
+
   ];
   return (
     <Grid container spacing={2}>
