@@ -57,9 +57,9 @@ export default function AdminActivity() {
             spacing={2}
           >
             <Grid item>
-              <StyledSearchbar placeholder={"Search by Endpoint"} 
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              <StyledSearchbar placeholder={"Search by Endpoint"}
+                value={search}
+                onchange={(e) => setSearch(e.target.value)}
               />
             </Grid>
             <Grid item>
