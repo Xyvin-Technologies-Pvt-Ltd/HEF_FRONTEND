@@ -131,7 +131,15 @@ const BusinessPage = () => {
     { title: "Business receiver", field: "memberName" },
     { title: "Request Type", field: "type" },
     { title: "Status", field: "status" },
-    { title: "Amount ↓", field: "amount", render: (value) => value ? `₹${value.toLocaleString()}` : "N/A" },
+    ...(selectedTab !== 2
+      ? [
+        {
+          title: "Amount ↓",
+          field: "amount",
+          render: (value) => (value ? `₹${value.toLocaleString()}` : "N/A"),
+        },
+      ]
+      : []),
     ...(selectedTab === 3
       ? [{ title: "Referral", field: "referralName" }]
       : []),
@@ -209,9 +217,12 @@ const BusinessPage = () => {
           { header: "Business Receiver", key: "memberName" },
           { header: "Request Type", key: "type" },
           { header: "Status", key: "status" },
-          { header: "Amount", key: "amount" },
         ];
 
+
+        if (selectedTab !== 2) {
+          customHeaders.push({ header: "Amount", key: "amount" });
+        }
         if (selectedTab === 3) {
           customHeaders.push({ header: "Referral", key: "referralName" });
         }
