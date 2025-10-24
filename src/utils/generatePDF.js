@@ -2,7 +2,7 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import logo from "../assets/images/logo.png"; // imported once
 
-export const generatePDF = (headers = [], body = [], fileName = "Report", eventInfo = null, chapterName = "") => {
+export const generatePDF = (headers = [], body = [], fileName = "Report", eventInfo = null, chapterName = "", totalCount) => {
   try {
     if (!headers || headers.length === 0) throw new Error("Headers are required");
     if (!body || !Array.isArray(body)) throw new Error("Body data must be an array");
@@ -78,6 +78,37 @@ export const generatePDF = (headers = [], body = [], fileName = "Report", eventI
           doc.rect(0, (i * headerHeight) / gradSteps, pageWidth, headerHeight / gradSteps, "F");
         }
 
+        // --- Draw total count circle ---
+        if (totalCount !== undefined) {
+          const circleRadius = 20;
+          const circleX = pageWidth - 60;
+          const circleY = headerHeight / 2;
+          doc.setDrawColor(255);
+          doc.setFillColor(255, 255, 255);
+          doc.circle(circleX, circleY, circleRadius, "F");
+          doc.setTextColor(255, 165, 0);
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(12);
+
+          const totalCountText = String(totalCount);
+          const textWidth = doc.getTextWidth(totalCountText);
+          doc.text(
+            totalCountText,
+            circleX - textWidth / 2,
+            circleY + 4
+          );
+          // Text below the circle
+          doc.setFont("helvetica", "normal");
+          doc.setFontSize(9);
+          doc.setTextColor(255, 0, 0);
+          const labelText = "Count";
+          const labelWidth = doc.getTextWidth(labelText);
+          doc.text(
+            labelText,
+            circleX - labelWidth / 2,
+            circleY + circleRadius + 12 // 12pt below the circle
+          );
+        }
         // --- Header content ---
         const centerY = headerHeight / 2 + 5;
         const logoWidth = 50;
