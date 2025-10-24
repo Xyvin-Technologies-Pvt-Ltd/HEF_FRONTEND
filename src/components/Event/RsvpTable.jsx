@@ -22,7 +22,7 @@ const RsvpTable = ({ eventId, data }) => {
         const sortedBody = [...res.data.body].sort((a, b) =>
           a.name?.toLowerCase().localeCompare(b.name?.toLowerCase())
         );
-        generateExcel(res?.data?.headers, res?.data.body, sortedBody, "Rsvp");
+        generateExcel(res?.data?.headers, sortedBody, "Rsvp");
         toast.success("Excel downloaded successfully!");
       } else {
         toast.error("No data available for download");
@@ -58,7 +58,7 @@ const RsvpTable = ({ eventId, data }) => {
           }),
         };
 
-        generatePDF(res?.data?.headers, res?.data?.body, sortedBody, "RSVP List", eventInfo);
+        generatePDF(res?.data?.headers, sortedBody, "RSVP List", eventInfo);
         toast.success("PDF downloaded successfully!");
       } else {
         toast.error("No data available for download");
