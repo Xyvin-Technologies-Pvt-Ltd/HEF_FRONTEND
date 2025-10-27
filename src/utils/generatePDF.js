@@ -69,6 +69,7 @@ export const generatePDF = (headers = [], body = [], fileName = "Report", eventI
 
       didDrawPage: (data) => {
         // --- Gradient header ---
+         if (data.pageNumber === 1) {
         const gradSteps = 100;
         for (let i = 0; i <= gradSteps; i++) {
           const r = 41 + Math.round((70 - 41) * (i / gradSteps));
@@ -169,6 +170,8 @@ export const generatePDF = (headers = [], body = [], fileName = "Report", eventI
           );
         }
 
+        
+      }
 
 
         // --- Footer ---
