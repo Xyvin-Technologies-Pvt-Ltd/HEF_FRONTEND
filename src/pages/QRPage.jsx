@@ -436,7 +436,7 @@ const QRPage = () => {
                     variant={"primary"}
                     name={
                       <>
-                        <WhatsappIcon style={{ marginRight: "8px" }} /> SAY HAI
+                        <WhatsappIcon style={{ marginRight: "8px" }} /> SAY HI
                       </>
                     }
                   />
