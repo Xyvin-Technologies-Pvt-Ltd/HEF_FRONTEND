@@ -87,7 +87,24 @@ const StyledTable = ({
   const [rowId, setRowId] = useState(null);
   const { singleAdmin } = useAdminStore();
   const { lists, totalCount, loading } = useListStore();
-  
+  const getSafeCellValue = (row, column) => {
+  const v = row[column.field];
+  if (v == null || v === "") return " ";
+  if (typeof v === "object" && !React.isValidElement(v)) {
+    if (column.field === "role" && v.roleName) return v.roleName;
+    if (Array.isArray(v)) {
+      return v
+        .map(item =>
+          item?.name || item?.roleName || item?.label || item || ""
+        )
+        .filter(Boolean)
+        .join(", ");
+    }
+    return v.name || v.title || v.label || v.roleName || JSON.stringify(v);
+  }
+  return v;
+};
+
   const handleSelectAllClick = (event) => {
     const isChecked = event.target.checked;
     const newSelectedIds = isChecked && lists ? lists.map((row) => row._id) : [];
@@ -397,7 +414,7 @@ const StyledTable = ({
                           )}
                         </Box>
                       ) : (
-                        row[column.field]
+                        getSafeCellValue(row, column)
                       )}
                     </StyledTableCell>
                   ))}
