@@ -54,6 +54,7 @@ const MemberList = () => {
     from: "",
     to: "",
     chapter: "",
+    businessCategory: "",
   });
 
   const handleSelectionChange = (newSelectedIds) => {
@@ -97,6 +98,7 @@ const MemberList = () => {
     if (filters.from) filter.from = filters.from;
     if (filters.to) filter.to = filters.to;
     if (filters.chapter) filter.chapter = filters.chapter;
+    if (filters.businessCategory) filter.businessCategory = filters.businessCategory;
     if (filters.status) filter.status = filters.status;
     if (typeof filters.installed === "boolean") {
       filter.installed = filters.installed;
@@ -125,6 +127,7 @@ const MemberList = () => {
       if (filters.from) filter.from = filters.from;
       if (filters.to) filter.to = filters.to;
       if (filters.chapter) filter.chapter = filters.chapter;
+      if (filters.businessCategory) filter.businessCategory = filters.businessCategory;
       if (typeof filters.installed === "boolean") {
         filter.installed = filters.installed;
       }
@@ -170,6 +173,7 @@ const MemberList = () => {
       if (filters.from) filter.from = filters.from;
       if (filters.to) filter.to = filters.to;
       if (filters.chapter) filter.chapter = filters.chapter;
+      if (filters.businessCategory) filter.businessCategory = filters.businessCategory;
       if (typeof filters.installed === "boolean") {
         filter.installed = filters.installed;
       }
@@ -264,6 +268,7 @@ const MemberList = () => {
                   filters.to ||
                   filters.status ||
                   filters.chapter ||
+                  filters.businessCategory ||
                   (filters.installed !== undefined && filters.installed !== "")
                 )
               }
