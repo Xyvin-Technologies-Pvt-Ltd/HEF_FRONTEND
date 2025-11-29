@@ -21,6 +21,7 @@ const MemberFilter = ({ open, onClose, onApply }) => {
   const [membershipId, setMembershipId] = useState("");
   const [status, setStatus] = useState(null);
   const [name, setName] = useState("");
+  const [businessCategory, setBusinessCategory] = useState("");
   const [installed, setInstalled] = useState(null);
   const [from, setFrom] = useState(null);
   const [to, setTo] = useState(null);
@@ -36,6 +37,7 @@ const MemberFilter = ({ open, onClose, onApply }) => {
   const handleClear = (event) => {
     event.preventDefault();
     setName("");
+    setBusinessCategory("");
     setMembershipId("");
     setMemStatus(null);
     setMemInstalled(null);
@@ -49,6 +51,7 @@ const MemberFilter = ({ open, onClose, onApply }) => {
     setSelectedChapter(null);
     onApply({
       name: "",
+      businessCategory: "",
       membershipId: "",
       status: "",
       installed: "",
@@ -132,6 +135,7 @@ const MemberFilter = ({ open, onClose, onApply }) => {
   const handleApply = (appliedStatus = status, appliedUser = installed) => {
     onApply({
       name,
+      businessCategory,
       membershipId,
       from,
       to,
@@ -201,6 +205,12 @@ const MemberFilter = ({ open, onClose, onApply }) => {
             placeholder={"Enter Member Name"}
             value={name}
             onChange={(e) => setName(e.target.value)}
+          />
+          <Typography>Business Category</Typography>
+          <StyledInput
+            placeholder={"Enter Business Category"}
+            value={businessCategory}
+            onChange={(e) => setBusinessCategory(e.target.value)}
           />
           <Typography>Membership Id</Typography>
           <StyledInput
