@@ -32,8 +32,6 @@ const UserCard = ({ user }) => {
   const handleUnClose = () => {
     setUnOpen(false);
   };
-  console.log(user, "***********");
-
   return (
     <Grid
       container
