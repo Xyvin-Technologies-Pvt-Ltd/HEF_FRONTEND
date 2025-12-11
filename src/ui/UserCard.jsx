@@ -128,6 +128,38 @@ const UserCard = ({ user }) => {
               </Typography>
             </Stack>
           )}{" "}
+          {user?.businessCatogary && (
+            <Stack direction={"row"} spacing={2}>
+              <Typography variant="h7" color={"textPrimary"}>
+                Business Category :
+              </Typography>
+              <Typography variant="h7" color={"textPrimary"}>
+                {user?.businessCatogary}
+              </Typography>
+            </Stack>
+          )}
+          {user?.businessSubCatogary && (
+            <Stack direction={"row"} spacing={2}>
+              <Typography variant="h7" color={"textPrimary"}>
+                Sub Category :
+              </Typography>
+              <Typography variant="h7" color={"textPrimary"} >
+                {user?.businessSubCatogary}
+              </Typography>
+            </Stack>
+          )}
+          {user?.businessTags && user?.businessTags?.length > 0 && (
+            <Stack direction={"row"} spacing={2}>
+              <Typography variant="h7" color={"textPrimary"}>
+                Business Tags :
+              </Typography>
+              <Typography variant="h7" color={"textPrimary"}>
+                {Array.isArray(user?.businessTags)
+                  ? user?.businessTags.join(", ")
+                  : user?.businessTags}
+              </Typography>
+            </Stack>
+          )}
           {user?.status === "active" && (
             <Stack direction="row" alignItems="center" spacing={2}>
               <StyledButton
