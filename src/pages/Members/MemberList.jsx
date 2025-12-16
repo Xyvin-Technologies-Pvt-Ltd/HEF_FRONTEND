@@ -46,15 +46,34 @@ const MemberList = () => {
   const [loading, setLoading] = useState(false);
   const [downloadPopupOpen, setDownloadPopupOpen] = useState(false);
   const [downloadLoading, setDownloadLoading] = useState(false);
-  const [filters, setFilters] = useState({
-    name: "",
-    membershipId: "",
-    status: "",
-    installed: "",
-    from: "",
-    to: "",
-    chapter: "",
-    businessCategory: "",
+  const [filters, setFilters] = useState(() => {
+    const savedFilters = localStorage.getItem("memberFilters");
+    if (savedFilters) {
+      try {
+        return JSON.parse(savedFilters);
+      } catch (e) {
+        return {
+          name: "",
+          membershipId: "",
+          status: "",
+          installed: "",
+          from: "",
+          to: "",
+          chapter: "",
+          businessCategory: "",
+        };
+      }
+    }
+    return {
+      name: "",
+      membershipId: "",
+      status: "",
+      installed: "",
+      from: "",
+      to: "",
+      chapter: "",
+      businessCategory: "",
+    };
   });
 
   const handleSelectionChange = (newSelectedIds) => {
@@ -398,7 +417,10 @@ const MemberList = () => {
         <MemberFilter
           open={filterOpen}
           onClose={() => setFilterOpen(false)}
-          onApply={(filters) => setFilters(filters)}
+          onApply={(filters) => {
+            setFilters(filters);
+            localStorage.setItem("memberFilters", JSON.stringify(filters));
+          }}
         />
         <DownloadPopup
           open={downloadPopupOpen}
