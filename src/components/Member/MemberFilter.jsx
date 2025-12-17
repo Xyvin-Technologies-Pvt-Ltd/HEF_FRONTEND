@@ -49,7 +49,7 @@ const MemberFilter = ({ open, onClose, onApply }) => {
     setSelectedZone(null);
     setSelectedDistrict(null);
     setSelectedChapter(null);
-    onApply({
+    const emptyFilters = {
       name: "",
       businessCategory: "",
       membershipId: "",
@@ -58,7 +58,9 @@ const MemberFilter = ({ open, onClose, onApply }) => {
       from: "",
       to: "",
       chapter: "",
-    });
+    };
+    onApply(emptyFilters);
+    localStorage.removeItem("memberFilters");
     onClose();
   };
   

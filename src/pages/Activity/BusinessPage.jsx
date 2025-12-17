@@ -124,7 +124,13 @@ const BusinessPage = () => {
     filter.limit = row;
     fetchActivity(filter);
   }, [isChange, pageNo, search, row, selectedTab, filters]);
-  const hasActiveFilters = Object.values(filters).some((value) => value);
+  // const hasActiveFilters = Object.values(filters).some((value) => value);
+  const hasActiveFilters = 
+    filters.type || 
+    filters.status || 
+    filters.startDate || 
+    filters.endDate || 
+    filters.chapter;
   const activityColumns = [
     { title: "Date", field: "date", padding: "none" },
     { title: "Business giver", field: "senderName" },

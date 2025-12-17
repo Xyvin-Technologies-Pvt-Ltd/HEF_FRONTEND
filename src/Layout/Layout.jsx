@@ -247,11 +247,19 @@ const Layout = (props) => {
     }
   }, [singleAdmin]);
   const drawer = (
-    <div style={{ position: "relative", height: "100%" }}>
+    <div
+      style={{
+        position: "relative",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       <Toolbar
         sx={{
           height: "118px",
           justifyContent: "center",
+          flexShrink: 0,
         }}
       >
         <Stack justifyContent={"center"} spacing={2}>
@@ -260,7 +268,7 @@ const Layout = (props) => {
       </Toolbar>
       <List
         sx={{
-          height: "600px",
+          flex: 1,
           overflowY: "auto",
           display: "flex",
           flexDirection: "column",
