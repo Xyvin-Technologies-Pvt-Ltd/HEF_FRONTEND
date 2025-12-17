@@ -753,44 +753,52 @@ const AddMember = () => {
                   variant="h6"
                   color="textSecondary"
                 >
-                  Business Tags
+                  Business Tags <span style={{ color: "red" }}>*</span>
                 </Typography>
                 <Controller
                   name="businessTags"
                   control={control}
                   defaultValue={[]}
+                  rules={{ required: "Business Tags are required" }}
                   render={({ field }) => (
-                    <StyledSearchInputField
-                      {...field}
-                      isMulti
-                      placeholder="Enter tags"
-                      options={
-                        inputValue &&
-                          !options.some((option) => option?.label === inputValue)
-                          ? [
-                            ...options,
-                            { label: inputValue, value: inputValue },
-                          ]
-                          : options
-                      }
-                      onInputChange={(value) => setInputValue(value)}
-                      onChange={(selected) => {
-                        if (selected?.length > 0) {
-                          const lastTag = selected[selected.length - 1];
-                          if (
-                            !options.some(
-                              (option) => option.value === lastTag.value
-                            )
-                          ) {
-                            setOptions((prevOptions) => [
-                              ...prevOptions,
-                              { label: lastTag.value, value: lastTag.value },
-                            ]);
-                          }
+                    <>
+                      <StyledSearchInputField
+                        {...field}
+                        isMulti
+                        placeholder="Enter tags"
+                        options={
+                          inputValue &&
+                            !options.some((option) => option?.label === inputValue)
+                            ? [
+                              ...options,
+                              { label: inputValue, value: inputValue },
+                            ]
+                            : options
                         }
-                        field.onChange(selected);
-                      }}
-                    />
+                        onInputChange={(value) => setInputValue(value)}
+                        onChange={(selected) => {
+                          if (selected?.length > 0) {
+                            const lastTag = selected[selected.length - 1];
+                            if (
+                              !options.some(
+                                (option) => option.value === lastTag.value
+                              )
+                            ) {
+                              setOptions((prevOptions) => [
+                                ...prevOptions,
+                                { label: lastTag.value, value: lastTag.value },
+                              ]);
+                            }
+                          }
+                          field.onChange(selected);
+                        }}
+                      />
+                      {errors.businessTags && (
+                        <span style={{ color: "red" }}>
+                          {errors.businessTags.message}
+                        </span>
+                      )}
+                    </>
                   )}
                 />
               </Grid>
