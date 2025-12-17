@@ -200,7 +200,7 @@ const AddActivity = () => {
             </Grid>
             <Grid item xs={12}>
               <Typography variant="h6" color="textSecondary">
-                Business Giver
+                Business Giver <span style={{ color: "red" }}>*</span>
               </Typography>
             </Grid>
             <Grid item xs={6}>
@@ -288,6 +288,7 @@ const AddActivity = () => {
                 name="sender"
                 control={control}
                 defaultValue=""
+                rules={{ required: "Business Giver is required" }}
                 render={({ field }) => (
                   <>
                     <StyledSelectField
@@ -295,6 +296,11 @@ const AddActivity = () => {
                       options={memberOptions}
                       {...field}
                     />
+                    {errors.sender && (
+                      <span style={{ color: "red" }}>
+                        {errors.sender.message}
+                      </span>
+                    )}
                   </>
                 )}
               />
@@ -302,7 +308,7 @@ const AddActivity = () => {
             <Grid item xs={6}></Grid>
             <Grid item xs={12}>
               <Typography variant="h6" color="textSecondary">
-                Business Receiver
+                Business Receiver <span style={{ color: "red" }}>*</span>
               </Typography>
             </Grid>
             <Grid item xs={6}>
@@ -390,6 +396,7 @@ const AddActivity = () => {
                 name="member"
                 control={control}
                 defaultValue=""
+                rules={{ required: "Business Receiver is required" }}
                 render={({ field }) => (
                   <>
                     <StyledSelectField
@@ -397,6 +404,11 @@ const AddActivity = () => {
                       options={filteredReceiverOptions}
                       {...field}
                     />
+                    {errors.member && (
+                      <span style={{ color: "red" }}>
+                        {errors.member.message}
+                      </span>
+                    )}
                   </>
                 )}
               />
@@ -433,13 +445,12 @@ const AddActivity = () => {
                 variant="h6"
                 color="textSecondary"
               >
-                Amount <span style={{ color: "red" }}>*</span>
+                Amount
               </Typography>
               <Controller
                 name="amount"
                 control={control}
                 defaultValue=""
-                rules={{ required: "Amount is required" }}
                 render={({ field }) => (
                   <>
                     <StyledInput placeholder="Enter the Amount" {...field} />
