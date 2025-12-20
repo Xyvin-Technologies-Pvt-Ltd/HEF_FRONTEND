@@ -42,6 +42,7 @@ const permissionsList = [
   { id: "memberManagement", name: "User Management" },
   { id: "activityManagement", name: " Activity Management" },
   { id: "businessManagement", name: "Business Management" },
+  { id: "categoryManagement", name: "Category Management" },
   { id: "eventManagement", name: "Event Management" },
   { id: "newsManagement", name: "News Management" },
   { id: "promotionManagement", name: "Promotion Management" },

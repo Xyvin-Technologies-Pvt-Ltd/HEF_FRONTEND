@@ -24,6 +24,7 @@ import { getTags } from "../../api/memberapi";
 import StyledSearchInputField from "../../ui/StyledSearchInputField";
 import { StyledCalender } from "../../ui/StyledCalender";
 import { upload } from "../../api/adminapi";
+import { getCategory } from "../../api/categoryapi";
 
 const AddMember = () => {
   const {
@@ -42,6 +43,7 @@ const AddMember = () => {
   const [loadings, setLoadings] = useState(false);
   const [imageFile, setImageFile] = useState(null);
   const [additionalPhones, setAdditionalPhones] = useState([]);
+  const [categoryOptions, setCategoryOptions] = useState([]);
   const [addMoreDisabled, setAddMoreDisabled] = useState(false);
   const [stateOptions, setStateOptions] = useState([]);
   const [zoneOptions, setZoneOptions] = useState([]);
@@ -91,6 +93,11 @@ const AddMember = () => {
         }
 
         setValue("businessCatogary", member?.businessCatogary);
+
+        const selectedCategory = categoryOptions.find(
+          (option) => option.id === (member?.category?._id || member?.category)
+        );
+        setValue("category", selectedCategory);
 
         setValue("businessSubCatogary", member?.businessSubCatogary);
         const selectedStatus = statusOptions?.find(
@@ -237,6 +244,7 @@ const AddMember = () => {
         ...(data?.dateOfJoining && { dateOfJoining: data?.dateOfJoining }),
         ...(filteredCompanies?.length ? { company: filteredCompanies } : {}),
         businessCatogary: data?.businessCatogary,
+        category: data?.category?.id,
         businessSubCatogary: data?.businessSubCatogary,
         chapter: data?.chapter?.value,
         ...(Array.isArray(data?.businessTags) && data?.businessTags.length
@@ -280,6 +288,25 @@ const AddMember = () => {
     };
 
     fetchStates();
+  }, []);
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await getCategory({ isAll: true, status: true });
+        const formattedOptions =
+          response?.data
+            ?.filter((item) => item?.name)
+            .map((item) => ({
+              value: item.name,
+              label: item.name,
+              id: item._id,
+            })) || [];
+        setCategoryOptions(formattedOptions);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+    fetchCategories();
   }, []);
   const handleStateChange = async (stateId) => {
     setZoneOptions([]);
@@ -796,6 +823,35 @@ const AddMember = () => {
                       {errors.businessTags && (
                         <span style={{ color: "red" }}>
                           {errors.businessTags.message}
+                        </span>
+                      )}
+                    </>
+                  )}
+                />
+              </Grid>
+               <Grid item xs={12}>
+                <Typography
+                  sx={{ marginBottom: 1 }}
+                  variant="h6"
+                  color="textSecondary"
+                >
+                  Category <span style={{ color: "red" }}>*</span>
+                </Typography>
+                <Controller
+                name="category"
+                  control={control}
+                rules={{ required: " category is required" }}
+                defaultValue={null}
+                  render={({ field }) => (
+                    <>
+                    <StyledSelectField
+                      placeholder="Choose business category"
+                      options={categoryOptions}
+                      {...field}
+                    />
+                    {errors.businessCategory && (
+                        <span style={{ color: "red" }}>
+                        {errors.businessCategory.message}
                         </span>
                       )}
                     </>

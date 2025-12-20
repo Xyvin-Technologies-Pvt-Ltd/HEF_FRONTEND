@@ -9,6 +9,7 @@ import { getNews } from "../api/newsapi";
 import { getMember } from "../api/memberapi";
 import { getReport } from "../api/reportapi";
 import { getAllLevel } from "../api/hierarchyapi";
+import { getCategory } from "../api/categoryapi";
 import { getActivities } from "../api/activityapi";
 import { getParentSub, getPayment } from "../api/paymentapi";
 import { getNotification } from "../api/notificationapi";
@@ -136,6 +137,13 @@ const useListStore = create((set, get) => ({
   fetchLevels: async (type, filter) => {
     set({ loading: true });
     const allData = await getAllLevel(type, filter);
+    set({ lists: allData?.data || [] });
+    set({ totalCount: allData?.totalCount || 0 });
+    set({ loading: false });
+  },
+  fetchCategory: async (filter) => {
+    set({ loading: true });
+    const allData = await getCategory(filter);
     set({ lists: allData?.data || [] });
     set({ totalCount: allData?.totalCount || 0 });
     set({ loading: false });
