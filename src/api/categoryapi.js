@@ -65,3 +65,13 @@ export const downloadCategory = async () => {
   }
 };
 
+export const getCategoryMembers = async (id, filter) => {
+  try {
+    const response = await axiosInstance.get(`/category/members/${id}`, {
+      params: filter,
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || error;
+  }
+};

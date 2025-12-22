@@ -85,7 +85,7 @@ const navigationItems = [
     permissions: ["memberManagement_view", "memberManagement_modify"],
   },
   {
-    name: "Category",
+    name: "Categories",
     to: "/categories",
     icon: <CategoryOutlinedIcon />,
     permissions: [

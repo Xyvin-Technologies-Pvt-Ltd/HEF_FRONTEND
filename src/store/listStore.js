@@ -14,6 +14,7 @@ import { getActivities } from "../api/activityapi";
 import { getParentSub, getPayment } from "../api/paymentapi";
 import { getNotification } from "../api/notificationapi";
 import { getGroup } from "../api/groupapi";
+import { getCategoryMembers } from "../api/categoryapi" 
 
 const useListStore = create((set, get) => ({
   lists: [],
@@ -167,6 +168,15 @@ const useListStore = create((set, get) => ({
   fetchGroup: async (filter) => {
     set({ loading: true });
     const allData = await getGroup(filter);
+    set({ lists: allData?.data || [] });
+    set({ totalCount: allData?.totalCount || 0 });
+    set({ loading: false });
+  },
+
+  
+  fetchCategoryMembers: async (id, filter) => {
+    set({ loading: true });
+    const allData = await getCategoryMembers(id, filter);
     set({ lists: allData?.data || [] });
     set({ totalCount: allData?.totalCount || 0 });
     set({ loading: false });

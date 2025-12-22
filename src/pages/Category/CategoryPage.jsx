@@ -7,6 +7,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import StyledTable from "../../ui/StyledTable";
 import StyledSearchbar from "../../ui/StyledSearchbar";
 import { StyledButton } from "../../ui/StyledButton";
@@ -21,6 +22,7 @@ import { downloadCategory } from "../../api/categoryapi";
 import { toast } from "react-toastify";
 
 const CategoryPage = () => {
+  const navigate = useNavigate();
   const [pageNo, setPageNo] = useState(1);
   const [rowPerSize, setRowPerSize] = useState(10);
   const [search, setSearch] = useState("");
@@ -77,6 +79,10 @@ const CategoryPage = () => {
   const handleModify = (id) => {
     setCategoryId(id);
     setOpenAdd(true);
+  };
+
+  const handleView = (id) => {
+    navigate(`/categories/members/${id}`);
   };
 
   const handleStatus = (id) => {
@@ -187,6 +193,7 @@ const CategoryPage = () => {
               data={lists}
               loading={loading}
               onDelete={handleDelete}
+              onView={handleView}
               onDeleteRow={handleRowDelete}
               onSelectionChange={handleSelectionChange}
               onModify={handleModify}
@@ -203,6 +210,7 @@ const CategoryPage = () => {
               columns={categoryColumns}
               data={lists}
               loading={loading}
+              onView={handleView}
               onSelectionChange={handleSelectionChange}
               pageNo={pageNo}
               setPageNo={setPageNo}
