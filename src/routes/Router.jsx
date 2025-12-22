@@ -32,6 +32,8 @@ import AddProductPage from "../pages/Members/AddProductPage";
 import AddActivityPage from "../pages/Activity/AddActivityPage";
 import GroupPage from "../pages/Group/GroupPage";
 import AddGroupPage from "../pages/Group/AddGroupPage";
+import CategoryPage from "../pages/Category/CategoryPage";
+import CategoryMembersPage from "../pages/Category/CategoryMembersPage";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -57,6 +59,26 @@ const router = createBrowserRouter([
       <PrivateRoute>
         <Layout>
           <MemberPage />
+        </Layout>
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/categories",
+    element: (
+      <PrivateRoute>
+        <Layout>
+          <CategoryPage />
+        </Layout>
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/categories/members/:id",
+    element: (
+      <PrivateRoute>
+        <Layout>
+          <CategoryMembersPage />
         </Layout>
       </PrivateRoute>
     ),

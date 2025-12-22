@@ -78,6 +78,7 @@ const StyledTable = ({
   report,
   payment,
   approve,
+  category,
   college,
   rowPerSize,
   setRowPerSize,
@@ -345,6 +346,7 @@ const StyledTable = ({
                           "event image",
                           "speaker_image",
                           "media",
+                          "icon",
                         ].includes(column.field) ? (
                         <>
                           <img
@@ -499,6 +501,21 @@ const StyledTable = ({
                                 )}
                               </>,
                             ]
+                      : category
+                      ? [
+                          <>
+                            <MenuItem onClick={handleModify}>Edit</MenuItem>
+                            <MenuItem onClick={handleAction}>
+                              {row.status ? "Deactivate" : "Activate"}
+                            </MenuItem>
+                            <MenuItem
+                              onClick={() => handleRowDelete(row._id)}
+                              style={{ color: "red" }}
+                            >
+                              Delete
+                            </MenuItem>
+                          </>,
+                        ]
                           : payment
                           ? [
                               <>

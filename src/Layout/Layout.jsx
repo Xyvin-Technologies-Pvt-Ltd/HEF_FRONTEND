@@ -41,6 +41,7 @@ import {
   LogoutOutlined,
   OutlinedFlag,
 } from "@mui/icons-material";
+import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
 import { useAdminStore } from "../store/adminStore";
 const drawerWidth = 250;
 const navigationItems = [
@@ -59,7 +60,6 @@ const navigationItems = [
     icon: <PeopleAltOutlinedIcon />,
     permissions: ["memberManagement_view", "memberManagement_modify"],
   },
-
   {
     name: "Activity",
     to: "/activity",
@@ -83,6 +83,17 @@ const navigationItems = [
     to: "/groups",
     icon: <GroupsOutlined />,
     permissions: ["memberManagement_view", "memberManagement_modify"],
+  },
+  {
+    name: "Categories",
+    to: "/categories",
+    icon: <CategoryOutlinedIcon />,
+    permissions: [
+      "categoryManagement_view",
+      "categoryManagement_modify",
+      "memberManagement_view",
+      "memberManagement_modify",
+    ],
   },
 
   {

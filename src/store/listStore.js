@@ -9,10 +9,12 @@ import { getNews } from "../api/newsapi";
 import { getMember } from "../api/memberapi";
 import { getReport } from "../api/reportapi";
 import { getAllLevel } from "../api/hierarchyapi";
+import { getCategory } from "../api/categoryapi";
 import { getActivities } from "../api/activityapi";
 import { getParentSub, getPayment } from "../api/paymentapi";
 import { getNotification } from "../api/notificationapi";
 import { getGroup } from "../api/groupapi";
+import { getCategoryMembers } from "../api/categoryapi" 
 
 const useListStore = create((set, get) => ({
   lists: [],
@@ -140,6 +142,13 @@ const useListStore = create((set, get) => ({
     set({ totalCount: allData?.totalCount || 0 });
     set({ loading: false });
   },
+  fetchCategory: async (filter) => {
+    set({ loading: true });
+    const allData = await getCategory(filter);
+    set({ lists: allData?.data || [] });
+    set({ totalCount: allData?.totalCount || 0 });
+    set({ loading: false });
+  },
 
   fetchReport: async (filter) => {
     set({ loading: true });
@@ -159,6 +168,15 @@ const useListStore = create((set, get) => ({
   fetchGroup: async (filter) => {
     set({ loading: true });
     const allData = await getGroup(filter);
+    set({ lists: allData?.data || [] });
+    set({ totalCount: allData?.totalCount || 0 });
+    set({ loading: false });
+  },
+
+  
+  fetchCategoryMembers: async (id, filter) => {
+    set({ loading: true });
+    const allData = await getCategoryMembers(id, filter);
     set({ lists: allData?.data || [] });
     set({ totalCount: allData?.totalCount || 0 });
     set({ loading: false });

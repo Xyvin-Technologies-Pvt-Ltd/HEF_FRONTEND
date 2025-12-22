@@ -7,7 +7,20 @@ export const memberColumns = [
   { title: "Join Date", field: "dateOfJoining" },
   { title: "Status", field: "status" },
 ];
-
+export const categoryColumns = [
+  { title: "Name", field: "name", padding: "none" },
+  { title: "Icon", field: "icon" },
+  { title: "Members", field: "memberCount" },
+  { title: "Status", field: "status" },
+];
+export const categoryMemberColumns = [
+  { title: "Name", field: "name", padding: "none" },
+  { title: "Member ID", field: "memberId" },
+  { title: "Category", field: "category" },
+  { title: "Phone Number", field: "phone" },
+  { title: "Join Date", field: "dateOfJoining" },
+  { title: "Status", field: "status" },
+];
 export const eventHistoryColumns = [
   { title: "Name", field: "fullName", padding: "none" },
   { title: "College Name", field: "college" },
