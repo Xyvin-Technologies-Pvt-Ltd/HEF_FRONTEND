@@ -128,7 +128,7 @@ const UserCard = ({ user }) => {
               </Typography>
             </Stack>
           )}{" "}
-          {user?.businessCatogary && (
+          {/* {user?.businessCatogary && (
             <Stack direction={"row"} spacing={2}>
               <Typography variant="h7" color={"textPrimary"}>
                 Business Category :
@@ -147,7 +147,7 @@ const UserCard = ({ user }) => {
                 {user?.businessSubCatogary}
               </Typography>
             </Stack>
-          )}
+          )} */}
           {user?.businessTags && user?.businessTags?.length > 0 && (
             <Stack direction={"row"} spacing={2}>
               <Typography variant="h7" color={"textPrimary"}>
