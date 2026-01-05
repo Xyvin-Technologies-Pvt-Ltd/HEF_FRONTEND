@@ -701,7 +701,7 @@ const AddMember = () => {
                 alignItems={"flex-end"}
                 justifyContent={"flex-end"}
               ></Grid>
-              <Grid item xs={12}>
+              {/* <Grid item xs={12}>
                 <Typography
                   sx={{ marginBottom: 1 }}
                   variant="h6"
@@ -753,7 +753,7 @@ const AddMember = () => {
                     </>
                   )}
                 />
-              </Grid>{" "}
+              </Grid>{" "} */}
               <Grid item xs={12}>
                 <Typography
                   sx={{ marginBottom: 1 }}
@@ -849,9 +849,9 @@ const AddMember = () => {
                       options={categoryOptions}
                       {...field}
                     />
-                    {errors.businessCategory && (
+                    {errors.category && (
                         <span style={{ color: "red" }}>
-                        {errors.businessCategory.message}
+                        {errors.category.message}
                         </span>
                       )}
                     </>
