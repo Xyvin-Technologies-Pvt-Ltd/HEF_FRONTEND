@@ -94,10 +94,20 @@ const AddMember = () => {
 
         setValue("businessCatogary", member?.businessCatogary);
 
-        const selectedCategory = categoryOptions.find(
-          (option) => option.id === (member?.category?._id || member?.category)
-        );
-        setValue("category", selectedCategory);
+        if (Array.isArray(member?.category) && member.category.length) {
+          const selectedCategories = member.category.map(cat => {
+            const categoryOption = categoryOptions.find(
+              (option) => option.id === (cat?._id || cat)
+            );
+            return categoryOption;
+          }).filter(Boolean);
+          setValue("category", selectedCategories);
+        } else if (member?.category) {
+          const selectedCategory = categoryOptions.find(
+            (option) => option.id === (member?.category?._id || member?.category)
+          );
+          setValue("category", selectedCategory ? [selectedCategory] : []);
+        }
 
         setValue("businessSubCatogary", member?.businessSubCatogary);
         const selectedStatus = statusOptions?.find(
@@ -244,7 +254,9 @@ const AddMember = () => {
         ...(data?.dateOfJoining && { dateOfJoining: data?.dateOfJoining }),
         ...(filteredCompanies?.length ? { company: filteredCompanies } : {}),
         businessCatogary: data?.businessCatogary,
-        category: data?.category?.id,
+        category: Array.isArray(data?.category) && data?.category.length 
+          ? data.category.map(cat => cat?.id || cat) 
+          : [],
         businessSubCatogary: data?.businessSubCatogary,
         chapter: data?.chapter?.value,
         ...(Array.isArray(data?.businessTags) && data?.businessTags.length
@@ -701,7 +713,7 @@ const AddMember = () => {
                 alignItems={"flex-end"}
                 justifyContent={"flex-end"}
               ></Grid>
-              <Grid item xs={12}>
+              {/* <Grid item xs={12}>
                 <Typography
                   sx={{ marginBottom: 1 }}
                   variant="h6"
@@ -753,7 +765,7 @@ const AddMember = () => {
                     </>
                   )}
                 />
-              </Grid>{" "}
+              </Grid>{" "} */}
               <Grid item xs={12}>
                 <Typography
                   sx={{ marginBottom: 1 }}
@@ -841,17 +853,18 @@ const AddMember = () => {
                 name="category"
                   control={control}
                 rules={{ required: " category is required" }}
-                defaultValue={null}
+                defaultValue={[]}
                   render={({ field }) => (
                     <>
-                    <StyledSelectField
-                      placeholder="Choose business category"
+                    <StyledSearchInputField
+                      placeholder="Choose business categories"
                       options={categoryOptions}
+                      isMulti={true}
                       {...field}
                     />
-                    {errors.businessCategory && (
+                    {errors.category && (
                         <span style={{ color: "red" }}>
-                        {errors.businessCategory.message}
+                        {errors.category.message}
                         </span>
                       )}
                     </>
