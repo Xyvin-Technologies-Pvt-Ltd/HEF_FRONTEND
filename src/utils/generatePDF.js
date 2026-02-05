@@ -143,21 +143,39 @@ export const generatePDF = (headers = [], body = [], fileName = "Report", eventI
           doc.setTextColor(255);
           doc.text(eventInfo.eventName, pageWidth / 2, textY, { align: "center" });
 
-          textY += 14;
-          doc.setFont("helvetica", "normal");
-          doc.setFontSize(10);
-          doc.text(eventInfo.eventDateTime, pageWidth / 2, textY, { align: "center" });
-        }
-        // --- Report Generated Date (only on first page, right side below header) ---
-        if (data.pageNumber === 1) {
-          const now = new Date();
-          const reportDate = now.toLocaleString("en-US", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-            hour: "2-digit",
-            minute: "2-digit"
-          });
+            textY += 14;
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(10);
+            doc.text(eventInfo.eventDateTime, pageWidth / 2, textY, { align: "center" });
+          }
+          if (eventInfo?.seatsInfo || (eventInfo?.totalSeats !== undefined)) {
+            const rightMarginX = pageWidth - margin; // right side
+            let yPosition = 40; // adjust as needed to align with header
+
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(10);
+            doc.setTextColor(255, 255, 255); // white color
+
+            // Registered / Total Seats
+            const regText = `Registered: ${eventInfo.registeredCount} / Total: ${eventInfo.totalSeats}`;
+            doc.text(regText, rightMarginX, yPosition, { align: "right" });
+
+            // Balance Seats
+            yPosition += 12; // spacing below
+            const balText = `Balance Seats: ${eventInfo.balanceSeats}`;
+            doc.text(balText, rightMarginX, yPosition, { align: "right" });
+          }
+
+          // --- Report Generated Date (only on first page, right side below header) ---
+          if (data.pageNumber === 1) {
+            const now = new Date();
+            const reportDate = now.toLocaleString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+              hour: "2-digit",
+              minute: "2-digit"
+            });
 
           doc.setFont("helvetica", "normal"); // plain text
           doc.setFontSize(10);

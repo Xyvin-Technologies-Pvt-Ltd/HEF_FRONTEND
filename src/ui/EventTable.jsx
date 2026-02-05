@@ -68,6 +68,13 @@ const EventTable = ({
   member,
   payment,
   college,
+  rsvp,
+  handleRemoveRsvp,
+  pageNo,
+  setPageNo,
+  rowPerSize,
+  setRowPerSize,
+  totalCount,
 }) => {
   const [selectedIds, setSelectedIds] = useState([]);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -310,7 +317,17 @@ const EventTable = ({
                         open={Boolean(anchorEl) && rowId === row._id}
                         onClose={handleMenuClose}
                       >
-                        {news
+                        {rsvp ? [
+                          <MenuItem
+                            onClick={() => {
+                              handleRemoveRsvp(row);
+                              handleMenuClose();
+                            }}
+                            style={{ color: "red" }}
+                          >
+                            Remove
+                          </MenuItem>
+                        ] : news
                           ? [
                             <>
                               <MenuItem onClick={handleModify}>Edit</MenuItem>
@@ -406,19 +423,48 @@ const EventTable = ({
             <Box display="flex" alignItems="center">
               <TablePagination
                 component="div"
-                count={data ? data.length : 0}
-                rowsPerPage={10}
-                page={0}
-                onPageChange={() => { }}
-                ActionsComponent={({ onPageChange }) => (
-                  <Stack
-                    direction="row"
-                    spacing={1}
-                    alignItems="center"
-                    marginLeft={2}
-                  >
-                    <LeftIcon />
-                    <RightIcon />
+                count={totalCount}                 
+                page={pageNo - 1}                  
+                rowsPerPage={rowPerSize}        
+                onPageChange={(event, newPage) => setPageNo(newPage + 1)} 
+                onRowsPerPageChange={(event) => {
+                  setRowPerSize(parseInt(event.target.value, 10));
+                  setPageNo(1);                    
+                }}
+                labelDisplayedRows={({ from, to, count }) =>
+                  `${from}-${to} of ${count}`
+                }
+                ActionsComponent={() => (
+                  <Stack direction="row" spacing={1} alignItems="center" marginLeft={2}>
+                    <Box
+                      onClick={() => pageNo > 1 && setPageNo(pageNo - 1)}
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        cursor: pageNo > 1 ? "pointer" : "not-allowed",
+                        opacity: pageNo > 1 ? 1 : 0.5,
+                      }}
+                    >
+                      <LeftIcon />
+                    </Box>
+                    <Box
+                      onClick={() =>
+                        pageNo < Math.ceil(totalCount / rowPerSize) &&
+                        setPageNo(pageNo + 1)
+                      }
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        cursor:
+                          pageNo < Math.ceil(totalCount / rowPerSize)
+                            ? "pointer"
+                            : "not-allowed",
+                        opacity:
+                          pageNo < Math.ceil(totalCount / rowPerSize) ? 1 : 0.5,
+                      }}
+                    >
+                      <RightIcon />
+                    </Box>
                   </Stack>
                 )}
               />
