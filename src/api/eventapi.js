@@ -77,3 +77,25 @@ export const getRsvpDownload = async (eventId) => {
   }
 };
 
+
+export const getEventRsvp = async (eventId, pageNo = 1, limit = 10) => {
+  try {
+    const res = await axiosInstance.get(
+      `/event/${eventId}/rsvp?pageNo=${pageNo}&limit=${limit}`
+    );
+    return res.data;
+  } catch (error) {
+    console.error("Error fetching RSVP:", error);
+  }
+};
+export const removeEventRsvp = async (eventId, userId) => {
+  try {
+    const res = await axiosInstance.patch(`/event/single/${eventId}/remove-rsvp`, {
+      userId, 
+    });
+    return res.data; 
+  } catch (error) {
+    console.error("Error removing RSVP:", error);
+    throw error;
+}
+};
