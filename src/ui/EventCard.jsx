@@ -8,6 +8,8 @@ const getStatusColor = (status) => {
   switch (status) {
     case "pending":
       return "#FFC107"; // Yellow
+     case "upcoming":
+        return "#2E7D32"; 
     case "live":
       return "#2E7D32"; // Green
     case "completed":

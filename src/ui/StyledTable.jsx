@@ -181,6 +181,8 @@ const StyledTable = ({
     switch (status) {
       case "pending":
         return "#FF9F00";
+      case "upcoming":
+        return "#4CAF50";
       case "rejected":
         return "#C62828";
       case "active":
