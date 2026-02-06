@@ -78,10 +78,10 @@ export const getRsvpDownload = async (eventId) => {
 };
 
 
-export const getEventRsvp = async (eventId, pageNo = 1, limit = 10) => {
+export const getEventRsvp = async (eventId, pageNo = 1, limit = 10,chapterId) => {
   try {
     const res = await axiosInstance.get(
-      `/event/${eventId}/rsvp?pageNo=${pageNo}&limit=${limit}`
+      `/event/${eventId}/rsvp?pageNo=${pageNo}&limit=${limit}${chapterId ? `&chapterId=${chapterId}` : ''}`
     );
     return res.data;
   } catch (error) {

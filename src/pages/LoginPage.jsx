@@ -16,7 +16,7 @@ import Email from "@mui/icons-material/Email";
 import Lock from "@mui/icons-material/Lock";
 import { useNavigate } from "react-router-dom";
 import { getLogin } from "../api/adminapi";
-import Logo from "../assets/images/logo.png";
+import Logo from "../assets/images/LogoFinal.png";
 import { StyledButton } from "../ui/StyledButton";
 
 function LoginPage() {

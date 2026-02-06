@@ -1,5 +1,5 @@
-import { Box, Stack } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { Box, Drawer, Stack, Badge, } from "@mui/material";
+import React, { useEffect, useState, useMemo } from "react";
 import EventTable from "../../ui/EventTable";
 import { StyledButton } from "../../ui/StyledButton";
 import { getRsvpDownload, getEventRsvp, getEventById, removeEventRsvp } from "../../api/eventapi";
@@ -7,6 +7,8 @@ import DownloadPopup from "../../components/Member/DownloadPopup";
 import { generateExcel } from "../../utils/generateExcel";
 import { generatePDF } from "../../utils/generatePDF";
 import { toast } from "react-toastify";
+import RsvpFilter from "../../components/Event/RsvpFilter";
+import { ReactComponent as FilterIcon } from "../../assets/icons/FilterIcon.svg";
 
 const RsvpTable = ({ eventId }) => {
   const [data, setData] = useState([]);
@@ -18,11 +20,20 @@ const RsvpTable = ({ eventId }) => {
   const [downloadPopupOpen, setDownloadPopupOpen] = useState(false);
   const [downloadLoading, setDownloadLoading] = useState(false);
 
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [filters, setFilters] = useState({});
+
+  const isFilterApplied = useMemo(
+    () => Boolean(filters?.chapterId),
+    [filters]
+  );
+
+
   // Fetch RSVP data from backend
   const fetchRsvp = async () => {
     setLoading(true);
     try {
-      const res = await getEventRsvp(eventId, pageNo, rowPerSize);
+      const res = await getEventRsvp(eventId, pageNo, rowPerSize, filters?.chapterId);
       setData(res?.data || []);
       setTotalCount(res?.totalCount || 0);
     } catch (err) {
@@ -35,7 +46,7 @@ const RsvpTable = ({ eventId }) => {
 
   useEffect(() => {
     if (eventId) fetchRsvp();
-  }, [eventId, pageNo, rowPerSize]);
+  }, [eventId, pageNo, rowPerSize, filters]);
 
   const sortedData = [...(data || [])].sort((a, b) =>
     (a.name || "").trim().toLowerCase().localeCompare((b.name || "").trim().toLowerCase())
@@ -72,11 +83,30 @@ const RsvpTable = ({ eventId }) => {
         const { body,totalSeats, registeredCount, balanceSeats } = res.data;
 
         const eventRes = await getEventById(eventId);
+         const formatEventDateTime = (date, time) => {
+          if (!date) return "";
+          const d = new Date(date);
+          const t = time ? new Date(time) : null;
+
+          if (t) {
+            d.setHours(t.getHours());
+            d.setMinutes(t.getMinutes());
+          }
+
+          return d.toLocaleString("en-IN", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true,
+          });
+        };
         const eventInfo = {
           eventName: eventRes?.data?.eventName,
-          eventDateTime: new Date(eventRes?.data?.startDate).toLocaleString(
-            "en-US",
-            { year: "numeric", month: "long", day: "numeric", hour: "2-digit", minute: "2-digit" }
+          eventDateTime: formatEventDateTime(
+            eventRes?.data?.startDate,
+            eventRes?.data?.startTime
           ),
           totalSeats,
           registeredCount,
@@ -116,10 +146,57 @@ const handleRemoveRsvp = async (row) => {
   ]
 
 
+  
+  const handleApplyFilter = (values) => {
+    setFilters(values);
+    setPageNo(1);
+  };
+
   return (
     <Box padding="15px">
       {/* Download Button */}
       <Stack direction="row" justifyContent="end" spacing={2} mb={2}>
+        <Badge
+          color="error"
+          variant="dot"
+          invisible={false}
+          sx={{
+            "& .MuiBadge-dot": {
+              width: "12px",
+              height: "12px",
+              borderRadius: "50%",
+              backgroundColor: "#F58220",
+              right: 8,
+              top: 8,
+            },
+          }}
+          overlap="circular"
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
+        >
+          <Box
+            bgcolor="#FFFFFF"
+            borderRadius="50%"
+            width="48px"
+            height="48px"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            border="1px solid #F58220"
+            onClick={() => setFilterOpen(true)}
+            sx={{
+              cursor: "pointer",
+              transition: "all 0.3s ease",
+              boxShadow: "0 0 8px rgba(245, 130, 32, 0.6)",
+            }}
+          >
+            <FilterIcon />
+          </Box>
+        </Badge>
+
+
         <StyledButton
           variant="primary"
           name="Download"
@@ -141,6 +218,18 @@ const handleRemoveRsvp = async (row) => {
        handleRemoveRsvp={handleRemoveRsvp} 
 
       />
+      <Drawer
+        anchor="right"
+        open={filterOpen}
+        onClose={() => setFilterOpen(false)}
+      >
+        <RsvpFilter
+          open={filterOpen}
+          onClose={() => setFilterOpen(false)}
+          onApply={handleApplyFilter}
+          appliedFilters={filters}
+        />
+      </Drawer>
 
       <DownloadPopup
         open={downloadPopupOpen}

@@ -1,6 +1,6 @@
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import logo from "../assets/images/logo.png"; // imported once
+import logo from "../assets/images/LogoFinal.png"; 
 
 export const generatePDF = (headers = [], body = [], fileName = "Report", eventInfo = null, chapterName = "", totalCount) => {
   try {

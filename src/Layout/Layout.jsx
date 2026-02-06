@@ -31,7 +31,7 @@ import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNone
 import NewspaperOutlinedIcon from "@mui/icons-material/NewspaperOutlined";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
-import logo from "../assets/images/logo.png";
+import logo from "../assets/images/LogoFinal.png";
 import ApprovalIcon from "@mui/icons-material/Approval";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import {
@@ -274,7 +274,7 @@ const Layout = (props) => {
         }}
       >
         <Stack justifyContent={"center"} spacing={2}>
-          <img src={logo} alt="Logo" width={"60px"} height="57px" />
+          <img src={logo} alt="Logo" width={"100px"} height="auto" />
         </Stack>
       </Toolbar>
       <List

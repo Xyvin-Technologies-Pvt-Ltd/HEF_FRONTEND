@@ -200,17 +200,23 @@ export default function AddEvent({ isUpdate }) {
           };
         })
       );
-      const currentDate = moment().startOf("day");
-      const startDate = moment(data?.startDate).startOf("day");
-      const endDate = moment(data?.endDate).startOf("day");
+      const today = moment().startOf("day");
+
+      const visibilityStart = moment(data.eventDate).startOf("day");
+      const visibilityEnd = data.eventEndDate
+        ? moment(data.eventEndDate).startOf("day")
+        : moment(data.endDate).startOf("day");
+
+      const eventEnd = moment(data.endDate).startOf("day");
 
       let status;
-      if (currentDate.isAfter(endDate)) {
-        status = "pending";
-      } else if (currentDate.isSameOrAfter(startDate)) {
+
+      if (today.isBefore(visibilityStart)) {
+        status = "upcoming";
+      } else if (today.isSameOrAfter(visibilityStart) && today.isSameOrBefore(eventEnd)) {
         status = "live";
       } else {
-        status = "pending";
+        status = "completed";
       }
       const formData = {
         type: data?.type?.value,
@@ -272,7 +278,7 @@ export default function AddEvent({ isUpdate }) {
       setValue(`speakers.${index}.name`, "");
       setValue(`speakers.${index}.designation`, "");
       setValue(`speakers.${index}.role`, "");
-      setValue(`speakers.${index}.image`, "",null);
+      setValue(`speakers.${index}.image`, "", null);
     }
   };
 
@@ -346,7 +352,7 @@ export default function AddEvent({ isUpdate }) {
                   <StyledEventUpload
                     label="Upload speaker image"
                     onChange={(file) => field.onChange(file)}
-                    value={field.value||null}
+                    value={field.value || null}
                   />
                 )}
               />
