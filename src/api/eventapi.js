@@ -68,9 +68,9 @@ export const getGuestsDownload = async (eventId) => {
     throw error;
   }
 };
-export const getRsvpDownload = async (eventId) => {
+export const getRsvpDownload = async (eventId, chapterId) => {
   try {
-    const response = await axiosInstance.get(`/event/${eventId}/download-rsvp`);
+    const response = await axiosInstance.get(`/event/${eventId}/download-rsvp${chapterId ? `?chapterId=${chapterId}` : ''}`);
     return response.data; // { headers, body }
   } catch (error) {
     throw error;

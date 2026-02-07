@@ -77,7 +77,7 @@ const RsvpTable = ({ eventId }) => {
   const handleDownloadPDF = async () => {
     setDownloadLoading(true);
     try {
-      const res = await getRsvpDownload(eventId);
+      const res = await getRsvpDownload(eventId, filters?.chapterId);
       if (res?.data?.headers && res?.data?.body) {
         
         const { body,totalSeats, registeredCount, balanceSeats } = res.data;
