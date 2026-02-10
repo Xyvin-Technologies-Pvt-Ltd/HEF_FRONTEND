@@ -10,6 +10,7 @@ import EventCard from "../../ui/EventCard";
 import { useEventStore } from "../../store/eventStore";
 import OrganinserCard from "../../components/Event/OrganinserCard";
 import GuestTable from "../../components/Event/GuestTable";
+import ParticipantsTable from "../../components/Event/ParticipantsTable";
 
 const EventSinglePage = () => {
   const [selectedTab, setSelectedTab] = useState(0);
@@ -129,6 +130,7 @@ const EventSinglePage = () => {
         >
           <Tab label="Speaker List" />
           <Tab label="RSVP list" />
+          <Tab label="Participants" />
           <Tab label="Guest list" />
         </Tabs>
       </Box>{" "}
@@ -144,6 +146,11 @@ const EventSinglePage = () => {
           </Grid>
         )}
         {selectedTab === 2 && (
+          <Grid>
+            <ParticipantsTable eventId={id} />
+          </Grid>
+        )}
+        {selectedTab === 3 && (
           <Grid>
             <GuestTable data={event?.guests} eventId={id} />
           </Grid>

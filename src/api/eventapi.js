@@ -99,3 +99,24 @@ export const removeEventRsvp = async (eventId, userId) => {
     throw error;
 }
 };
+export const getEventAttendedUsers = async (eventId, pageNo = 1, limit = 10, chapterId) => {
+  try {
+    const res = await axiosInstance.get(
+      `/event/${eventId}/attended-users?pageNo=${pageNo}&limit=${limit}${chapterId ? `&chapterId=${chapterId}` : ""}`
+    );
+    return res.data;
+  } catch (error) {
+    console.error("Error fetching attended users:", error);
+  }
+};
+
+export const downloadAttendedUsers = async (eventId, chapterId) => {
+  try {
+    const response = await axiosInstance.get(
+      `/event/${eventId}/download-attended${chapterId ? `?chapterId=${chapterId}` : ""}`
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
