@@ -227,23 +227,16 @@ export default function AddEvent({ isUpdate }) {
           };
         })
       );
-      const today = moment().startOf("day");
-
-      const visibilityStart = moment(data.eventDate).startOf("day");
-      const visibilityEnd = data.eventEndDate
-        ? moment(data.eventEndDate).startOf("day")
-        : moment(data.endDate).startOf("day");
-
-      const eventEnd = moment(data.endDate).startOf("day");
-
+      const currentDate = moment().startOf("day");
+      const startDate = moment(data?.startDate).startOf("day");
+      const endDate = moment(data?.endDate).startOf("day");
       let status;
-
-      if (today.isBefore(visibilityStart)) {
-        status = "upcoming";
-      } else if (today.isSameOrAfter(visibilityStart) && today.isSameOrBefore(eventEnd)) {
+      if (currentDate.isAfter(endDate)) {
+        status = "pending";
+      } else if (currentDate.isSameOrAfter(startDate)) {
         status = "live";
       } else {
-        status = "completed";
+        status = "pending";
       }
       const formData = {
         type: data?.type?.value,
