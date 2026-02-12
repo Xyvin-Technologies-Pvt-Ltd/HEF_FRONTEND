@@ -75,6 +75,7 @@ const EventTable = ({
   rowPerSize,
   setRowPerSize,
   totalCount,
+  disableActions = false,
 }) => {
   const [selectedIds, setSelectedIds] = useState([]);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -291,118 +292,119 @@ const EventTable = ({
                     </StyledTableCell>
                   ))}
 
-                  <StyledTableCell padding="normal">
-                    <Box display="flex" alignItems="center">
-                      {onView && (
-                        <IconButton
-                          aria-controls="simple-view"
-                          aria-haspopup="true"
-                          onClick={() => handleView(row._id)}
-                        >
-                          <ViewIcon />
-                        </IconButton>
-                      )}{" "}
-                      {!menu &&
-                        row.status !== "rejected" &&
-                        row.status !== "approved" && (
+                  {!disableActions &&
+                    <StyledTableCell padding="normal">
+                      <Box display="flex" alignItems="center">
+                        {onView && (
                           <IconButton
-                            aria-controls="simple-menu"
+                            aria-controls="simple-view"
                             aria-haspopup="true"
-                            onClick={(event) => handleMenuOpen(event, row._id)}
+                            onClick={() => handleView(row._id)}
                           >
-                            <MoreVertIcon />
+                            <ViewIcon />
                           </IconButton>
-                        )}
-                      <Menu
-                        id="row-menu"
-                        anchorEl={anchorEl}
-                        open={Boolean(anchorEl) && rowId === row._id}
-                        onClose={handleMenuClose}
-                      >
-                        {rsvp ? [
-                          <MenuItem
-                            onClick={() => {
-                              handleRemoveRsvp(row);
-                              handleMenuClose();
-                            }}
-                            style={{ color: "red" }}
-                          >
-                            Remove
-                          </MenuItem>
-                        ] : news
-                          ? [
-                            <>
-                              <MenuItem onClick={handleModify}>Edit</MenuItem>
-                              <MenuItem onClick={handleAction}>
-                                Publish/Unpublish
-                              </MenuItem>
-                              <MenuItem
-                                onClick={() => handleRowDelete(row._id)}
-                                style={{ color: "red" }}
-                              >
-                                Remove
-                              </MenuItem>
-                            </>,
-                          ]
-                          : member
+                        )}{" "}
+                        {!menu &&
+                          row.status !== "rejected" &&
+                          row.status !== "approved" && (
+                            <IconButton
+                              aria-controls="simple-menu"
+                              aria-haspopup="true"
+                              onClick={(event) => handleMenuOpen(event, row._id)}
+                            >
+                              <MoreVertIcon />
+                            </IconButton>
+                          )}
+                        <Menu
+                          id="row-menu"
+                          anchorEl={anchorEl}
+                          open={Boolean(anchorEl) && rowId === row._id}
+                          onClose={handleMenuClose}
+                        >
+                          {rsvp ? [
+                            <MenuItem
+                              onClick={() => {
+                                handleRemoveRsvp(row);
+                                handleMenuClose();
+                              }}
+                              style={{ color: "red" }}
+                            >
+                              Remove
+                            </MenuItem>
+                          ] : news
                             ? [
                               <>
-                                <MenuItem onClick={handleView}>
-                                  View Details
-                                </MenuItem>
                                 <MenuItem onClick={handleModify}>Edit</MenuItem>
+                                <MenuItem onClick={handleAction}>
+                                  Publish/Unpublish
+                                </MenuItem>
                                 <MenuItem
                                   onClick={() => handleRowDelete(row._id)}
                                   style={{ color: "red" }}
                                 >
-                                  Delete
+                                  Remove
                                 </MenuItem>
                               </>,
                             ]
-                            : payment
+                            : member
                               ? [
                                 <>
-                                  <MenuItem onClick={handleModify}>
-                                    Approve
+                                  <MenuItem onClick={handleView}>
+                                    View Details
                                   </MenuItem>
-                                  <MenuItem onClick={handleAction}>
-                                    Reject
+                                  <MenuItem onClick={handleModify}>Edit</MenuItem>
+                                  <MenuItem
+                                    onClick={() => handleRowDelete(row._id)}
+                                    style={{ color: "red" }}
+                                  >
+                                    Delete
                                   </MenuItem>
                                 </>,
                               ]
-                              : college
+                              : payment
                                 ? [
                                   <>
-                                    <MenuItem onClick={handleView}>
-                                      View Details
+                                    <MenuItem onClick={handleModify}>
+                                      Approve
                                     </MenuItem>
                                     <MenuItem onClick={handleAction}>
-                                      Add Member
-                                    </MenuItem>
-                                    <MenuItem onClick={handleModify}>Edit</MenuItem>
-                                    <MenuItem
-                                      onClick={() => handleRowDelete(row._id)}
-                                      style={{ color: "red" }}
-                                    >
-                                      Delete
+                                      Reject
                                     </MenuItem>
                                   </>,
                                 ]
-                                : [
-                                  <>
-                                    {" "}
-                                    <MenuItem onClick={handleModify}>Edit</MenuItem>
-                                    <MenuItem
-                                      onClick={() => handleRowDelete(row._id)}
-                                      style={{ color: "red" }}
-                                    >
-                                      Remove
-                                    </MenuItem>
-                                  </>,
-                                ]}
-                      </Menu>
-                    </Box>
-                  </StyledTableCell>
+                                : college
+                                  ? [
+                                    <>
+                                      <MenuItem onClick={handleView}>
+                                        View Details
+                                      </MenuItem>
+                                      <MenuItem onClick={handleAction}>
+                                        Add Member
+                                      </MenuItem>
+                                      <MenuItem onClick={handleModify}>Edit</MenuItem>
+                                      <MenuItem
+                                        onClick={() => handleRowDelete(row._id)}
+                                        style={{ color: "red" }}
+                                      >
+                                        Delete
+                                      </MenuItem>
+                                    </>,
+                                  ]
+                                  : [
+                                    <>
+                                      {" "}
+                                      <MenuItem onClick={handleModify}>Edit</MenuItem>
+                                      <MenuItem
+                                        onClick={() => handleRowDelete(row._id)}
+                                        style={{ color: "red" }}
+                                      >
+                                        Remove
+                                      </MenuItem>
+                                    </>,
+                                  ]}
+                        </Menu>
+                      </Box>
+                    </StyledTableCell>}
                 </StyledTableRow>
               ))
             )}

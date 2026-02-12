@@ -24,6 +24,7 @@ import StyledCropImage from "../../ui/StyledCropImage.jsx";
 import { useDropDownStore } from "../../store/dropDownStore.js";
 import moment from "moment";
 import { upload } from "../../api/adminapi.js";
+import { getchapterList } from "../../api/hierarchyapi.js";
 
 export default function AddEvent({ isUpdate }) {
   const {
@@ -51,12 +52,31 @@ export default function AddEvent({ isUpdate }) {
   const { user, fetchListofUser } = useDropDownStore();
   const [type, setType] = useState();
 
+  const [participantOption, setParticipantOption] = useState("chapter");
+  const [chapterList, setChapterList] = useState([]);
+  const [selectedChapters, setSelectedChapters] = useState([]);
+
+
   const navigate = useNavigate();
   const handleTypeChange = (selectedOption) => {
     setType(selectedOption?.value);
   };
   useEffect(() => {
     fetchListofUser();
+  }, []);
+
+  useEffect(() => {
+    const fetchChapters = async () => {
+      try {
+        const res = await getchapterList();
+        if (res && res.data.body) {
+          setChapterList(res.data.body);
+        }
+      } catch (err) {
+        console.error("Failed to fetch chapters:", err);
+      }
+    };
+    fetchChapters();
   }, []);
 
   const users =
@@ -129,6 +149,13 @@ export default function AddEvent({ isUpdate }) {
           },
         ]);
       }
+      if (event.isAllUsers) {
+        setParticipantOption("all");
+        setSelectedChapters([]);
+      } else {
+        setParticipantOption("chapter");
+        setSelectedChapters(event.chapters || []);
+      }
     }
   }, [event, isUpdate, setValue]);
   const [imageFile, setImageFile] = useState(null);
@@ -200,23 +227,16 @@ export default function AddEvent({ isUpdate }) {
           };
         })
       );
-      const today = moment().startOf("day");
-
-      const visibilityStart = moment(data.eventDate).startOf("day");
-      const visibilityEnd = data.eventEndDate
-        ? moment(data.eventEndDate).startOf("day")
-        : moment(data.endDate).startOf("day");
-
-      const eventEnd = moment(data.endDate).startOf("day");
-
+      const currentDate = moment().startOf("day");
+      const startDate = moment(data?.startDate).startOf("day");
+      const endDate = moment(data?.endDate).startOf("day");
       let status;
-
-      if (today.isBefore(visibilityStart)) {
-        status = "upcoming";
-      } else if (today.isSameOrAfter(visibilityStart) && today.isSameOrBefore(eventEnd)) {
+      if (currentDate.isAfter(endDate)) {
+        status = "pending";
+      } else if (currentDate.isSameOrAfter(startDate)) {
         status = "live";
       } else {
-        status = "completed";
+        status = "pending";
       }
       const formData = {
         type: data?.type?.value,
@@ -235,6 +255,8 @@ export default function AddEvent({ isUpdate }) {
         status: status,
         coordinator: data?.coordinator?.map((coordinator) => coordinator.value),
         allowGuestRegistration: data.allowGuestRegistration,
+        isAllUsers: participantOption === "all",
+        chapters: participantOption === "chapter" ? selectedChapters : [],
       };
 
       if (type === "Online") {
@@ -590,6 +612,65 @@ export default function AddEvent({ isUpdate }) {
                   />
                 </Grid>
               )}
+              <Grid item xs={6}>
+                <Typography sx={{ marginBottom: 1 }} variant="h6" color="textSecondary">
+                  Participants <span style={{ color: "red" }}>*</span>
+                </Typography>
+
+                <Controller
+                  name="participants"
+                  control={control}
+                  render={({ field }) => (
+                    <StyledSelectField
+                      placeholder="Select Participants"
+                      isMulti={participantOption === "chapter"}
+                      value={
+                        participantOption === "all"
+                          ? { value: "all", label: "All Users" }
+                          : chapterList
+                            .filter((c) => selectedChapters.includes(c.Name))
+                            .map((c) => ({
+                              value: c.Name,
+                              label: c.ChapterName,
+                            }))
+                      }
+                      options={[
+                        { value: "all", label: "All Users" },
+                        ...chapterList.map((chapter) => ({
+                          value: chapter.Name,
+                          label: chapter.ChapterName,
+                        })),
+                      ]}
+                      onChange={(selected) => {
+                        if (!selected) {
+                          setParticipantOption("all");
+                          setSelectedChapters([]);
+                          field.onChange("all");
+                          return;
+                        }
+
+                        // If "All Users" selected
+                        if (Array.isArray(selected) && selected.some((s) => s.value === "all")) {
+                          setParticipantOption("all");
+                          setSelectedChapters([]);
+                          field.onChange("all");
+                          return;
+                        }
+
+                        // Chapter selection
+                        const values = Array.isArray(selected)
+                          ? selected.map((s) => s.value)
+                          : [selected.value];
+
+                        setParticipantOption("chapter");
+                        setSelectedChapters(values);
+                        field.onChange(values);
+                      }}
+                    />
+                  )}
+                />
+              </Grid>
+
 
               <Grid item xs={6}>
                 <Typography

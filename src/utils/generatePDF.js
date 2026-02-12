@@ -156,14 +156,21 @@ export const generatePDF = (headers = [], body = [], fileName = "Report", eventI
             doc.setFontSize(10);
             doc.setTextColor(255, 255, 255); // white color
 
-            // Registered / Total Seats
-            const regText = `Registered: ${eventInfo.registeredCount} / Total: ${eventInfo.totalSeats}`;
-            doc.text(regText, rightMarginX, yPosition, { align: "right" });
-
-            // Balance Seats
-            yPosition += 12; // spacing below
-            const balText = `Balance Seats: ${eventInfo.balanceSeats}`;
-            doc.text(balText, rightMarginX, yPosition, { align: "right" });
+            if (eventInfo?.registeredCount !== undefined) {
+              const regText = `Registered: ${eventInfo.registeredCount} / Total: ${eventInfo.totalSeats}`;
+              doc.text(regText, rightMarginX, yPosition, { align: "right" });
+              yPosition += 12;
+            }
+            if (eventInfo?.attendedCount !== undefined) {
+              const regText = `Attended: ${eventInfo.attendedCount} / Total: ${eventInfo.totalSeats}`;
+              doc.text(regText, rightMarginX, yPosition, { align: "right" });
+              yPosition += 12;
+            }
+           
+            if (eventInfo?.balanceSeats !== undefined) {
+              const balText = `Balance Seats: ${eventInfo.balanceSeats}`;
+              doc.text(balText, rightMarginX, yPosition, { align: "right" });
+            }
           }
 
           // --- Report Generated Date (only on first page, right side below header) ---
