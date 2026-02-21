@@ -116,6 +116,7 @@ const MemberList = () => {
     if (filters.membershipId) filter.membershipId = filters.membershipId;
     if (filters.from) filter.from = filters.from;
     if (filters.to) filter.to = filters.to;
+    if (filters.district) filter.district = filters.district;
     if (filters.chapter) filter.chapter = filters.chapter;
     if (filters.businessCategory) filter.businessCategory = filters.businessCategory;
     if (filters.status) filter.status = filters.status;
