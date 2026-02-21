@@ -144,6 +144,7 @@ const MemberFilter = ({ open, onClose, onApply }) => {
       status: appliedStatus?.value || status?.value || "",
       installed: appliedUser?.value ?? installed?.value ?? "",
 
+      district: selectedDistrict?.value || "",
       chapter: selectedChapter?.value || "",
       chapterName: selectedChapter?.label || "All Chapters"
     });
