@@ -60,6 +60,7 @@ const MemberList = () => {
           from: "",
           to: "",
           chapter: "",
+          district: "",
           businessCategory: "",
         };
       }
@@ -72,6 +73,7 @@ const MemberList = () => {
       from: "",
       to: "",
       chapter: "",
+      district: "",
       businessCategory: "",
     };
   });
@@ -147,6 +149,7 @@ const MemberList = () => {
       if (filters.from) filter.from = filters.from;
       if (filters.to) filter.to = filters.to;
       if (filters.chapter) filter.chapter = filters.chapter;
+      if (filters.district) filter.district = filters.district;
       if (filters.businessCategory) filter.businessCategory = filters.businessCategory;
       if (typeof filters.installed === "boolean") {
         filter.installed = filters.installed;
@@ -193,6 +196,7 @@ const MemberList = () => {
       if (filters.from) filter.from = filters.from;
       if (filters.to) filter.to = filters.to;
       if (filters.chapter) filter.chapter = filters.chapter;
+      if (filters.district) filter.district = filters.district;
       if (filters.businessCategory) filter.businessCategory = filters.businessCategory;
       if (typeof filters.installed === "boolean") {
         filter.installed = filters.installed;
