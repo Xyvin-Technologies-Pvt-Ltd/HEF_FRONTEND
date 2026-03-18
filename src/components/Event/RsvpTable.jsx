@@ -143,6 +143,7 @@ const handleRemoveRsvp = async (row) => {
     { title: "Phone", field: "phone" },
     { title: "Chapter", field: "chaptername" },
     { title: "Registration Date", field: "registeredDate" },
+    { title: "Business Category", field: "businessCatogary" },
   ]
 
 

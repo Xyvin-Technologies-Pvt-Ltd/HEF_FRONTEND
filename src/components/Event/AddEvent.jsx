@@ -622,7 +622,7 @@ export default function AddEvent({ isUpdate }) {
                   control={control}
                   render={({ field }) => (
                     <StyledSelectField
-                      placeholder="Select Participants"
+                      placeholder="Select chapter"
                       isMulti={participantOption === "chapter"}
                       value={
                         participantOption === "all"

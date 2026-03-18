@@ -130,7 +130,7 @@ const EventSinglePage = () => {
         >
           <Tab label="Speaker List" />
           <Tab label="RSVP list" />
-          <Tab label="Participants" />
+          <Tab label="Attended list" />
           <Tab label="Guest list" />
         </Tabs>
       </Box>{" "}
