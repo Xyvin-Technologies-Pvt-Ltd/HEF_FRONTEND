@@ -45,6 +45,7 @@ export default function AddEvent({ isUpdate }) {
         },
       ],
       allowGuestRegistration: false,
+      registrationEnabled: true,
     },
   });
   const { id } = useParams();
@@ -117,6 +118,7 @@ export default function AddEvent({ isUpdate }) {
       setValue("organiserName", event.organiserName);
       setValue("limit", event.limit);
       setValue("allowGuestRegistration", event.allowGuestRegistration || false);
+      setValue("registrationEnabled", event.registrationEnabled ?? true);
       const selectedplatform = option.find(
         (item) => item.value === event.platform
       );
@@ -255,6 +257,7 @@ export default function AddEvent({ isUpdate }) {
         status: status,
         coordinator: data?.coordinator?.map((coordinator) => coordinator.value),
         allowGuestRegistration: data.allowGuestRegistration,
+        registrationEnabled: data.registrationEnabled,
         isAllUsers: participantOption === "all",
         chapters: participantOption === "chapter" ? selectedChapters : [],
       };
@@ -884,6 +887,28 @@ export default function AddEvent({ isUpdate }) {
                   name="allowGuestRegistration"
                   control={control}
                   defaultValue={false}
+                  render={({ field }) => (
+                    <Switch
+                      checked={field.value}
+                      onChange={(e) => field.onChange(e.target.checked)}
+                      color="primary"
+                    />
+                  )}
+                />
+              </Grid>
+
+              <Grid item xs={6}>
+                <Typography
+                  sx={{ marginBottom: 1 }}
+                  variant="h6"
+                  color="textSecondary"
+                >
+                  Enable Event Registration
+                </Typography>
+                <Controller
+                  name="registrationEnabled"
+                  control={control}
+                  defaultValue={true}
                   render={({ field }) => (
                     <Switch
                       checked={field.value}

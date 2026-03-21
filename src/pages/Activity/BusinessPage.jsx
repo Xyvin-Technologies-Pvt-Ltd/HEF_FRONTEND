@@ -31,7 +31,6 @@ import { useAdminStore } from "../../store/adminStore";
 import { generatePDF } from "../../utils/generatePDF";
 import DownloadPopup from "../../components/Member/DownloadPopup";
 
-
 const BusinessPage = () => {
   const navigate = useNavigate();
   const [pageNo, setPageNo] = useState(1);
@@ -45,6 +44,9 @@ const BusinessPage = () => {
   const { removeActivity } = useActivityStore();
   const [downloadPopupOpen, setDownloadPopupOpen] = useState(false);
   const [downloadLoading, setDownloadLoading] = useState(false);
+  const [downloadData, setDownloadData] = useState(null);
+  const [downloadColumns, setDownloadColumns] = useState([]);
+  const [selectedKeys, setSelectedKeys] = useState([]);
   const [filters, setFilters] = useState({
     type: "",
     status: "",
@@ -125,14 +127,14 @@ const BusinessPage = () => {
     fetchActivity(filter);
   }, [isChange, pageNo, search, row, selectedTab, filters]);
   // const hasActiveFilters = Object.values(filters).some((value) => value);
-  const hasActiveFilters = 
-    filters.type || 
-    filters.status || 
-    filters.startDate || 
-    filters.endDate || 
+  const hasActiveFilters =
+    filters.type ||
+    filters.status ||
+    filters.startDate ||
+    filters.endDate ||
     filters.chapter;
   const activityColumns = [
-    { title: "Date", field: "date", padding: "none" },
+    { title: "Date", field: "createdAt", padding: "none" },
     { title: "Business giver", field: "senderName" },
     { title: "Business receiver", field: "memberName" },
     { title: "Request Type", field: "type" },
@@ -157,29 +159,93 @@ const BusinessPage = () => {
     return "All Activities Report";
   };
 
+  const buildDownloadFilter = () => {
+    let filter = { ...filters, sortByAmount: "true" };
+
+    if (selectedTab === 1) {
+      filter.type = "Business";
+    } else if (selectedTab === 2) {
+      filter.type = "One v One Meeting";
+    } else if (selectedTab === 3) {
+      filter.type = "Referral";
+    }
+
+    return filter;
+  };
+
+  const filterDownloadData = (headers, body, keys) => {
+    const safeKeys = Array.isArray(keys) ? keys : [];
+    const selectedHeaders = Array.isArray(headers)
+      ? headers.filter((h) => safeKeys.includes(h.key))
+      : [];
+    const filteredBody = Array.isArray(body)
+      ? body.map((row) =>
+          safeKeys.reduce((acc, key) => {
+            acc[key] = row?.[key];
+            return acc;
+          }, {})
+        )
+      : [];
+
+    return { selectedHeaders, filteredBody };
+  };
+
+  const prefetchDownloadData = async () => {
+    try {
+      const filter = buildDownloadFilter();
+      const data = await getBusinessDwld(filter);
+      const csvData = data?.data;
+      if (csvData?.headers && csvData?.body) {
+        const sortedBody = csvData.body.sort(
+          (a, b) => (b.amount || 0) - (a.amount || 0)
+        );
+        setDownloadData({ ...csvData, body: sortedBody });
+
+        const customHeaders = [
+          { header: "Date", key: "createdAt" },
+          { header: "Business Giver", key: "senderName" },
+          { header: "Business Receiver", key: "memberName" },
+          { header: "Request Type", key: "type" },
+          { header: "Status", key: "status" },
+        ];
+
+        if (selectedTab !== 2) {
+          customHeaders.push({ header: "Amount", key: "amount" });
+        }
+        if (selectedTab === 3) {
+          customHeaders.push({ header: "Referral", key: "referralName" });
+        }
+
+        setDownloadColumns(customHeaders);
+        setSelectedKeys(customHeaders.map((h) => h.key));
+      }
+    } catch (error) {
+      console.error("Download prefetch error:", error);
+    }
+  };
+
+  const handleOpenDownloadPopup = async () => {
+    setDownloadPopupOpen(true);
+    await prefetchDownloadData();
+  };
+
   const handleDownloadExcel = async () => {
     setDownloadLoading(true);
     try {
-      // ✅ Build filter with selectedTab
-      let filter = { ...filters, sortByAmount: "true" };
-
-      if (selectedTab === 1) {
-        filter.type = "Business";
-      } else if (selectedTab === 2) {
-        filter.type = "One v One Meeting";
-      } else if (selectedTab === 3) {
-        filter.type = "Referral";
-      }
-
-      const data = await getBusinessDwld(filter);
-      const csvData = data.data;
+      const filter = buildDownloadFilter();
+      const csvData = downloadData || (await getBusinessDwld(filter)).data;
 
       if (csvData?.headers && csvData?.body) {
         const sortedBody = csvData.body.sort(
           (a, b) => (b.amount || 0) - (a.amount || 0)
         );
+        const { selectedHeaders, filteredBody } = filterDownloadData(
+          csvData.headers,
+          sortedBody,
+          selectedKeys
+        );
         const chapterName = filters.chapterLabel || "All_Chapters";
-        generateExcel(csvData.headers, sortedBody, getReportTitle(), chapterName);
+        generateExcel(selectedHeaders, filteredBody, getReportTitle(), chapterName);
         toast.success("Excel downloaded successfully!");
       } else {
         toast.error("Invalid data for Excel download");
@@ -197,19 +263,8 @@ const BusinessPage = () => {
   const handleDownloadPDF = async () => {
     setDownloadLoading(true);
     try {
-      // ✅ Build filter with selectedTab
-      let filter = { ...filters, sortByAmount: "true" };
-
-      if (selectedTab === 1) {
-        filter.type = "Business";
-      } else if (selectedTab === 2) {
-        filter.type = "One v One Meeting";
-      } else if (selectedTab === 3) {
-        filter.type = "Referral";
-      }
-
-      const data = await getBusinessDwld(filter);
-      const csvData = data.data;
+      const filter = buildDownloadFilter();
+      const csvData = downloadData || (await getBusinessDwld(filter)).data;
 
       if (csvData?.headers && csvData?.body) {
         const sortedBody = csvData.body.sort(
@@ -233,7 +288,19 @@ const BusinessPage = () => {
           customHeaders.push({ header: "Referral", key: "referralName" });
         }
 
-        generatePDF(customHeaders, sortedBody, getReportTitle(), null, filters.chapterLabel);
+        const { selectedHeaders, filteredBody } = filterDownloadData(
+          customHeaders,
+          sortedBody,
+          selectedKeys
+        );
+
+        generatePDF(
+          selectedHeaders,
+          filteredBody,
+          getReportTitle(),
+          null,
+          filters.chapterLabel
+        );
         toast.success("PDF downloaded successfully!");
       } else {
         toast.error("Invalid data for PDF download");
@@ -246,6 +313,7 @@ const BusinessPage = () => {
       setDownloadPopupOpen(false);
     }
   };
+
   return (
     <>
       {" "}
@@ -266,19 +334,19 @@ const BusinessPage = () => {
           {singleAdmin?.role?.permissions?.includes(
             "activityManagement_modify"
           ) && (
-              <StyledButton
-                variant={"primary"}
-                name={
-                  <>
-                    <AddIcon />
-                    Create Activity
-                  </>
-                }
-                onClick={() => {
-                  navigate("/activity/activity");
-                }}
-              />
-            )}
+            <StyledButton
+              variant={"primary"}
+              name={
+                <>
+                  <AddIcon />
+                  Create Activity
+                </>
+              }
+              onClick={() => {
+                navigate("/activity/activity");
+              }}
+            />
+          )}
         </Stack>
       </Stack>
       <Tabs
@@ -326,7 +394,7 @@ const BusinessPage = () => {
             <StyledButton
               variant={"primary"}
               name={"Download"}
-              onClick={() => setDownloadPopupOpen(true)}
+              onClick={handleOpenDownloadPopup}
             />
             <Tooltip title={hasActiveFilters ? "Active filters" : "Filter"}>
               <Badge
@@ -405,6 +473,9 @@ const BusinessPage = () => {
           onDownloadExcel={handleDownloadExcel}
           onDownloadPDF={handleDownloadPDF}
           loading={downloadLoading}
+          columns={downloadColumns}
+          selectedKeys={selectedKeys}
+          onSelectionChange={setSelectedKeys}
         />
       </Box>
     </>

@@ -46,6 +46,9 @@ const MemberList = () => {
   const [loading, setLoading] = useState(false);
   const [downloadPopupOpen, setDownloadPopupOpen] = useState(false);
   const [downloadLoading, setDownloadLoading] = useState(false);
+  const [downloadData, setDownloadData] = useState(null);
+  const [downloadColumns, setDownloadColumns] = useState([]);
+  const [selectedKeys, setSelectedKeys] = useState([]);
   const [filters, setFilters] = useState(() => {
     const savedFilters = localStorage.getItem("memberFilters");
     if (savedFilters) {
@@ -134,40 +137,75 @@ const MemberList = () => {
     fetchMember(filter);
   }, [isChange, pageNo, search, row, filters, memberInstalled, memberStatus]);
 
-  const handleDownload = () => {
+  const buildDownloadFilter = () => {
+    let filter = {};
+
+    if (filters.name) filter.name = filters.name;
+    if (filters.membershipId) filter.membershipId = filters.membershipId;
+    if (filters.status) filter.status = filters.status;
+    if (filters.from) filter.from = filters.from;
+    if (filters.to) filter.to = filters.to;
+    if (filters.chapter) filter.chapter = filters.chapter;
+    if (filters.district) filter.district = filters.district;
+    if (filters.businessCategory) filter.businessCategory = filters.businessCategory;
+    if (typeof filters.installed === "boolean") {
+      filter.installed = filters.installed;
+    }
+
+    return filter;
+  };
+
+  const prefetchDownloadData = async () => {
+    try {
+      const filter = buildDownloadFilter();
+      const data = await getDwld(filter);
+      const csvData = data?.data;
+      if (csvData?.headers && csvData?.body) {
+        setDownloadData(csvData);
+        setDownloadColumns(csvData.headers);
+        setSelectedKeys(csvData.headers.map((h) => h.key));
+      }
+    } catch (error) {
+      console.error("Download prefetch error:", error);
+    }
+  };
+
+  const handleOpenDownloadPopup = async () => {
     setDownloadPopupOpen(true);
+    await prefetchDownloadData();
+  };
+
+  const filterDownloadData = (headers, body, keys) => {
+    const safeKeys = Array.isArray(keys) ? keys : [];
+    const selectedHeaders = Array.isArray(headers)
+      ? headers.filter((h) => safeKeys.includes(h.key))
+      : [];
+    const filteredBody = Array.isArray(body)
+      ? body.map((row) =>
+          safeKeys.reduce((acc, key) => {
+            acc[key] = row?.[key];
+            return acc;
+          }, {})
+        )
+      : [];
+
+    return { selectedHeaders, filteredBody };
   };
 
   const handleDownloadExcel = async () => {
     setDownloadLoading(true);
     try {
-      let filter = {};
-
-      if (filters.name) filter.name = filters.name;
-      if (filters.membershipId) filter.membershipId = filters.membershipId;
-      if (filters.status) filter.status = filters.status;
-      if (filters.from) filter.from = filters.from;
-      if (filters.to) filter.to = filters.to;
-      if (filters.chapter) filter.chapter = filters.chapter;
-      if (filters.district) filter.district = filters.district;
-      if (filters.businessCategory) filter.businessCategory = filters.businessCategory;
-      if (typeof filters.installed === "boolean") {
-        filter.installed = filters.installed;
-      }
-
-      console.log("Excel Download - Filters:", filter);
-      const data = await getDwld(filter);
-      console.log("Excel Download - API Response:", data);
-
-      const csvData = data.data;
-      console.log("Excel Download - CSV Data:", csvData);
+      const filter = buildDownloadFilter();
+      const csvData = downloadData || (await getDwld(filter)).data;
 
       if (csvData && csvData.headers && csvData.body) {
-        console.log("Excel Download - Headers:", csvData.headers);
-        console.log("Excel Download - Body sample:", csvData.body.slice(0, 2));
-
-         const chapterName = filters.chapterName || "All_Chapters";
-        generateExcel(csvData.headers, csvData.body, "Members", chapterName)
+        const { selectedHeaders, filteredBody } = filterDownloadData(
+          csvData.headers,
+          csvData.body,
+          selectedKeys
+        );
+        const chapterName = filters.chapterName || "All_Chapters";
+        generateExcel(selectedHeaders, filteredBody, "Members", chapterName);
         toast.success("Excel file downloaded successfully!");
       } else {
         console.error(
@@ -188,32 +226,24 @@ const MemberList = () => {
   const handleDownloadPDF = async () => {
     setDownloadLoading(true);
     try {
-      let filter = {};
-
-      if (filters.name) filter.name = filters.name;
-      if (filters.membershipId) filter.membershipId = filters.membershipId;
-      if (filters.status) filter.status = filters.status;
-      if (filters.from) filter.from = filters.from;
-      if (filters.to) filter.to = filters.to;
-      if (filters.chapter) filter.chapter = filters.chapter;
-      if (filters.district) filter.district = filters.district;
-      if (filters.businessCategory) filter.businessCategory = filters.businessCategory;
-      if (typeof filters.installed === "boolean") {
-        filter.installed = filters.installed;
-      }
-
-      console.log("PDF Download - Filters:", filter);
-      const data = await getDwld(filter);
-      console.log("PDF Download - API Response:", data);
-
-      const csvData = data.data;
-      console.log("PDF Download - CSV Data:", csvData);
+      const filter = buildDownloadFilter();
+      const csvData = downloadData || (await getDwld(filter)).data;
 
       if (csvData && csvData.headers && csvData.body) {
-        console.log("PDF Download - Headers:", csvData.headers);
-        console.log("PDF Download - Body sample:", csvData.body.slice(0, 2));
+        const { selectedHeaders, filteredBody } = filterDownloadData(
+          csvData.headers,
+          csvData.body,
+          selectedKeys
+        );
         const chapterName = filters.chapterName || "All_Chapters";
-        generatePDF(csvData.headers, csvData.body, "Members", null, chapterName, csvData.totalCount);
+        generatePDF(
+          selectedHeaders,
+          filteredBody,
+          "Members",
+          null,
+          chapterName,
+          csvData.totalCount
+        );
         toast.success("PDF file downloaded successfully!");
       } else {
         console.error(
@@ -279,7 +309,7 @@ const MemberList = () => {
             <StyledButton
               variant={"primary"}
               name={"Download"}
-              onClick={handleDownload}
+              onClick={handleOpenDownloadPopup}
             />
             <Badge
               color="error"
@@ -433,6 +463,9 @@ const MemberList = () => {
           onDownloadExcel={handleDownloadExcel}
           onDownloadPDF={handleDownloadPDF}
           loading={downloadLoading}
+          columns={downloadColumns}
+          selectedKeys={selectedKeys}
+          onSelectionChange={setSelectedKeys}
         />
       </Box>
       <Dialog
