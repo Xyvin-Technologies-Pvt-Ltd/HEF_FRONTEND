@@ -9,13 +9,27 @@ import {
   Box,
   IconButton,
   CircularProgress,
+  Checkbox,
+  FormControlLabel,
+  FormGroup,
 } from '@mui/material';
 import { StyledButton } from '../../ui/StyledButton';
 import { ReactComponent as ExcelIcon } from '../../assets/icons/excel-icon.svg';
 import { ReactComponent as PdfIcon } from '../../assets/icons/pdf-icon.svg';
 import { ReactComponent as CloseIcon } from '../../assets/icons/CloseIcon.svg';
 
-const DownloadPopup = ({ open, onClose, onDownloadExcel, onDownloadPDF, loading }) => {
+const DownloadPopup = ({ open, onClose, onDownloadExcel, onDownloadPDF, loading, columns, selectedKeys, onSelectionChange}) => {
+  const showColumnSelection = Array.isArray(columns) && columns.length > 0;
+
+  const handleToggleColumn = (key) => {
+    if (!onSelectionChange) return;
+    const current = Array.isArray(selectedKeys) ? selectedKeys : [];
+    const next = current.includes(key)
+      ? current.filter((k) => k !== key)
+      : [...current, key];
+    onSelectionChange(next);
+  };
+
   return (
     <Dialog
       open={open}
@@ -59,6 +73,43 @@ const DownloadPopup = ({ open, onClose, onDownloadExcel, onDownloadPDF, loading 
           Choose your preferred format to download the member data. 
           {loading && ' The download will include any applied filters.'}
         </Typography>
+
+        {showColumnSelection && (
+          <Box
+            sx={{
+              mb: 3,
+              border: '1px solid rgba(0, 0, 0, 0.12)',
+              borderRadius: '12px',
+              padding: '12px',
+              maxHeight: '220px',
+              overflowY: 'auto',
+            }}
+          >
+            <Typography
+              variant="body2"
+              color="textSecondary"
+              sx={{ mb: 1, fontWeight: 600 }}
+            >
+              Select columns
+            </Typography>
+            <FormGroup>
+              {columns.map((col) => (
+                <FormControlLabel
+                  key={col.key}
+                  control={
+                    <Checkbox
+                      size="small"
+                      checked={(Array.isArray(selectedKeys) ? selectedKeys : []).includes(col.key)}
+                      onChange={() => handleToggleColumn(col.key)}
+                      disabled={loading}
+                    />
+                  }
+                  label={col.header}
+                />
+              ))}
+            </FormGroup>
+          </Box>
+        )}
 
         <Stack spacing={2}>
           {/* Excel Option */}

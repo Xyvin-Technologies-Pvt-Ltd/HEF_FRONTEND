@@ -26,6 +26,9 @@ const EventList = () => {
   const { singleAdmin } = useAdminStore();
   const [downloadPopupOpen, setDownloadPopupOpen] = useState(false);
   const [downloadLoading, setDownloadLoading] = useState(false);
+  const [downloadData, setDownloadData] = useState(null);
+  const [downloadColumns, setDownloadColumns] = useState([]);
+  const [selectedKeys, setSelectedKeys] = useState([]);
   useEffect(() => {
     let filter = {};
     if (search) {
@@ -60,14 +63,54 @@ const EventList = () => {
     }
   };
 
+  const prefetchDownloadData = async () => {
+    try {
+      const data = await getEventsDownload({});
+      const eventData = data.data;
+      if (eventData?.headers && eventData?.body) {
+        setDownloadData(eventData);
+        setDownloadColumns(eventData.headers);
+        setSelectedKeys(eventData.headers.map((h) => h.key));
+      }
+    } catch (error) {
+      console.error("Download prefetch error:", error);
+    }
+  };
+
+  const handleOpenDownloadPopup = async () => {
+    setDownloadPopupOpen(true);
+    await prefetchDownloadData();
+  };
+
+  const filterDownloadData = (headers, body, keys) => {
+    const safeKeys = Array.isArray(keys) ? keys : [];
+    const selectedHeaders = Array.isArray(headers)
+      ? headers.filter((h) => safeKeys.includes(h.key))
+      : [];
+    const filteredBody = Array.isArray(body)
+      ? body.map((row) =>
+          safeKeys.reduce((acc, key) => {
+            acc[key] = row?.[key];
+            return acc;
+          }, {})
+        )
+      : [];
+
+    return { selectedHeaders, filteredBody };
+  };
+
   const handleDownloadExcel = async () => {
     setDownloadLoading(true);
     try {
-      const data = await getEventsDownload({}); // Fetch all events
-      const eventData = data.data;
+      const eventData = downloadData || (await getEventsDownload({})).data;
 
       if (eventData?.headers && eventData?.body) {
-        generateExcel(eventData.headers, eventData.body, "Events");
+        const { selectedHeaders, filteredBody } = filterDownloadData(
+          eventData.headers,
+          eventData.body,
+          selectedKeys
+        );
+        generateExcel(selectedHeaders, filteredBody, "Events");
         toast.success("Excel file downloaded successfully!");
       } else {
         toast.error("Error downloading Excel - invalid data");
@@ -84,12 +127,14 @@ const EventList = () => {
   const handleDownloadPDF = async () => {
     setDownloadLoading(true);
     try {
-      const data = await getEventsDownload({});
-      console.log("event data",data)
-      const eventData = data.data;
-      console.log("event data",eventData);
+      const eventData = downloadData || (await getEventsDownload({})).data;
       if (eventData?.headers && eventData?.body) {
-        generatePDF(eventData.headers, eventData.body, "Events");
+        const { selectedHeaders, filteredBody } = filterDownloadData(
+          eventData.headers,
+          eventData.body,
+          selectedKeys
+        );
+        generatePDF(selectedHeaders, filteredBody, "Events");
         toast.success("PDF file downloaded successfully!");
       } else {
         toast.error("Error downloading PDF - invalid data");
@@ -124,7 +169,7 @@ const EventList = () => {
           <StyledButton
             variant="primary"
             name="Download"
-            onClick={() => setDownloadPopupOpen(true)}
+            onClick={handleOpenDownloadPopup}
           />
         </Stack>
       </Stack>
@@ -178,6 +223,9 @@ const EventList = () => {
         onDownloadExcel={handleDownloadExcel}
         onDownloadPDF={handleDownloadPDF}
         loading={downloadLoading}
+        columns={downloadColumns}
+        selectedKeys={selectedKeys}
+        onSelectionChange={setSelectedKeys}
       />
     </Box>
   );
