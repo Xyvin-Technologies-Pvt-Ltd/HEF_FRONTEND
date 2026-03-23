@@ -97,6 +97,9 @@ export const StyledEventUpload = ({ label, value, onChange }) => {
     if (value && typeof value === "string") {
       setSelectedImage(value);
       setIsPdf(value.endsWith(".pdf"));
+    } else if (!value) {
+      setSelectedImage(null);
+      setIsPdf(false);
     }
   }, [value]);
 

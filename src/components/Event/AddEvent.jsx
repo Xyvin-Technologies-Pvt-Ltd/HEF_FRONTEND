@@ -169,6 +169,10 @@ export default function AddEvent({ isUpdate }) {
     }
 
     reset();
+    setImageFile(null);
+    setType(null);
+    setParticipantOption("chapter");
+    setSelectedChapters([]);
   };
   const option = [{ value: "Zoom", label: "Zoom" }];
 
