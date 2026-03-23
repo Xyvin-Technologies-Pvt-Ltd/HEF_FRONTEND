@@ -4,6 +4,7 @@ import { styled } from "@mui/material/styles";
 import InputAdornment from "@mui/material/InputAdornment";
 import BackupOutlinedIcon from "@mui/icons-material/BackupOutlined";
 import IconButton from "@mui/material/IconButton";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import Box from "@mui/material/Box";
 
 const CustomTextField = styled(TextField)(({ theme }) => ({
@@ -38,6 +39,23 @@ const ImagePreview = styled("img")({
   border: "1px solid rgba(0, 0, 0, 0.2)",
   borderRadius: "4px",
 });
+
+const PreviewContainer = styled("div")({
+  position: "relative",
+  display: "inline-block",
+});
+
+const DeleteButton = styled(IconButton)({
+  position: "absolute",
+  top: "15px",
+  right: "5px",
+  backgroundColor: "rgba(255, 255, 255, 0.8)",
+  padding: "4px",
+  "&:hover": {
+    backgroundColor: "rgba(255, 255, 255, 0.9)",
+  },
+});
+
 const PdfPreview = styled("div")({
   width: "100px",
   height: "100px",
@@ -105,12 +123,26 @@ export const StyledEventUpload = ({ label, value, onChange }) => {
         style={{ display: "none" }}
         accept="image/*,application/pdf"
       />
-       {selectedImage && (
-        isPdf ? (
-          <PdfPreview>PDF Preview: {selectedImage}</PdfPreview>
-        ) : (
-          <ImagePreview src={selectedImage} alt="Preview" />
-        )
+      {selectedImage && (
+        <PreviewContainer>
+          {isPdf ? (
+            <PdfPreview>PDF Preview: {selectedImage}</PdfPreview>
+          ) : (
+            <ImagePreview src={selectedImage} alt="Preview" />
+          )}
+          <DeleteButton
+            onClick={() => {
+              setSelectedImage(null);
+              setIsPdf(false);
+              onChange(null);
+              if (fileInputRef.current) {
+                fileInputRef.current.value = "";
+              }
+            }}
+          >
+            <DeleteOutlineIcon style={{ fontSize: "20px", color: "#f44336" }} />
+          </DeleteButton>
+        </PreviewContainer>
       )}
     </>
   );
