@@ -169,6 +169,10 @@ export default function AddEvent({ isUpdate }) {
     }
 
     reset();
+    setImageFile(null);
+    setType(null);
+    setParticipantOption("chapter");
+    setSelectedChapters([]);
   };
   const option = [{ value: "Zoom", label: "Zoom" }];
 
@@ -480,12 +484,13 @@ export default function AddEvent({ isUpdate }) {
                   variant="h6"
                   color="textSecondary"
                 >
-                  Event Image
+                  Event Image <span style={{ color: "red" }}>*</span>
                 </Typography>
                 <Controller
                   name="image"
                   control={control}
                   defaultValue=""
+                  rules={{required : "image is required"}}
                   render={({ field: { onChange, value } }) => (
                     <>
                       <StyledCropImage

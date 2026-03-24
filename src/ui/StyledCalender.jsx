@@ -63,6 +63,8 @@ export const StyledCalender = ({ label, onChange, placeholder, value }) => {
   React.useEffect(() => {
     if (value) {
       setSelectedDate(moment(value));
+    } else {
+      setSelectedDate(null);
     }
   }, [value]);
 
