@@ -27,7 +27,11 @@ const RsvpTable = ({ eventId }) => {
     () => Boolean(filters?.chapterId),
     [filters]
   );
-
+  
+  const [selectedFields, setSelectedFields] = useState([]);
+  useEffect(() => {
+    setSelectedFields(userColumns.map((col) => col.field));
+  }, []);
 
   // Fetch RSVP data from backend
   const fetchRsvp = async () => {
@@ -55,12 +59,25 @@ const RsvpTable = ({ eventId }) => {
   const handleDownloadExcel = async () => {
     setDownloadLoading(true);
     try {
-      const res = await getRsvpDownload(eventId);
+      const res = await getRsvpDownload(eventId, filters?.chapterId);
       if (res?.data?.headers && res?.data?.body) {
         const sortedBody = [...res.data.body].sort((a, b) =>
           a.name?.toLowerCase().localeCompare(b.name?.toLowerCase())
         );
-        generateExcel(res?.data?.headers, sortedBody, "Rsvp");
+
+        const filteredBody = sortedBody.map((row) => {
+          const newRow = {};
+          selectedFields.forEach((key) => {
+            newRow[key] = row[key];
+          });
+          return newRow;
+        });
+
+        const filteredHeaders = res.data.headers.filter(
+          (header) => selectedFields.includes(header.key || header.field), // match key with selected
+        );
+
+        generateExcel(filteredHeaders, filteredBody, "Rsvp");
         toast.success("Excel downloaded successfully!");
       } else {
         toast.error("No data available for download");
@@ -83,7 +100,7 @@ const RsvpTable = ({ eventId }) => {
         const { body,totalSeats, registeredCount, balanceSeats } = res.data;
 
         const eventRes = await getEventById(eventId);
-         const formatEventDateTime = (date, time) => {
+        const formatEventDateTime = (date, time) => {
           if (!date) return "";
           const d = new Date(date);
           const t = time ? new Date(time) : null;
@@ -112,7 +129,19 @@ const RsvpTable = ({ eventId }) => {
           registeredCount,
           balanceSeats
         };
-        generatePDF(res.data.headers, body, "RSVP List", eventInfo);
+
+        const filteredBody = body.map((row) => {
+          const newRow = {};
+          selectedFields.forEach((key) => {
+            newRow[key] = row[key];
+          });
+          return newRow;
+        });
+        const filteredHeaders = res.data.headers.filter((header) =>
+          selectedFields.includes(header.key || header.field),
+        );
+
+        generatePDF(filteredHeaders, filteredBody, "RSVP List", eventInfo);
         toast.success("PDF downloaded successfully!");
       } else {
         toast.error("No data available for download");
@@ -125,7 +154,7 @@ const RsvpTable = ({ eventId }) => {
       setDownloadPopupOpen(false);
     }
   };
-const handleRemoveRsvp = async (row) => {
+  const handleRemoveRsvp = async (row) => {
     try {
       const userId = row.user?._id || row._id;
       if (!userId) throw new Error("User ID missing");
@@ -147,7 +176,7 @@ const handleRemoveRsvp = async (row) => {
   ]
 
 
-  
+
   const handleApplyFilter = (values) => {
     setFilters(values);
     setPageNo(1);
@@ -215,8 +244,8 @@ const handleRemoveRsvp = async (row) => {
         rowPerSize={rowPerSize}
         setRowPerSize={setRowPerSize}
         totalCount={totalCount}
-        rsvp={true} 
-       handleRemoveRsvp={handleRemoveRsvp} 
+        rsvp={true}
+        handleRemoveRsvp={handleRemoveRsvp}
 
       />
       <Drawer
@@ -238,6 +267,12 @@ const handleRemoveRsvp = async (row) => {
         onDownloadExcel={handleDownloadExcel}
         onDownloadPDF={handleDownloadPDF}
         loading={downloadLoading}
+        columns={userColumns.map((col) => ({
+          key: col.field,
+          header: col.title,
+        }))}
+        selectedKeys={selectedFields}
+        onSelectionChange={setSelectedFields}
       />
     </Box>
   );

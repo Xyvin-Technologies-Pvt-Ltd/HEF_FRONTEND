@@ -23,10 +23,12 @@ const ParticipantsTable = ({ eventId }) => {
   const [filterOpen, setFilterOpen] = useState(false);
   const [filters, setFilters] = useState({});
 
-    const isFilterApplied = useMemo(
-        () => Boolean(filters?.chapterId),
-        [filters]
-    );
+  const isFilterApplied = useMemo(() => Boolean(filters?.chapterId), [filters]);
+
+  const [selectedFields, setSelectedFields] = useState([]);
+  useEffect(() => {
+    setSelectedFields(userColumns.map((col) => col.field));
+  }, []);
 
   // Fetch Attended Users
   const fetchParticipants = async () => {
@@ -36,7 +38,7 @@ const ParticipantsTable = ({ eventId }) => {
         eventId,
         pageNo,
         rowPerSize,
-                filters?.chapterId
+        filters?.chapterId
       );
       setData(res?.data || []);
       setTotalCount(res?.totalCount || 0);
@@ -56,7 +58,7 @@ const ParticipantsTable = ({ eventId }) => {
     (a.name || "")
       .trim()
       .toLowerCase()
-            .localeCompare((b.name || "").trim().toLowerCase())
+      .localeCompare((b.name || "").trim().toLowerCase())
   );
 
   const handleDownloadExcel = async () => {
@@ -65,9 +67,21 @@ const ParticipantsTable = ({ eventId }) => {
       const res = await downloadAttendedUsers(eventId, filters?.chapterId);
       if (res?.data?.headers && res?.data?.body) {
         const sortedBody = [...res.data.body].sort((a, b) =>
-                    a.name?.toLowerCase().localeCompare(b.name?.toLowerCase())
+          a.name?.toLowerCase().localeCompare(b.name?.toLowerCase())
         );
-        generateExcel(res.data.headers, sortedBody, "Participants");
+
+        // NEW: Filter data based on selected fields
+        const filteredBody = sortedBody.map((row) => {
+          const newRow = {};
+          selectedFields.forEach((key) => (newRow[key] = row[key]));
+          return newRow;
+        });
+
+        const filteredHeaders = res.data.headers.filter((header) =>
+          selectedFields.includes(header.key || header.field),
+        );
+
+        generateExcel(filteredHeaders, filteredBody, "Participants");
         toast.success("Excel downloaded successfully!");
       } else {
         toast.error("No data available for download");
@@ -113,13 +127,28 @@ const ParticipantsTable = ({ eventId }) => {
           eventName: eventRes?.data?.eventName,
           eventDateTime: formatEventDateTime(
             eventRes?.data?.startDate,
-                        eventRes?.data?.startTime
+            eventRes?.data?.startTime
           ),
           attendedCount,
-                    totalSeats
+          totalSeats
         };
 
-        generatePDF(res.data.headers, body, "Attended List", eventInfo);
+        const filteredBody = body.map((row) => {
+          const newRow = {};
+          selectedFields.forEach((key) => (newRow[key] = row[key]));
+          return newRow;
+        });
+
+        const filteredHeaders = res.data.headers.filter((header) =>
+          selectedFields.includes(header.key || header.field),
+        );
+
+        generatePDF(
+          filteredHeaders,
+          filteredBody,
+          "Attended Users List",
+          eventInfo,
+        );
         toast.success("PDF downloaded successfully!");
       } else {
         toast.error("No data available for download");
@@ -227,6 +256,12 @@ const ParticipantsTable = ({ eventId }) => {
         onDownloadExcel={handleDownloadExcel}
         onDownloadPDF={handleDownloadPDF}
         loading={downloadLoading}
+        columns={userColumns.map((col) => ({
+          key: col.field,
+          header: col.title,
+        }))}
+        selectedKeys={selectedFields}
+        onSelectionChange={setSelectedFields}
       />
     </Box>
   );
