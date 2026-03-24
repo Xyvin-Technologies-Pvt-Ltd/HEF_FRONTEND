@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Box, Stack, Badge, Tooltip } from "@mui/material";
+import { useState, useEffect } from "react";
+import { Box, Stack } from "@mui/material";
 import { StyledButton } from "../../ui/StyledButton";
 import { getGuestsDownload , getEventById } from "../../api/eventapi";
 import DownloadPopup from "../../components/Member/DownloadPopup";
@@ -11,6 +11,11 @@ import EventTable from "../../ui/EventTable";
 const GuestTable = ({ eventId, data }) => {
   const [downloadPopupOpen, setDownloadPopupOpen] = useState(false);
   const [downloadLoading, setDownloadLoading] = useState(false);
+  const [selectedFields, setSelectedFields] = useState([]);
+  useEffect(() => {
+    setSelectedFields(guestColumns.map((col) => col.field));
+  }, []);
+
   const sortedData = [...data].sort((a, b) =>
     a.name?.toLowerCase().localeCompare(b.name?.toLowerCase())
   );
@@ -23,7 +28,17 @@ const GuestTable = ({ eventId, data }) => {
         const sortedBody = [...res.data.body].sort((a, b) =>
           a.name?.toLowerCase().localeCompare(b.name?.toLowerCase())
         );
-        generateExcel(res?.data?.headers, sortedBody,"Guests");
+        const filteredBody = sortedBody.map((row) => {
+          const newRow = {};
+          selectedFields.forEach((key) => (newRow[key] = row[key]));
+          return newRow;
+        });
+
+        const filteredHeaders = res.data.headers.filter((header) =>
+          selectedFields.includes(header.key || header.field),
+        );
+
+        generateExcel(filteredHeaders, filteredBody, "Guests");
         toast.success("Excel downloaded successfully!");
       } else {
         toast.error("No data available for download");
@@ -50,15 +65,25 @@ const GuestTable = ({ eventId, data }) => {
         const eventInfo = {
           eventName: eventRes?.data?.eventName,
           eventDateTime: new Date(eventRes?.data?.startDate).toLocaleString("en-US", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
           }),
         };
 
-        generatePDF(res?.data?.headers, sortedBody, "Guests List", eventInfo);
+        const filteredBody = sortedBody.map((row) => {
+          const newRow = {};
+          selectedFields.forEach((key) => (newRow[key] = row[key]));
+          return newRow;
+        });
+
+        const filteredHeaders = res.data.headers.filter((header) =>
+          selectedFields.includes(header.key || header.field),
+        );
+
+        generatePDF(filteredHeaders, filteredBody, "Guests List", eventInfo);
         toast.success("PDF downloaded successfully!");
       } else {
         toast.error("No data available for download");
@@ -98,6 +123,12 @@ const GuestTable = ({ eventId, data }) => {
         onDownloadExcel={handleDownloadExcel}
         onDownloadPDF={handleDownloadPDF}
         loading={downloadLoading}
+        columns={guestColumns.map((col) => ({
+          key: col.field,
+          header: col.title,
+        }))}
+        selectedKeys={selectedFields}
+        onSelectionChange={setSelectedFields}
       />
     </Box>
   );
