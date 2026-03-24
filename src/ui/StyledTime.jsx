@@ -64,6 +64,8 @@ export const StyledTime = ({ label, placeholder, onChange, value }) => {
   React.useEffect(() => {
     if (value) {
       setSelectedDate(moment(value));
+    } else {
+      setSelectedDate(null);
     }
   }, [value]);
 
