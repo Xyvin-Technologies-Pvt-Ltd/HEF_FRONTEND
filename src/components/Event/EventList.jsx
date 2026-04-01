@@ -14,6 +14,26 @@ import { generateExcel } from "../../utils/generateExcel";
 import { generatePDF } from "../../utils/generatePDF";
 import { getEventsDownload  } from "../../api/eventapi"; 
 
+const formatDate = (dateStr) => {
+  if (!dateStr) return "-";
+  const date = new Date(dateStr);
+  return date.toLocaleDateString("en-IN", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    timeZone: "Asia/Kolkata",
+  });
+};
+const formatTime = (timeStr) => {
+  if (!timeStr) return "-";
+  const date = new Date(`1970-01-01T${timeStr}Z`); 
+  return date.toLocaleTimeString("en-IN", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+    timeZone: "Asia/Kolkata",
+  });
+};
 const EventList = () => {
   const navigate = useNavigate();
   const [selectedRows, setSelectedRows] = useState([]);
@@ -88,12 +108,20 @@ const EventList = () => {
       ? headers.filter((h) => safeKeys.includes(h.key))
       : [];
     const filteredBody = Array.isArray(body)
-      ? body.map((row) =>
-          safeKeys.reduce((acc, key) => {
-            acc[key] = row?.[key];
-            return acc;
-          }, {})
-        )
+      ? body.map((row) => {
+          const newRow = {};
+          safeKeys.forEach((key) => {
+            let value = row?.[key];
+            if (key === "date") {
+              value = formatDate(value);
+            }
+            if (key === "time") {
+              value = formatTime(value);
+            }
+            newRow[key] = value;
+          });
+          return newRow;
+        })
       : [];
 
     return { selectedHeaders, filteredBody };
