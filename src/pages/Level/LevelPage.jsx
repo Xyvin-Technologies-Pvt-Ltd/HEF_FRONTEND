@@ -7,7 +7,13 @@ import {
   Tab,
   Tabs,
   Typography,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  IconButton,
 } from "@mui/material";
+import { Close as CloseIcon } from "@mui/icons-material";
 import StyledTable from "../../ui/StyledTable";
 import { useListStore } from "../../store/listStore";
 import { levelColumns } from "../../assets/json/TableData";
@@ -30,7 +36,7 @@ const tabMapping = {
   chapter: 3,
 };
 const LevelPage = () => {
-  const { fetchLevels } = useListStore();
+  const { fetchLevels, lists } = useListStore();
   const storedTab = localStorage.getItem("levelTab");
   const [selectedRows, setSelectedRows] = useState([]);
   const [search, setSearch] = useState("");
@@ -47,6 +53,16 @@ const LevelPage = () => {
   const { singleAdmin } = useAdminStore();
   const [downloadPopupOpen, setDownloadPopupOpen] = useState(false);
   const [downloadLoading, setDownloadLoading] = useState(false);
+  const [pstModalOpen, setPstModalOpen] = useState(false);
+  const [selectedLevelForPst, setSelectedLevelForPst] = useState(null);
+
+  const handleView = (id) => {
+    const found = lists?.find((item) => item._id === id);
+    if (found) {
+      setSelectedLevelForPst(found);
+      setPstModalOpen(true);
+    }
+  };
   useEffect(() => {
     if (type && tabMapping.hasOwnProperty(type)) {
       setSelectedTab(tabMapping[type]);
@@ -320,6 +336,7 @@ const LevelPage = () => {
               rowPerSize={row}
               setRowPerSize={setRow}
               onModify={handleEdit}
+              onView={handleView}
             />
           ) : (
             <StyledTable
@@ -332,15 +349,121 @@ const LevelPage = () => {
               rowPerSize={row}
               setRowPerSize={setRow}
               onModify={handleEdit}
+              onView={handleView}
             />
           )}
           <DownloadPopup
-                    open={downloadPopupOpen}
-                    onClose={() => setDownloadPopupOpen(false)}
-                    onDownloadExcel={handleDownloadExcel}
-                    onDownloadPDF={handleDownloadPDF}
-                    loading={downloadLoading}
-                  />
+            open={downloadPopupOpen}
+            onClose={() => setDownloadPopupOpen(false)}
+            onDownloadExcel={handleDownloadExcel}
+            onDownloadPDF={handleDownloadPDF}
+            loading={downloadLoading}
+          />
+          <Dialog
+            open={pstModalOpen}
+            onClose={() => setPstModalOpen(false)}
+            fullWidth
+            maxWidth="sm"
+            PaperProps={{
+              sx: { borderRadius: "16px", p: 1 },
+            }}
+          >
+            <DialogTitle
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                pb: 1,
+              }}
+            >
+              <Box>
+                <Typography variant="h6" fontWeight={600} color="primary">
+                  PST Members
+                </Typography>
+                <Typography variant="subtitle2" color="textSecondary">
+                  {selectedLevelForPst?.name} ({selectedLevelForPst?.category ? selectedLevelForPst.category.charAt(0).toUpperCase() + selectedLevelForPst.category.slice(1) : "Level"})
+                </Typography>
+              </Box>
+              <IconButton onClick={() => setPstModalOpen(false)} size="small">
+                <CloseIcon />
+              </IconButton>
+            </DialogTitle>
+            <DialogContent sx={{ pt: 1 }}>
+              {selectedLevelForPst?.admins &&
+              selectedLevelForPst.admins.length > 0 ? (
+                <Stack spacing={2} sx={{ mt: 1 }}>
+                  {selectedLevelForPst.admins.map((admin, idx) => (
+                    <Box
+                      key={idx}
+                      sx={{
+                        p: 2,
+                        borderRadius: "12px",
+                        border: "1px solid rgba(0, 0, 0, 0.08)",
+                        bgcolor: "#fafafa",
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Box>
+                        <Box display="flex" alignItems="center" gap={1} mb={0.5}>
+                          <Typography
+                            variant="caption"
+                            sx={{
+                              bgcolor: "#FFF0E6",
+                              color: "#F58220",
+                              fontWeight: 700,
+                              px: 1,
+                              py: 0.25,
+                              borderRadius: "4px",
+                              textTransform: "capitalize",
+                            }}
+                          >
+                            {admin?.role}
+                          </Typography>
+                          <Typography
+                            variant="subtitle1"
+                            fontWeight={600}
+                            color="textPrimary"
+                          >
+                            {admin?.user?.name || (typeof admin?.user === "string" ? admin?.user : "N/A")}
+                          </Typography>
+                        </Box>
+                        <Typography variant="body2" color="textSecondary">
+                          {admin?.user?.phone ? `Phone: ${admin?.user?.phone}` : ""}
+                          {admin?.user?.phone && admin?.user?.email ? " • " : ""}
+                          {admin?.user?.email ? `Email: ${admin?.user?.email}` : ""}
+                        </Typography>
+                        {admin?.user?.memberId && (
+                          <Typography
+                            variant="caption"
+                            color="textSecondary"
+                            display="block"
+                          >
+                            Member ID: {admin?.user?.memberId}
+                          </Typography>
+                        )}
+                      </Box>
+                    </Box>
+                  ))}
+                </Stack>
+              ) : (
+                <Typography
+                  color="textSecondary"
+                  sx={{ py: 3, textAlign: "center" }}
+                >
+                  No PST members assigned to this level yet.
+                </Typography>
+              )}
+            </DialogContent>
+            <DialogActions>
+              <StyledButton
+                name="Close"
+                variant="secondary"
+                onClick={() => setPstModalOpen(false)}
+              />
+            </DialogActions>
+          </Dialog>
         </Box>
       </Box>
     </>

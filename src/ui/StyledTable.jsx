@@ -383,6 +383,31 @@ const StyledTable = ({
                               : row[column.field]}
                           </span>
                         </Box>
+                      ) : column.field === "pstMembers" ? (
+                        row.admins && row.admins.length > 0 ? (
+                          <Box display="flex" flexDirection="column" gap={0.5} alignItems="center">
+                            {row.admins.map((adm, idx) => (
+                              <Typography
+                                key={idx}
+                                variant="body2"
+                                sx={{
+                                  fontSize: "13px",
+                                  color: "#333",
+                                  whiteSpace: "nowrap",
+                                }}
+                              >
+                                <strong style={{ color: "#F58220", textTransform: "capitalize" }}>
+                                  {adm.role}:
+                                </strong>{" "}
+                                {adm.user?.name || (typeof adm.user === "string" ? adm.user : "N/A")}
+                              </Typography>
+                            ))}
+                          </Box>
+                        ) : (
+                          <Typography variant="body2" color="textSecondary">
+                            None
+                          </Typography>
+                        )
                       ) : typeof row[column.field] === "string" &&
                         row[column.field].length > 30 ? (
                         `${row[column.field].slice(0, 30)}...`

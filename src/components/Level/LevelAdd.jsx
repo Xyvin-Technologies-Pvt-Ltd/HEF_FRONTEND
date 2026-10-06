@@ -69,6 +69,20 @@ export default function LevelAdd() {
     }
   }, [levelId, isUpdate]);
 
+  const handleOpenDialog = () => {
+    setValue("adminRole", null);
+    setValue("adminState", null);
+    setValue("adminZone", null);
+    setValue("adminDistrict", null);
+    setValue("adminChapter", null);
+    setValue("adminMember", null);
+    setAdminZoneOptions([]);
+    setAdminDistrictOptions([]);
+    setAdminChapterOptions([]);
+    setAdminMemberOptions([]);
+    setOpen(true);
+  };
+
   useEffect(() => {
     if (
       level &&
@@ -80,8 +94,20 @@ export default function LevelAdd() {
       setValue("name", level.name);
       setValue("type", { value: category, label: category });
       setType(category);
-      setAdmins(level.admins);
-      setViewAdmin(level.admins);
+
+      const initialAdmins = (level.admins || []).map((a) => ({
+        role: a.role,
+        user: typeof a.user === "object" ? a.user?._id : a.user,
+      }));
+      const initialViewAdmins = (level.admins || []).map((a) => ({
+        role: a.role,
+        roleLabel: a.role ? a.role.charAt(0).toUpperCase() + a.role.slice(1) : "",
+        user: typeof a.user === "object" ? a.user?._id : a.user,
+        userName: typeof a.user === "object" ? a.user?.name : a.user,
+      }));
+
+      setAdmins(initialAdmins);
+      setViewAdmin(initialViewAdmins);
 
       if (category === "zone") {
         const selectedState = stateOptions.find(
@@ -131,6 +157,8 @@ export default function LevelAdd() {
   const handleClear = (event) => {
     event.preventDefault();
     reset();
+    setAdmins([]);
+    setViewAdmin([]);
   };
 
   const onSubmit = async (data) => {
@@ -138,7 +166,11 @@ export default function LevelAdd() {
       setSubmitting(true);
 
       const formData = {};
-      if (admins) formData.admins = admins;
+      const cleanedAdmins = (admins || []).map((a) => ({
+        role: a.role,
+        user: typeof a.user === "object" ? a.user?._id : a.user,
+      }));
+      formData.admins = cleanedAdmins;
       formData.name = data?.name;
 
       if (type === "zone") {
@@ -165,32 +197,46 @@ export default function LevelAdd() {
   };
 
   const handleAddAdmin = (e) => {
-    e.preventDefault(e);
+    e.preventDefault();
     const formValues = getValues();
 
+    if (!formValues.adminRole?.value || !formValues.adminMember?.value) {
+      toast.warning("Please select both a role and a member");
+      return;
+    }
+
     const newAdmin = {
-      role: formValues.role?.value,
-      user: formValues.sender?.value,
+      role: formValues.adminRole?.value,
+      user: formValues.adminMember?.value,
     };
     const viewAdminData = {
-      role: formValues.role?.label,
-      user: formValues.sender?.label,
+      role: formValues.adminRole?.value,
+      roleLabel: formValues.adminRole?.label,
+      user: formValues.adminMember?.value,
+      userName: formValues.adminMember?.label,
     };
     setViewAdmin([...viewAdmin, viewAdminData]);
     setAdmins([...admins, newAdmin]);
-    setValue("role", "");
-    setValue("state", "");
-    setValue("zone", "");
-    setValue("district", "");
-    setValue("chapter", "");
-    setValue("sender", "");
+
+    setValue("adminRole", null);
+    setValue("adminState", null);
+    setValue("adminZone", null);
+    setValue("adminDistrict", null);
+    setValue("adminChapter", null);
+    setValue("adminMember", null);
+
+    setAdminZoneOptions([]);
+    setAdminDistrictOptions([]);
+    setAdminChapterOptions([]);
+    setAdminMemberOptions([]);
     setOpen(false);
   };
 
   const handleRemoveAdmin = (index) => {
     const updatedAdmins = admins.filter((_, idx) => idx !== index);
+    const updatedViewAdmin = viewAdmin.filter((_, idx) => idx !== index);
     setAdmins(updatedAdmins);
-    setViewAdmin(updatedAdmins);
+    setViewAdmin(updatedViewAdmin);
   };
 
   const fetchDialog = async (type, id, filter) => {
@@ -223,9 +269,14 @@ export default function LevelAdd() {
     setAdminDistrictOptions([]);
     setAdminChapterOptions([]);
     setAdminMemberOptions([]);
+    setValue("adminZone", null);
+    setValue("adminDistrict", null);
+    setValue("adminChapter", null);
+    setValue("adminMember", null);
+    if (!stateId?.value) return;
     const zones = await fetchDialog("state", stateId.value);
     setAdminZoneOptions(
-      zones.map(({ _id, name }) => ({ value: _id, label: name }))
+      zones ? zones.map(({ _id, name }) => ({ value: _id, label: name })) : []
     );
   };
 
@@ -233,24 +284,33 @@ export default function LevelAdd() {
     setAdminDistrictOptions([]);
     setAdminChapterOptions([]);
     setAdminMemberOptions([]);
+    setValue("adminDistrict", null);
+    setValue("adminChapter", null);
+    setValue("adminMember", null);
+    if (!zoneId) return;
     const districts = await fetchDialog("zone", zoneId);
     setAdminDistrictOptions(
-      districts.map(({ _id, name }) => ({ value: _id, label: name }))
+      districts ? districts.map(({ _id, name }) => ({ value: _id, label: name })) : []
     );
   };
   const handleDistrictChange = async (districtId) => {
     setAdminChapterOptions([]);
     setAdminMemberOptions([]);
+    setValue("adminChapter", null);
+    setValue("adminMember", null);
+    if (!districtId) return;
     const chapters = await fetchDialog("district", districtId);
     setAdminChapterOptions(
-      chapters.map(({ _id, name }) => ({ value: _id, label: name }))
+      chapters ? chapters.map(({ _id, name }) => ({ value: _id, label: name })) : []
     );
   };
   const handleChapterChange = async (chapterId) => {
     setAdminMemberOptions([]);
+    setValue("adminMember", null);
+    if (!chapterId) return;
     const members = await fetchDialog("user", chapterId, { chooseAdmin: true });
     setAdminMemberOptions(
-      members.map(({ _id, name }) => ({ value: _id, label: name }))
+      members ? members.map(({ _id, name }) => ({ value: _id, label: name })) : []
     );
   };
 
@@ -419,18 +479,23 @@ export default function LevelAdd() {
                     }}
                   >
                     <div>
-                      <Typography variant="subtitle2" color="primary">
-                        {admin?.role}
+                      <Typography
+                        variant="subtitle2"
+                        color="primary"
+                        sx={{ textTransform: "capitalize", fontWeight: 600 }}
+                      >
+                        {admin?.roleLabel ||
+                          (admin?.role
+                            ? admin.role.charAt(0).toUpperCase() +
+                              admin.role.slice(1)
+                            : "")}
                       </Typography>
-                      {!isUpdate ? (
-                        <Typography variant="body2" color="textSecondary">
-                          {admin?.user}
-                        </Typography>
-                      ) : (
-                        <Typography variant="body2" color="textSecondary">
-                          {admin?.user?.name}
-                        </Typography>
-                      )}
+                      <Typography variant="body2" color="textSecondary">
+                        {admin?.userName ||
+                          (typeof admin?.user === "object"
+                            ? admin?.user?.name
+                            : admin?.user)}
+                      </Typography>
                     </div>
                     <IconButton
                       onClick={() => handleRemoveAdmin(index)}
@@ -454,11 +519,11 @@ export default function LevelAdd() {
           <Grid item xs={12} display={"flex"} justifyContent={"end"} mb={4}>
             {" "}
             <Typography
-              sx={{ marginBottom: 1 }}
+              sx={{ marginBottom: 1, cursor: "pointer" }}
               variant="h6"
               fontWeight={500}
               color={"#004797"}
-              onClick={() => setOpen(true)}
+              onClick={handleOpenDialog}
             >
               + Add Admin
             </Typography>
@@ -498,23 +563,15 @@ export default function LevelAdd() {
                     Role
                   </Typography>
                   <Controller
-                    name="role"
+                    name="adminRole"
                     control={control}
                     defaultValue=""
-                    rules={{ required: "Role is required" }}
                     render={({ field }) => (
-                      <>
-                        <StyledSelectField
-                          placeholder="Choose the Role"
-                          options={availableRoleOptions}
-                          {...field}
-                        />
-                        {errors.role && (
-                          <span style={{ color: "red" }}>
-                            {errors.role.message}
-                          </span>
-                        )}
-                      </>
+                      <StyledSelectField
+                        placeholder="Choose the Role"
+                        options={availableRoleOptions}
+                        {...field}
+                      />
                     )}
                   />
                 </Grid>
@@ -527,21 +584,19 @@ export default function LevelAdd() {
                     State
                   </Typography>
                   <Controller
-                    name="state"
+                    name="adminState"
                     control={control}
                     defaultValue=""
                     render={({ field }) => (
-                      <>
-                        <StyledSelectField
-                          placeholder="Choose the state"
-                          options={adminStateOptions}
-                          {...field}
-                          onChange={(e) => {
-                            field.onChange(e);
-                            handleStateChange(e);
-                          }}
-                        />{" "}
-                      </>
+                      <StyledSelectField
+                        placeholder="Choose the state"
+                        options={adminStateOptions}
+                        {...field}
+                        onChange={(e) => {
+                          field.onChange(e);
+                          handleStateChange(e);
+                        }}
+                      />
                     )}
                   />
                 </Grid>
@@ -554,21 +609,19 @@ export default function LevelAdd() {
                     Zone
                   </Typography>
                   <Controller
-                    name="zone"
+                    name="adminZone"
                     control={control}
                     defaultValue=""
                     render={({ field }) => (
-                      <>
-                        <StyledSelectField
-                          placeholder="Choose the zone"
-                          options={adminZoneOptions}
-                          {...field}
-                          onChange={(e) => {
-                            field.onChange(e);
-                            handleZoneChange(e.value);
-                          }}
-                        />
-                      </>
+                      <StyledSelectField
+                        placeholder="Choose the zone"
+                        options={adminZoneOptions}
+                        {...field}
+                        onChange={(e) => {
+                          field.onChange(e);
+                          handleZoneChange(e?.value);
+                        }}
+                      />
                     )}
                   />
                 </Grid>{" "}
@@ -581,21 +634,19 @@ export default function LevelAdd() {
                     District
                   </Typography>
                   <Controller
-                    name="district"
+                    name="adminDistrict"
                     control={control}
                     defaultValue=""
                     render={({ field }) => (
-                      <>
-                        <StyledSelectField
-                          placeholder="Choose the district"
-                          options={adminDistrictOptions}
-                          {...field}
-                          onChange={(e) => {
-                            field.onChange(e);
-                            handleDistrictChange(e.value);
-                          }}
-                        />
-                      </>
+                      <StyledSelectField
+                        placeholder="Choose the district"
+                        options={adminDistrictOptions}
+                        {...field}
+                        onChange={(e) => {
+                          field.onChange(e);
+                          handleDistrictChange(e?.value);
+                        }}
+                      />
                     )}
                   />
                 </Grid>{" "}
@@ -608,21 +659,19 @@ export default function LevelAdd() {
                     Chapter
                   </Typography>
                   <Controller
-                    name="chapter"
+                    name="adminChapter"
                     control={control}
                     defaultValue=""
                     render={({ field }) => (
-                      <>
-                        <StyledSelectField
-                          placeholder="Choose the chapter"
-                          options={adminChapterOptions}
-                          {...field}
-                          onChange={(e) => {
-                            field.onChange(e);
-                            handleChapterChange(e.value);
-                          }}
-                        />
-                      </>
+                      <StyledSelectField
+                        placeholder="Choose the chapter"
+                        options={adminChapterOptions}
+                        {...field}
+                        onChange={(e) => {
+                          field.onChange(e);
+                          handleChapterChange(e?.value);
+                        }}
+                      />
                     )}
                   />
                 </Grid>
@@ -635,17 +684,15 @@ export default function LevelAdd() {
                     Member
                   </Typography>
                   <Controller
-                    name="sender"
+                    name="adminMember"
                     control={control}
                     defaultValue=""
                     render={({ field }) => (
-                      <>
-                        <StyledSelectField
-                          placeholder="Choose the member"
-                          options={adminMemberOptions}
-                          {...field}
-                        />
-                      </>
+                      <StyledSelectField
+                        placeholder="Choose the member"
+                        options={adminMemberOptions}
+                        {...field}
+                      />
                     )}
                   />
                 </Grid>
