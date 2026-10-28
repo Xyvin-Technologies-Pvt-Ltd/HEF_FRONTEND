@@ -31,7 +31,7 @@ const BulkAdd = () => {
           const result = {
             name: row.name?.trim() || "",
             phone: formatPhoneNumber(String(row.phone || "").trim()),
-            chapter: row.chapter?.trim() || "",
+            chapterCode: (row.chapterCode || row.chapter || "").trim(),
             businessTags: formatBusinessTags(row.businessTags),
           };
           const formattedDate = formatDate(row.dateOfJoining?.trim());
@@ -163,7 +163,7 @@ const BulkAdd = () => {
             <li>First, download the file template.</li>
             <li>Remove the existing data without removing the headers.</li>
             <li>Don't change the headers.</li>
-            <li>Add user data in the respective columns.</li>
+            <li>Add user data in the respective columns (enter Chapter Code in the chapterCode column).</li>
 
             <li>A maximum of 50 entries is allowed at a time.</li>
           </ul>
