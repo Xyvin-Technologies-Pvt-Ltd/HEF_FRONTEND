@@ -4,16 +4,22 @@ import { styled } from "@mui/material/styles";
 import InputAdornment from "@mui/material/InputAdornment";
 import BackupOutlinedIcon from "@mui/icons-material/BackupOutlined";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";
 import Cropper from "react-easy-crop";
 import Modal from "@mui/material/Modal";
 import Slider from "@mui/material/Slider";
-import { getCroppedImg } from "../utils/image";
-import { Button } from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
 import { PictureAsPdfOutlined } from "@mui/icons-material";
+import { getCroppedImg } from "../utils/image";
 
 const CustomTextField = styled(TextField)(({ theme }) => ({
+  width: "100%",
   "& .MuiOutlinedInput-root": {
+    borderRadius: "8px",
+    backgroundColor: "#fff",
     "& fieldset": {
       borderColor: "rgba(0, 0, 0, 0.2)",
     },
@@ -21,71 +27,129 @@ const CustomTextField = styled(TextField)(({ theme }) => ({
       borderColor: "rgba(0, 0, 0, 0.2)",
     },
     "&.Mui-focused fieldset": {
-      borderColor: "rgba(0, 0, 0, 0.2)",
+      borderColor: "#f58220",
     },
   },
   "& .MuiInputLabel-root": {
-    color: "rgba(0, 0, 0, 0.2)",
+    color: "rgba(0, 0, 0, 0.5)",
   },
   "& .MuiInputLabel-root.Mui-focused": {
-    color: "rgba(0, 0, 0, 0.2)",
+    color: "#f58220",
   },
   "& .MuiInputBase-input::placeholder": {
-    color: "rgba(0, 0, 0, 0.2)",
+    color: "rgba(0, 0, 0, 0.4)",
     opacity: 1,
   },
 }));
 
-const SaveButton = styled(Button)(({ theme }) => ({
-  marginTop: "10px",
+const SaveButton = styled(Button)({
   backgroundColor: "#f58220",
   color: "#fff",
-  fontWeight: "400",
-  padding: "8px 16px",
-  borderRadius: "4px",
-}));
+  fontWeight: "500",
+  padding: "8px 20px",
+  borderRadius: "6px",
+  textTransform: "none",
+  "&:hover": {
+    backgroundColor: "#e07316",
+  },
+});
+
+const CancelButton = styled(Button)({
+  backgroundColor: "#fff",
+  color: "#333",
+  border: "1px solid #ccc",
+  fontWeight: "500",
+  padding: "8px 20px",
+  borderRadius: "6px",
+  textTransform: "none",
+  "&:hover": {
+    backgroundColor: "#f5f5f5",
+  },
+});
 
 const PreviewContainer = styled("div")({
+  display: "flex",
+  alignItems: "center",
+  marginTop: "12px",
+  gap: "12px",
+});
+
+const PreviewCard = styled("div")({
   position: "relative",
-  display: "inline-block",
+  width: "120px",
+  height: "120px",
+  borderRadius: "8px",
+  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+  overflow: "hidden",
+  transition: "transform 0.2s ease, box-shadow 0.2s ease",
+  "&:hover": {
+    transform: "scale(1.02)",
+    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
+  },
 });
 
 const DeleteButton = styled(IconButton)({
   position: "absolute",
-  top: "5px",
-  right: "5px",
-  backgroundColor: "rgba(255, 255, 255, 0.8)",
+  top: "6px",
+  right: "6px",
+  backgroundColor: "rgba(255, 255, 255, 0.9)",
   padding: "4px",
+  opacity: 0.85,
+  transition: "opacity 0.2s ease, background-color 0.2s ease",
   "&:hover": {
-    backgroundColor: "rgba(255, 255, 255, 0.9)",
+    backgroundColor: "rgba(255, 255, 255, 1)",
+    opacity: 1,
   },
 });
 
 const ImagePreview = styled("img")({
-  width: "100px",
-  height: "100px",
-  marginTop: "10px",
-  objectFit: "contain",
-  border: "1px solid rgba(0, 0, 0, 0.2)",
-  borderRadius: "4px",
+  width: "100%",
+  height: "100%",
+  objectFit: "cover",
+  borderRadius: "8px",
 });
 
 const PdfPreview = styled("div")({
-  width: "100px",
-  height: "100px",
-  marginTop: "10px",
+  width: "100%",
+  height: "100%",
   display: "flex",
+  flexDirection: "column",
   alignItems: "center",
   justifyContent: "center",
-  border: "1px solid rgba(0, 0, 0, 0.2)",
-  borderRadius: "4px",
-  backgroundColor: "#f0f0f0",
-  fontSize: "12px",
-  fontWeight: "bold",
-  color: "rgba(0, 0, 0, 0.5)",
+  backgroundColor: "#f5f5f5",
+  borderRadius: "8px",
+  transition: "background-color 0.2s ease",
+  "&:hover": {
+    backgroundColor: "#e0e0e0",
+  },
 });
 
-export const StyledCropImage = ({ label, value, onChange, ratio }) => {
+const PdfIconButton = styled(IconButton)({
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  color: "#f58220",
+  "&:hover": {
+    color: "#d96b0b",
+  },
+});
+
+const PdfText = styled("span")({
+  fontSize: "12px",
+  fontWeight: "500",
+  marginTop: "6px",
+  color: "inherit",
+});
+
+export const StyledCropImage = ({
+  label,
+  value,
+  onChange,
+  ratio,
+  show,
+  accept = "image/*,application/pdf",
+  maxFileSizeMB = 1,
+}) => {
   const fileInputRef = useRef(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
@@ -97,17 +161,21 @@ export const StyledCropImage = ({ label, value, onChange, ratio }) => {
   const [imageForCrop, setImageForCrop] = useState(null);
 
   const handleIconClick = () => {
-    fileInputRef.current.click();
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
   };
 
   const handleDelete = () => {
+    if (selectedImage && typeof selectedImage === "string" && selectedImage.startsWith("blob:")) {
+      URL.revokeObjectURL(selectedImage);
+    }
     setSelectedImage(null);
     setSelectedFile(null);
     setIsPdf(false);
     if (onChange) {
       onChange(null);
     }
-    // Reset the file input
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
@@ -124,7 +192,7 @@ export const StyledCropImage = ({ label, value, onChange, ratio }) => {
   };
 
   const handleFileChange = (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files && e.target.files[0];
     if (file) {
       setSelectedFile(file);
       const fileType = file.type;
@@ -132,14 +200,18 @@ export const StyledCropImage = ({ label, value, onChange, ratio }) => {
       if (fileType.startsWith("image/")) {
         const imageUrl = URL.createObjectURL(file);
         setImageForCrop(imageUrl);
+        setCrop({ x: 0, y: 0 });
+        setZoom(1);
         setCropModalOpen(true);
         setIsPdf(false);
-        setSelectedImage(imageUrl);
+        // Notice: do NOT call onChange here with the uncropped file!
       } else if (fileType === "application/pdf") {
         setSelectedImage(file.name);
         setIsPdf(true);
+        if (onChange) {
+          onChange(file);
+        }
       }
-      onChange(file);
     }
   };
 
@@ -150,19 +222,54 @@ export const StyledCropImage = ({ label, value, onChange, ratio }) => {
   const handleCropSave = async () => {
     if (imageForCrop && croppedAreaPixels) {
       try {
-        const croppedImage = await getCroppedImg(imageForCrop, croppedAreaPixels);
-        setSelectedImage(croppedImage);
+        const croppedImage = await getCroppedImg(
+          imageForCrop,
+          croppedAreaPixels,
+          maxFileSizeMB
+        );
+
         setCropModalOpen(false);
+
         const response = await fetch(croppedImage);
         const blob = await response.blob();
-        const uniqueName = `cropped_image_${Date.now()}.png`;
+        const extension = blob.type === "image/png" ? "png" : "jpg";
+        const uniqueName = `cropped_image_${Date.now()}.${extension}`;
         const file = new File([blob], uniqueName, { type: blob.type });
+
+        if (selectedImage && typeof selectedImage === "string" && selectedImage.startsWith("blob:")) {
+          URL.revokeObjectURL(selectedImage);
+        }
+
+        setSelectedImage(croppedImage);
         setSelectedFile(file);
         setIsPdf(false);
-        onChange(file);
+
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
+
+        if (onChange) {
+          onChange(file);
+        }
+
+        if (imageForCrop && typeof imageForCrop === "string" && imageForCrop.startsWith("blob:")) {
+          URL.revokeObjectURL(imageForCrop);
+        }
+        setImageForCrop(null);
       } catch (error) {
         console.error("Error cropping image:", error);
       }
+    }
+  };
+
+  const handleCropCancel = () => {
+    setCropModalOpen(false);
+    if (imageForCrop && typeof imageForCrop === "string" && imageForCrop.startsWith("blob:")) {
+      URL.revokeObjectURL(imageForCrop);
+    }
+    setImageForCrop(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
     }
   };
 
@@ -183,6 +290,10 @@ export const StyledCropImage = ({ label, value, onChange, ratio }) => {
 
       if (value instanceof File) {
         setSelectedFile(value);
+        if (!isPdfFile) {
+          const imageUrl = URL.createObjectURL(value);
+          setSelectedImage(imageUrl);
+        }
       } else if (typeof value === "string") {
         setSelectedImage(value);
         if (!isPdfFile) {
@@ -196,11 +307,23 @@ export const StyledCropImage = ({ label, value, onChange, ratio }) => {
     }
   }, [value]);
 
+  useEffect(() => {
+    return () => {
+      if (selectedImage && typeof selectedImage === "string" && selectedImage.startsWith("blob:")) {
+        URL.revokeObjectURL(selectedImage);
+      }
+      if (imageForCrop && typeof imageForCrop === "string" && imageForCrop.startsWith("blob:")) {
+        URL.revokeObjectURL(imageForCrop);
+      }
+    };
+  }, [selectedImage, imageForCrop]);
+
   return (
     <>
       <CustomTextField
         fullWidth
-        label={label}
+        placeholder={label}
+        value={selectedFile ? selectedFile.name : typeof value === "string" ? value : ""}
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
@@ -211,89 +334,122 @@ export const StyledCropImage = ({ label, value, onChange, ratio }) => {
           ),
           readOnly: true,
         }}
+        onClick={handleIconClick}
+        sx={{ cursor: "pointer" }}
       />
       <input
         type="file"
         ref={fileInputRef}
         onChange={handleFileChange}
         style={{ display: "none" }}
-        accept="image/*,application/pdf"
+        accept={accept}
       />
-      {selectedImage && (
+      {selectedImage && !show && (
         <PreviewContainer>
-          {isPdf ? (
-            <PdfPreview>
-              <IconButton
-                onClick={handlePdfClick}
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  color: "#f58220",
-                }}
-              >
-                <PictureAsPdfOutlined style={{ fontSize: "40px" }} />
-                <span style={{ fontSize: "12px", marginTop: "4px" }}>
-                  View PDF
-                </span>
-              </IconButton>
-              <DeleteButton onClick={handleDelete}>
-                <DeleteOutlineIcon style={{ fontSize: "20px", color: "#f44336" }} />
-              </DeleteButton>
-            </PdfPreview>
-          ) : (
-            <>
-              <ImagePreview src={selectedImage} alt="Preview" />
-              <DeleteButton onClick={handleDelete}>
-                <DeleteOutlineIcon style={{ fontSize: "20px", color: "#f44336" }} />
-              </DeleteButton>
-            </>
-          )}
+          <PreviewCard>
+            {isPdf ? (
+              <PdfPreview>
+                <PdfIconButton onClick={handlePdfClick}>
+                  <PictureAsPdfOutlined style={{ fontSize: "40px" }} />
+                  <PdfText>View PDF</PdfText>
+                </PdfIconButton>
+                <DeleteButton onClick={handleDelete}>
+                  <DeleteOutlineIcon style={{ fontSize: "18px", color: "#f44336" }} />
+                </DeleteButton>
+              </PdfPreview>
+            ) : (
+              <>
+                <ImagePreview src={selectedImage} alt="Preview" />
+                <DeleteButton onClick={handleDelete}>
+                  <DeleteOutlineIcon style={{ fontSize: "18px", color: "#f44336" }} />
+                </DeleteButton>
+              </>
+            )}
+          </PreviewCard>
         </PreviewContainer>
       )}
 
-      <Modal open={cropModalOpen} onClose={() => setCropModalOpen(false)}>
-        <div
-          style={{
+      <Modal open={cropModalOpen} onClose={handleCropCancel}>
+        <Box
+          sx={{
             position: "relative",
-            width: "400px",
-            height: "400px",
+            width: { xs: "90vw", sm: "480px" },
+            maxWidth: "500px",
             margin: "auto",
             top: "50%",
             transform: "translateY(-50%)",
-            backgroundColor: "white",
+            backgroundColor: "#fff",
             padding: "20px",
-            borderRadius: "8px",
+            borderRadius: "12px",
+            boxShadow: 24,
+            outline: "none",
+            display: "flex",
+            flexDirection: "column",
           }}
         >
-          <Cropper
-            image={imageForCrop}
-            crop={crop}
-            zoom={zoom}
-            aspect={ratio}
-            onCropChange={setCrop}
-            onZoomChange={setZoom}
-            onCropComplete={onCropComplete}
-          />
-          <Slider
-            value={zoom}
-            min={1}
-            max={3}
-            step={0.1}
-            onChange={(e, newZoom) => setZoom(newZoom)}
-            style={{ marginTop: "10px", color: "#f58220" }}
-          />
-          <div
-            style={{
-              position: "absolute",
-              bottom: "20px",
-              left: "50%",
-              transform: "translateX(-50%)",
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              mb: 2,
             }}
           >
+            <Typography variant="h6" fontWeight={600}>
+              Crop Image
+            </Typography>
+            <IconButton onClick={handleCropCancel} size="small">
+              <CloseIcon />
+            </IconButton>
+          </Box>
+
+          <Box
+            sx={{
+              position: "relative",
+              width: "100%",
+              height: "320px",
+              backgroundColor: "#111",
+              borderRadius: "8px",
+              overflow: "hidden",
+            }}
+          >
+            <Cropper
+              image={imageForCrop}
+              crop={crop}
+              zoom={zoom}
+              aspect={ratio}
+              onCropChange={setCrop}
+              onZoomChange={setZoom}
+              onCropComplete={onCropComplete}
+            />
+          </Box>
+
+          <Box sx={{ mt: 2, px: 1 }}>
+            <Typography variant="body2" color="textSecondary" mb={0.5}>
+              Zoom
+            </Typography>
+            <Slider
+              value={zoom}
+              min={1}
+              max={3}
+              step={0.1}
+              onChange={(e, newZoom) => setZoom(newZoom)}
+              sx={{ color: "#f58220" }}
+            />
+          </Box>
+
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "flex-end",
+              gap: "12px",
+              mt: 2,
+            }}
+          >
+            <CancelButton onClick={handleCropCancel}>Cancel</CancelButton>
             <SaveButton onClick={handleCropSave}>Save</SaveButton>
-          </div>
-        </div>
+          </Box>
+        </Box>
       </Modal>
     </>
   );

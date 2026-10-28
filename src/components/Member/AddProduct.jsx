@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { StyledButton } from "../../ui/StyledButton";
 import StyledInput from "../../ui/StyledInput";
-import { StyledEventUpload } from "../../ui/StyledEventUpload";
+import StyledCropImage from "../../ui/StyledCropImage";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import StyledSelectField from "../../ui/StyledSelectField";
 import { useProductStore } from "../../store/productStore";
@@ -159,8 +159,9 @@ const AddProduct = () => {
               rules={{ required: "Image is required" }}
               render={({ field: { onChange, value } }) => (
                 <>
-                  <StyledEventUpload
+                  <StyledCropImage
                     label="Upload Product Image"
+                    ratio={16 / 9}
                     onChange={(file) => {
                       setImageFile(file);
                       onChange(file);
@@ -168,7 +169,7 @@ const AddProduct = () => {
                     value={value}
                   />
                   <FormHelperText style={{ color: "#888" }}>
-                    File size limit: 1 MB
+                    File size limit: 1 MB | Recommended aspect ratio: 16:9
                   </FormHelperText>
                   {errors.photo && (
                     <span style={{ color: "red" }}>{errors.photo.message}</span>
