@@ -13,7 +13,6 @@ import StyledInput from "../../ui/StyledInput.jsx";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import StyledSelectField from "../../ui/StyledSelectField.jsx";
 import { ReactComponent as Delete } from "../../assets/icons/DeleteIcon.svg";
-import { StyledEventUpload } from "../../ui/StyledEventUpload.jsx";
 import { StyledCalender } from "../../ui/StyledCalender.jsx";
 import { StyledTime } from "../../ui/StyledTime.jsx";
 import { useEventStore } from "../../store/eventStore.js";
@@ -378,8 +377,9 @@ export default function AddEvent({ isUpdate }) {
                 name={`speakers.${index}.image`}
                 control={control}
                 render={({ field }) => (
-                  <StyledEventUpload
+                  <StyledCropImage
                     label="Upload speaker image"
+                    ratio={1 / 1}
                     onChange={(file) => field.onChange(file)}
                     value={field.value || null}
                   />

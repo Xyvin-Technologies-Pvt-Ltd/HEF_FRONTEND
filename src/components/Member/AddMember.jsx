@@ -14,7 +14,7 @@ import StyledInput from "../../ui/StyledInput";
 import StyledSelectField from "../../ui/StyledSelectField";
 import { StyledMultilineTextField } from "../../ui/StyledMultilineTextField";
 import { StyledButton } from "../../ui/StyledButton";
-import { StyledEventUpload } from "../../ui/StyledEventUpload";
+import StyledCropImage from "../../ui/StyledCropImage";
 import { toast } from "react-toastify";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useMemberStore } from "../../store/Memberstore";
@@ -421,7 +421,7 @@ const AddMember = () => {
                   defaultValue=""
                   render={({ field: { onChange, value } }) => (
                     <>
-                      <StyledEventUpload
+                      <StyledCropImage
                         label="Upload Photo here"
                         onChange={(file) => {
                           setImageFile(file);
