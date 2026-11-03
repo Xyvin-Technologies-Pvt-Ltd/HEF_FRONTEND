@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import ResponsiveTabs from "../../ui/ResponsiveTabs";
 import {
   Badge,
   Box,
@@ -6,7 +7,6 @@ import {
   Grid,
   Stack,
   Tab,
-  Tabs,
   Tooltip,
   Typography,
 } from "@mui/material";
@@ -321,7 +321,7 @@ const BusinessPage = () => {
         direction={"row"}
         padding={"10px"}
         bgcolor={"#fff"}
-        height={"70px"}
+        sx={{ height: { xs: "auto", sm: "70px" }, minHeight: "70px" }}
         alignItems={"center"}
         justifyContent={"space-between"}
       >
@@ -349,7 +349,7 @@ const BusinessPage = () => {
           )}
         </Stack>
       </Stack>
-      <Tabs
+      <ResponsiveTabs
         value={selectedTab}
         onChange={handleChange}
         aria-label="tabs"
@@ -382,13 +382,14 @@ const BusinessPage = () => {
         <Tab label="Business" />
         <Tab label="1 on 1 meeting" />
         <Tab label="Referrals" />
-      </Tabs>
+      </ResponsiveTabs>
       <Box padding={"15px"}>
         <Stack
           direction={"row"}
           justifyContent={"end"}
           paddingBottom={"15px"}
           alignItems={"center"}
+          sx={{ flexWrap: { xs: "wrap", sm: "nowrap" }, gap: { xs: 1, sm: 0 } }}
         >
           <Stack direction={"row"} spacing={2} mt={2}>
             <StyledButton

@@ -131,7 +131,7 @@ const CategoryPage = () => {
         direction={"row"}
         padding={"10px"}
         bgcolor={"#FFFFFF"}
-        height={"70px"}
+        sx={{ height: { xs: "auto", sm: "70px" }, minHeight: "70px" }}
         alignItems={"center"}
         justifyContent={"space-between"}
       >

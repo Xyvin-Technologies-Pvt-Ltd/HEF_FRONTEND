@@ -132,7 +132,7 @@ export default function MemberSubscriptionCard({ payment }) {
 
       <Grid item xs={12}>
         <Grid container justifyContent="flex-end">
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             {payment ? (
               <Stack direction="row" spacing={2} justifyContent="flex-end">
                 <StyledButton

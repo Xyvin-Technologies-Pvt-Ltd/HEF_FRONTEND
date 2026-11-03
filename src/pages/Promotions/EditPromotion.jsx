@@ -8,13 +8,13 @@ const EditPromotion = () => {
     <>
       <Box
         padding={"10px"}
-        height={"70px"}
+        sx={{ height: { xs: "auto", sm: "70px" }, minHeight: "70px" }}
         display={"flex"}
         alignItems={"center"}
         bgcolor={"#FFFFFF"}
       >
         <Grid container alignItems="center">
-          <Grid item xs={6} spacing={2}>
+          <Grid item xs={12} sm={6} spacing={2}>
             <Typography variant="h4" color={"#4A4647"}>
               Edit Promotion
             </Typography>

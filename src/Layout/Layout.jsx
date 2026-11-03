@@ -166,9 +166,11 @@ const SimpleDialog = ({ open, onClose }) => {
         sx: {
           position: "fixed",
           top: 50,
-          right: 50,
+          right: { xs: 12, sm: 50 },
+          left: { xs: 12, sm: "auto" },
           m: 0,
           width: "270px",
+          maxWidth: { xs: "calc(100% - 24px)", sm: "270px" },
           borderRadius: "10px",
           boxShadow: "rgba(0, 0, 0, 0.25)",
         },
@@ -310,6 +312,7 @@ const Layout = (props) => {
             <ListItemButton
               component={Link}
               to={item.to}
+              onClick={isMobile ? handleDrawerClose : undefined}
               sx={{
                 fontWeight: location.pathname.startsWith(item.to)
                   ? "bold"
@@ -370,9 +373,11 @@ const Layout = (props) => {
       >
         <Toolbar
           sx={{
-            height: "88px",
+            height: { xs: "64px", sm: "88px" },
+            minHeight: { xs: "64px", sm: "88px" },
             justifyContent: "space-between",
-            paddingRight: "20px",
+            paddingLeft: { xs: "8px", sm: "16px" },
+            paddingRight: { xs: "8px", sm: "20px" },
           }}
         >
           <Box
@@ -380,39 +385,47 @@ const Layout = (props) => {
               display: "flex",
               flexDirection: isMobile ? "row" : "column",
               alignItems: "flex-start",
-              padding: "15px",
+              padding: { xs: "8px", sm: "15px" },
             }}
           >
             <IconButton
-              color="#000"
+              color="inherit"
               aria-label="open drawer"
               edge="start"
               onClick={handleDrawerToggle}
-              sx={{ mr: 2, display: { sm: "none" } }}
+              sx={{ mr: 2, display: { sm: "none" }, color: "#000" }}
             >
               <MenuIcon />
             </IconButton>
           </Box>
 
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Box display={isMobile && "none"}> </Box>
-            {/* <NotificationIcon /> */}
             <Box
               borderRadius="24px"
               padding={"5px 20px 5px 5px"}
               bgcolor={"#F7F7F7"}
-              width={"200px"}
               color={"#000"}
               gap={1}
               display={"flex"}
               alignItems={"center"}
               justifyContent={"space-between"}
               onClick={handleDialogOpen}
-              sx={{ cursor: "pointer", flexShrink: 0, marginLeft: "10px" }}
+              sx={{
+                cursor: "pointer",
+                flexShrink: 0,
+                marginLeft: "10px",
+                width: "200px",
+                maxWidth: { xs: "180px", sm: "200px" },
+              }}
             >
-              <Box sx={{ display: "flex", alignItems: "center" }}>
-                <Box sx={{ marginLeft: "10px" }}>
-                  <Typography variant="h7" color={"#292D32"} display="block">
+              <Box sx={{ display: "flex", alignItems: "center", minWidth: 0 }}>
+                <Box sx={{ marginLeft: "10px", minWidth: 0 }}>
+                  <Typography
+                    variant="h7"
+                    color={"#292D32"}
+                    display="block"
+                    noWrap
+                  >
                     {singleAdmin?.name}
                   </Typography>
                   <Typography
@@ -478,11 +491,21 @@ const Layout = (props) => {
           backgroundColor: "#F3F3F3",
           paddingTop: 3,
           width: { sm: `calc(100% - ${drawerWidth}px)` },
+          maxWidth: "100%",
+          overflowX: { xs: "hidden", sm: "visible" },
         }}
       >
         <Toolbar />
-        {children}
-      </Box>{" "}
+        <Box
+          sx={{
+            width: "100%",
+            maxWidth: "100%",
+            overflowX: { xs: "hidden", sm: "visible" },
+          }}
+        >
+          {children}
+        </Box>
+      </Box>
       <SimpleDialog open={dialogOpen} onClose={handleDialogClose} />
     </Box>
   );

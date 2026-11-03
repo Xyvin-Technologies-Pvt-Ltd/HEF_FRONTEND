@@ -108,7 +108,7 @@ const ParentSub = ({ open, onClose, sub, isUpdate }) => {
           </Box>
         </DialogTitle>
         <DialogContent
-          sx={{ height: "400px", width: "430px", backgroundColor: "#FFF" }}
+          sx={{ height: "400px", width: { xs: "100%", sm: "430px" }, maxWidth: "100%", backgroundColor: "#FFF" }}
         >
           <Stack spacing={2} paddingTop={2}>
             <Stack direction={"row"} spacing={2}>

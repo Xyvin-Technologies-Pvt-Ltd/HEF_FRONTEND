@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
+import ResponsiveTabs from "../../ui/ResponsiveTabs";
 import {
   Box,
   Divider,
   Grid,
   Stack,
   Tab,
-  Tabs,
   Typography,
   Dialog,
   DialogTitle,
@@ -232,7 +232,7 @@ const LevelPage = () => {
       <Box
         padding={"10px"}
         bgcolor={"#FFFFFF"}
-        height={"70px"}
+        sx={{ height: { xs: "auto", sm: "70px" }, minHeight: "70px" }}
         display={"flex"}
         alignItems={"center"}
       >
@@ -259,7 +259,7 @@ const LevelPage = () => {
             )}
         </Stack>
       </Box>
-      <Tabs
+      <ResponsiveTabs
         value={selectedTab}
         onChange={handleChange}
         aria-label="tabs"
@@ -290,7 +290,7 @@ const LevelPage = () => {
         <Tab label="Zone" />
         <Tab label="District" />
         <Tab label="Chapter" />
-      </Tabs>
+      </ResponsiveTabs>
       <Divider />{" "}
       <Box padding={"15px"}>
         {" "}

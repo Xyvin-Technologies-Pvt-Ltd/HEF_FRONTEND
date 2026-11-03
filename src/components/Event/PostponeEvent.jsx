@@ -82,7 +82,7 @@ const PostponeEvent = ({ open, onClose, onChange, data }) => {
             </Box>
           </DialogTitle>
           <DialogContent
-            sx={{ height: "auto", width: "430px", backgroundColor: "#F9F9F9" }}
+            sx={{ height: "auto", width: { xs: "100%", sm: "430px" }, maxWidth: "100%", backgroundColor: "#F9F9F9" }}
           >
             {" "}
             <Stack spacing={2} paddingTop={2}>

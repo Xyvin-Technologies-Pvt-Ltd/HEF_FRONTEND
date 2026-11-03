@@ -407,7 +407,7 @@ const AddMember = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={12} sm={6}>
                 <Typography
                   sx={{ marginBottom: 1 }}
                   variant="h6"
@@ -437,7 +437,7 @@ const AddMember = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={12} sm={6}>
                 <Typography
                   sx={{ marginBottom: 1 }}
                   variant="h6"
@@ -581,7 +581,7 @@ const AddMember = () => {
                   )}
                 />
               </Grid>{" "}
-              <Grid item xs={6}>
+              <Grid item xs={12} sm={6}>
                 {" "}
                 <Typography
                   sx={{ marginBottom: 1 }}
@@ -591,7 +591,7 @@ const AddMember = () => {
                   Company Details
                 </Typography>
               </Grid>
-              <Grid item xs={6} display={"flex"} justifyContent={"flex-end"}>
+              <Grid item xs={12} sm={6} display={"flex"} justifyContent={"flex-end"}>
                 <Typography
                   sx={{
                     color: "#004797",
@@ -614,7 +614,7 @@ const AddMember = () => {
               </Grid>
               {fields?.map((company, index) => (
                 <React.Fragment key={company?.id}>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} sm={6}>
                     <Typography variant="h6" color="textSecondary">
                       Company Name
                     </Typography>
@@ -630,7 +630,7 @@ const AddMember = () => {
                       )}
                     />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} sm={6}>
                     <Typography variant="h6" color="textSecondary">
                       Company Phone
                     </Typography>
@@ -646,7 +646,7 @@ const AddMember = () => {
                       )}
                     />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} sm={6}>
                     <Typography variant="h6" color="textSecondary">
                       Company Designation
                     </Typography>
@@ -662,7 +662,7 @@ const AddMember = () => {
                       )}
                     />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} sm={6}>
                     <Typography variant="h6" color="textSecondary">
                       Company Email
                     </Typography>
@@ -678,7 +678,7 @@ const AddMember = () => {
                       )}
                     />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} sm={6}>
                     <Typography variant="h6" color="textSecondary">
                       Website
                     </Typography>
@@ -876,7 +876,7 @@ const AddMember = () => {
                   HEF Designation
                 </Typography>
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={12} sm={6}>
                 <Typography variant="h6" color="textSecondary">
                   State <span style={{ color: "red" }}>*</span>
                 </Typography>
@@ -899,7 +899,7 @@ const AddMember = () => {
                   )}
                 />
               </Grid>{" "}
-              <Grid item xs={6}>
+              <Grid item xs={12} sm={6}>
                 Zone <span style={{ color: "red" }}>*</span>
                 <Controller
                   name="zone"
@@ -920,7 +920,7 @@ const AddMember = () => {
                   )}
                 />
               </Grid>{" "}
-              <Grid item xs={6}>
+              <Grid item xs={12} sm={6}>
                 District <span style={{ color: "red" }}>*</span>
                 <Controller
                   name="district"
@@ -941,7 +941,7 @@ const AddMember = () => {
                   )}
                 />
               </Grid>{" "}
-              <Grid item xs={6}>
+              <Grid item xs={12} sm={6}>
                 Chapter <span style={{ color: "red" }}>*</span>
                 <Controller
                   name="chapter"
@@ -993,7 +993,7 @@ const AddMember = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={12} sm={6}>
                 {" "}
                 <Typography
                   variant="body2"
@@ -1003,7 +1003,7 @@ const AddMember = () => {
                   * Fields are mandatory
                 </Typography>
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={12} sm={6}>
                 <Stack
                   direction={"row"}
                   spacing={2}

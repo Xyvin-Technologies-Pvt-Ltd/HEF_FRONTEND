@@ -160,8 +160,8 @@ const EventTable = ({
     return moment(time).format("h:mm A");
   };
   return (
-    <Box bgcolor={"white"} borderRadius={"16px"}>
-      <TableContainer sx={{ border: "none" }}>
+    <Box bgcolor={"white"} borderRadius={"16px"} sx={{ width: "100%", maxWidth: "100%" }}>
+      <TableContainer sx={{ border: "none", overflowX: "auto", maxWidth: "100%" }}>
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
           <TableHead>
             <TableRow>

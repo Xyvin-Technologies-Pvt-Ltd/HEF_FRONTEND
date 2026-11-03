@@ -152,11 +152,15 @@ const ActivityFilter = ({ open, onClose, onApply }) => {
       onClose={onClose}
       PaperProps={{
         sx: {
-          borderRadius: "12px",
+          borderRadius: { xs: 0, sm: "12px" },
           position: "absolute",
           top: 0,
           right: 0,
-          width: "630px",
+          height: { xs: "100vh", sm: "auto" },
+          maxHeight: "100vh",
+          overflowY: "auto",
+          width: { xs: "100%", sm: "630px" },
+          maxWidth: "100%",
         },
       }}
     >
@@ -178,14 +182,14 @@ const ActivityFilter = ({ open, onClose, onApply }) => {
         <Grid container spacing={2} p={2} >
           <Grid item xs={12}>
             <Grid container spacing={2}>
-              <Grid item xs={6}>
+              <Grid item xs={12} sm={6}>
                 <Typography mb={1}>Start Date</Typography>
                 <StyledCalender
                   value={startDate}
                   onChange={(selectedDate) => setStartDate(selectedDate)}
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={12} sm={6}>
                 <Typography mb={1}>End Date</Typography>
                 <StyledCalender
                   value={endDate}
@@ -208,7 +212,7 @@ const ActivityFilter = ({ open, onClose, onApply }) => {
                 Chapter
               </Typography>
               <Grid container spacing={2}>
-                <Grid item xs={6}>
+                <Grid item xs={12} sm={6}>
                   <Typography mb={1}>Select State</Typography>
                   <StyledSelectField
                     placeholder="Select State"
@@ -217,7 +221,7 @@ const ActivityFilter = ({ open, onClose, onApply }) => {
                     onChange={handleStateChange}
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={12} sm={6}>
                   <Typography mb={1}>Select Zone</Typography>
                   <StyledSelectField
                     placeholder="Select Zone"
@@ -227,7 +231,7 @@ const ActivityFilter = ({ open, onClose, onApply }) => {
                     disabled={!selectedState}
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={12} sm={6}>
                   <Typography mb={1}>Select District</Typography>
                   <StyledSelectField
                     placeholder="Select District"
@@ -237,7 +241,7 @@ const ActivityFilter = ({ open, onClose, onApply }) => {
                     disabled={!selectedZone}
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={12} sm={6}>
                   <Typography mb={1}>Select Chapter</Typography>
                   <StyledSelectField
                     placeholder="Select Chapter"
@@ -253,7 +257,7 @@ const ActivityFilter = ({ open, onClose, onApply }) => {
           
           <Grid item xs={12} mb={15}>
             <Grid container spacing={2}>
-              <Grid item xs={6}>
+              <Grid item xs={12} sm={6}>
                 <Typography mb={1}>Business Type</Typography>
                 <StyledSelectField
                   placeholder="Select Type"
@@ -266,7 +270,7 @@ const ActivityFilter = ({ open, onClose, onApply }) => {
                   onChange={handleTypeChange}
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={12} sm={6}>
                 <Typography mb={1}>Status</Typography>
                 <StyledSelectField
                   placeholder="Select Status"

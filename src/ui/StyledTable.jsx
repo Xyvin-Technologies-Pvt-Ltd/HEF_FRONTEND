@@ -236,8 +236,8 @@ const StyledTable = ({
     setPageNo(1);
   };
   return (
-    <Box bgcolor={"white"} borderRadius={"16px"}>
-      <TableContainer sx={{ border: "none" }}>
+    <Box bgcolor={"white"} borderRadius={"16px"} sx={{ width: "100%", maxWidth: "100%" }}>
+      <TableContainer sx={{ border: "none", overflowX: "auto", maxWidth: "100%" }}>
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
           <TableHead>
             <TableRow>
@@ -650,6 +650,11 @@ const StyledTable = ({
               : "flex-end"
           }
           alignItems="center"
+          sx={{
+            flexWrap: { xs: "wrap", sm: "nowrap" },
+            rowGap: { xs: 1, sm: 0 },
+            px: { xs: 1, sm: 0 },
+          }}
         >
           {selectedIds.length > 0 && onDelete && (
             <Stack direction="row" alignItems="center">

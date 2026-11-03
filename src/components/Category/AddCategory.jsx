@@ -107,7 +107,7 @@ const AddCategory = ({ open, onClose, categoryId, onChange }) => {
           </Box>
         </DialogTitle>
         <DialogContent
-          sx={{ height: "auto", width: "430px", bgcolor: "#fff" }}
+          sx={{ height: "auto", width: { xs: "100%", sm: "430px" }, maxWidth: "100%", bgcolor: "#fff" }}
         >
           {fetching ? (
             <Typography>Loading...</Typography>

@@ -1,5 +1,6 @@
-import { Box, Stack, Tab, Tabs, Typography } from "@mui/material";
+import { Box, Stack, Tab, Typography } from "@mui/material";
 import React, { useState } from "react";
+import ResponsiveTabs from "../../ui/ResponsiveTabs";
 import MemberList from "./MemberList";
 import MemberAccess from "./MemberAccess";
 import { StyledButton } from "../../ui/StyledButton";
@@ -25,9 +26,11 @@ const MemberPage = () => {
         direction={"row"}
         padding={"10px"}
         bgcolor={"#fff"}
-        height={"70px"}
+        sx={{ height: { xs: "auto", sm: "70px" }, minHeight: "70px" }}
         alignItems={"center"}
         justifyContent={"space-between"}
+        gap={{ xs: 1, sm: 0 }}
+        flexWrap={{ xs: "wrap", sm: "nowrap" }}
       >
         <Stack>
           <Typography variant="h4" color="textSecondary">
@@ -53,7 +56,7 @@ const MemberPage = () => {
           )}
         </Stack>
       </Stack>
-      <Tabs
+      <ResponsiveTabs
         value={selectedTab}
         onChange={handleChange}
         aria-label="tabs"
@@ -85,7 +88,7 @@ const MemberPage = () => {
         <Tab label="User Details" />
 
         <Tab label="Accesses" />
-      </Tabs>
+      </ResponsiveTabs>
       <Box padding="15px" marginBottom={4}>
         {selectedTab === 0 && <MemberList />}
         {selectedTab === 1 && <MemberAccess />}

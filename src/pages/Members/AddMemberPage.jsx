@@ -13,7 +13,7 @@ const AddMemberPage = () => {
         direction={"row"}
         padding={"10px"}
         bgcolor={"#fff"}
-        height={"70px"}
+        sx={{ height: { xs: "auto", sm: "70px" }, minHeight: "70px" }}
         alignItems={"center"}
         justifyContent={"space-between"}
       >

@@ -44,7 +44,7 @@ const ChangeCategoryStatus = ({ open, onClose, id, deactivate }) => {
           <Close fontSize="small" sx={{ color: "#AEB9E1" }} />
         </IconButton>
       </DialogTitle>
-      <DialogContent sx={{ pt: 0, width: "400px", overflow: "hidden" }}>
+      <DialogContent sx={{ pt: 0, width: { xs: "100%", sm: "400px" }, maxWidth: "100%", overflow: "hidden" }}>
         <Typography
           variant="h5"
           fontWeight={500}

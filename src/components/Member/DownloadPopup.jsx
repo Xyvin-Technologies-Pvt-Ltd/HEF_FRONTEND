@@ -38,8 +38,10 @@ const DownloadPopup = ({ open, onClose, onDownloadExcel, onDownloadPDF, loading,
         sx: {
           borderRadius: '16px',
           padding: 0,
-          minWidth: '400px',
-          maxWidth: '500px',
+          minWidth: { xs: 'auto', sm: '400px' },
+          maxWidth: { xs: '100%', sm: '500px' },
+          width: { xs: 'calc(100% - 32px)', sm: 'auto' },
+          m: { xs: 2, sm: 0 },
         },
       }}
     >

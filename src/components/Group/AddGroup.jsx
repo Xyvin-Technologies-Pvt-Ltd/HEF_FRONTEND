@@ -257,7 +257,7 @@ const AddGroup = () => {
               Participants <span style={{ color: "red" }}>*</span>
             </Typography>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <Controller
               name="state"
               control={control}
@@ -277,7 +277,7 @@ const AddGroup = () => {
               )}
             />
           </Grid>{" "}
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <Controller
               name="zone"
               control={control}
@@ -297,7 +297,7 @@ const AddGroup = () => {
               )}
             />
           </Grid>{" "}
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <Controller
               name="district"
               control={control}
@@ -317,7 +317,7 @@ const AddGroup = () => {
               )}
             />
           </Grid>{" "}
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <Controller
               name="chapter"
               control={control}
@@ -337,7 +337,7 @@ const AddGroup = () => {
               )}
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <Controller
               name="participants"
               control={control}

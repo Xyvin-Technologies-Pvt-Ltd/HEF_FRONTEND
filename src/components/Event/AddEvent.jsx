@@ -342,7 +342,7 @@ export default function AddEvent({ isUpdate }) {
       {fields.map((field, index) => (
         <Box key={field.id} sx={{ position: "relative", mb: 4 }}>
           <Grid container spacing={4}>
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6}>
               <Controller
                 name={`speakers.${index}.name`}
                 control={control}
@@ -351,7 +351,7 @@ export default function AddEvent({ isUpdate }) {
                 )}
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6}>
               <Controller
                 name={`speakers.${index}.designation`}
                 control={control}
@@ -363,7 +363,7 @@ export default function AddEvent({ isUpdate }) {
                 )}
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6}>
               <Controller
                 name={`speakers.${index}.role`}
                 control={control}
@@ -372,7 +372,7 @@ export default function AddEvent({ isUpdate }) {
                 )}
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6}>
               <Controller
                 name={`speakers.${index}.image`}
                 control={control}
@@ -450,7 +450,7 @@ export default function AddEvent({ isUpdate }) {
                   )}
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={12} sm={6}>
                 <Typography
                   sx={{ marginBottom: 1 }}
                   variant="h6"
@@ -478,7 +478,7 @@ export default function AddEvent({ isUpdate }) {
                   )}
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={12} sm={6}>
                 <Typography
                   sx={{ marginBottom: 1 }}
                   variant="h6"
@@ -539,7 +539,7 @@ export default function AddEvent({ isUpdate }) {
               </Grid>
               {type === "Online" && (
                 <>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} sm={6}>
                     <Typography
                       sx={{ marginBottom: 1 }}
                       variant="h6"
@@ -562,7 +562,7 @@ export default function AddEvent({ isUpdate }) {
                       )}
                     />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} sm={6}>
                     <Typography
                       sx={{ marginBottom: 1 }}
                       variant="h6"
@@ -593,7 +593,7 @@ export default function AddEvent({ isUpdate }) {
                 </>
               )}
               {type === "Offline" && (
-                <Grid item xs={6}>
+                <Grid item xs={12} sm={6}>
                   <Typography
                     sx={{ marginBottom: 1 }}
                     variant="h6"
@@ -620,7 +620,7 @@ export default function AddEvent({ isUpdate }) {
                   />
                 </Grid>
               )}
-              <Grid item xs={6}>
+              <Grid item xs={12} sm={6}>
                 <Typography sx={{ marginBottom: 1 }} variant="h6" color="textSecondary">
                   Participants <span style={{ color: "red" }}>*</span>
                 </Typography>
@@ -680,7 +680,7 @@ export default function AddEvent({ isUpdate }) {
               </Grid>
 
 
-              <Grid item xs={6}>
+              <Grid item xs={12} sm={6}>
                 <Typography
                   sx={{ marginBottom: 1 }}
                   variant="h6"
@@ -705,7 +705,7 @@ export default function AddEvent({ isUpdate }) {
                   )}
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={12} sm={6}>
                 <Typography
                   sx={{ marginBottom: 1 }}
                   variant="h6"
@@ -730,7 +730,7 @@ export default function AddEvent({ isUpdate }) {
                   )}
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={12} sm={6}>
                 <Typography
                   sx={{ marginBottom: 1 }}
                   variant="h6"
@@ -755,7 +755,7 @@ export default function AddEvent({ isUpdate }) {
                   )}
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={12} sm={6}>
                 <Typography
                   sx={{ marginBottom: 1 }}
                   variant="h6"
@@ -774,7 +774,7 @@ export default function AddEvent({ isUpdate }) {
                   )}
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={12} sm={6}>
                 <Typography
                   sx={{ marginBottom: 1 }}
                   variant="h6"
@@ -799,7 +799,7 @@ export default function AddEvent({ isUpdate }) {
                   )}
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={12} sm={6}>
                 <Typography
                   sx={{ marginBottom: 1 }}
                   variant="h6"
@@ -880,7 +880,7 @@ export default function AddEvent({ isUpdate }) {
                   )}
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={12} sm={6}>
                 <Typography
                   sx={{ marginBottom: 1 }}
                   variant="h6"
@@ -902,7 +902,7 @@ export default function AddEvent({ isUpdate }) {
                 />
               </Grid>
 
-              <Grid item xs={6}>
+              <Grid item xs={12} sm={6}>
                 <Typography
                   sx={{ marginBottom: 1 }}
                   variant="h6"

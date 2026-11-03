@@ -1,5 +1,6 @@
-import { Box, Grid, Stack, Tab, Tabs, Typography } from "@mui/material";
+import { Box, Grid, Stack, Tab, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
+import ResponsiveTabs from "../../ui/ResponsiveTabs";
 import AdminManagement from "./AdminManagement.jsx";
 import RoleManagement from "./RoleManagement.jsx";
 import AdminActivity from "./AdminActivity.jsx";
@@ -38,7 +39,7 @@ const SettingsPage = () => {
 
   return (
     <>
-      <Tabs
+      <ResponsiveTabs
         value={selectedTab}
         onChange={handleChange}
         aria-label="tabs"
@@ -69,7 +70,7 @@ const SettingsPage = () => {
         {tabs.map((label, index) => (
           <Tab key={index} label={label} />
         ))}
-      </Tabs>
+      </ResponsiveTabs>
       <Box padding="15px" marginBottom={4}>
         <Grid container>
           <Grid item md={12}>
