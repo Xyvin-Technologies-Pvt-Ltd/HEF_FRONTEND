@@ -283,8 +283,8 @@ const AddRole = () => {
             />
           </Grid>
           {/* Buttons */}
-          <Grid item xs={6}></Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}></Grid>
+          <Grid item xs={12} sm={6}>
             <Stack direction={"row"} spacing={2} justifyContent={"flex-end"}>
               <StyledButton
                 name="Cancel"

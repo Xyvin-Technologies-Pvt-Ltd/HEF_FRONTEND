@@ -159,7 +159,7 @@ const AddSubscription = ({
           </Box>
         </DialogTitle>
         <DialogContent
-          sx={{ height: "auto", width: "430px", backgroundColor: "#FFF" }}
+          sx={{ height: "auto", width: { xs: "100%", sm: "430px" }, maxWidth: "100%", backgroundColor: "#FFF" }}
         >
           <Stack spacing={2} paddingTop={2}>
             <Typography variant="h6" color={"#333333"}>

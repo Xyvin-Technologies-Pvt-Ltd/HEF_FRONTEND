@@ -13,17 +13,17 @@ export default function Promotionpage() {
       <Box
         padding={"10px"}
         bgcolor={"#FFFFFF"}
-        height={"70px"}
+        sx={{ height: { xs: "auto", sm: "70px" }, minHeight: "70px" }}
         display={"flex"}
         alignItems={"center"}
       >
         <Grid container alignItems="center">
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <Typography variant="h4" color={"textSecondary"}>
               Promotions
             </Typography>
           </Grid>
-          <Grid item xs={6} container justifyContent="flex-end" spacing={2}>
+          <Grid item xs={12} sm={6} container justifyContent="flex-end" spacing={2}>
             <Grid item>
               {singleAdmin?.role?.permissions?.includes(
                 "promotionManagement_modify"

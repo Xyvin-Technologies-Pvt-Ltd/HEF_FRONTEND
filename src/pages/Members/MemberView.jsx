@@ -1,5 +1,6 @@
-import { Box, Divider, Grid, Tab, Tabs, Typography } from "@mui/material";
+import { Box, Divider, Grid, Tab, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
+import ResponsiveTabs from "../../ui/ResponsiveTabs";
 import { useParams } from "react-router-dom";
 import MemberProfile from "../../components/Member/MemberProfile";
 import MemberAnalytics from "../../components/Member/MemberAnalytics";
@@ -53,7 +54,7 @@ const MemberView = () => {
     if (storedTab >= tabs.length) {
       localStorage.setItem("memberViewTab", "0");
     }
-  }, [refreshMember, id, storedTab, tabs.length]);
+  }, [refreshMember, id, storedTab.length]);
 
   const handleChange = (event, newValue) => {
     localStorage.setItem("memberViewTab", newValue);
@@ -65,7 +66,7 @@ const MemberView = () => {
       <Box
         padding={"20px"}
         bgcolor={"#FFFFFF"}
-        height={"70px"}
+        sx={{ height: { xs: "auto", sm: "70px" }, minHeight: "70px" }}
         display={"flex"}
         alignItems={"center"}
       >
@@ -74,7 +75,7 @@ const MemberView = () => {
         </Typography>
       </Box>
       <Divider />
-      <Tabs
+      <ResponsiveTabs
         value={selectedTab}
         onChange={handleChange}
         aria-label="tabs"
@@ -105,7 +106,7 @@ const MemberView = () => {
         {tabs.map((label, index) => (
           <Tab key={index} label={label} />
         ))}
-      </Tabs>
+      </ResponsiveTabs>
       <Box padding="15px" marginBottom={4}>
         <Grid spacing={2}>{components[selectedTab]}</Grid>
       </Box>

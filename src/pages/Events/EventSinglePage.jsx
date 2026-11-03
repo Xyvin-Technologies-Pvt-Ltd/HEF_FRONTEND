@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Box, Grid, Skeleton, Tab, Tabs, Typography } from "@mui/material";
+import ResponsiveTabs from "../../ui/ResponsiveTabs";
+import { Box, Grid, Skeleton, Tab, Typography } from "@mui/material";
 import SpeakerTable from "../../components/Event/SpeakerTable";
 import RsvpTable from "../../components/Event/RsvpTable";
 import CancelEvent from "../../components/Event/CancelEvent";
@@ -49,17 +50,17 @@ const EventSinglePage = () => {
       <Box
         padding={"10px"}
         bgcolor={"#FFFFFF"}
-        height={"70px"}
+        sx={{ height: { xs: "auto", sm: "70px" }, minHeight: "70px" }}
         display={"flex"}
         alignItems={"center"}
       >
         <Grid container alignItems="center">
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <Typography variant="h4" color={"textSecondary"}>
               Events / {event?.eventName}
             </Typography>
           </Grid>
-          <Grid item xs={6} container justifyContent="flex-end" spacing={2}>
+          <Grid item xs={12} sm={6} container justifyContent="flex-end" spacing={2}>
             {event?.status === "pending" && (
               <>
                 <Grid item>
@@ -100,7 +101,7 @@ const EventSinglePage = () => {
         </Grid>
       </Box>
       <Box marginBottom={4}>
-        <Tabs
+        <ResponsiveTabs
           value={selectedTab}
           onChange={handleChange}
           aria-label="tabs"
@@ -132,7 +133,7 @@ const EventSinglePage = () => {
           <Tab label="RSVP list" />
           <Tab label="Attended list" />
           <Tab label="Guest list" />
-        </Tabs>
+        </ResponsiveTabs>
       </Box>{" "}
       <Box padding="15px" paddingTop={0} marginBottom={4}>
         {selectedTab === 0 && (

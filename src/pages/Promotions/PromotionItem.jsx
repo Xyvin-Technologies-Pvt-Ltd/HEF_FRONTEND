@@ -4,10 +4,10 @@ import {
   Grid,
   Stack,
   Tab,
-  Tabs,
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
+import ResponsiveTabs from "../../ui/ResponsiveTabs";
 import StyledPosterTable from "../../components/Promotion/StyledPosterTable";
 import StyledBannerTable from "../../components/Promotion/StyledBannerTable";
 import StyledVideoTable from "../../components/Promotion/StyledVideoTable";
@@ -41,7 +41,7 @@ const PromotionItem = () => {
 
   return (
     <>
-      <Tabs
+      <ResponsiveTabs
         value={selectedTab}
         onChange={handleChange}
         aria-label="tabs"
@@ -72,7 +72,7 @@ const PromotionItem = () => {
         <Tab label="Video" />
         <Tab label="Poster" />
         <Tab label="Notice" />
-      </Tabs>
+      </ResponsiveTabs>
       <Divider />
       <Box padding="15px" marginBottom={4}>
         {selectedTab === 0 && (

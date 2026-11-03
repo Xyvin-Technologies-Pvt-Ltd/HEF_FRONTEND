@@ -21,7 +21,7 @@ export default function AddRolePage() {
       {" "}
       <Box padding={"15px"} bgcolor={"#FFFFFF"}>
         <Grid container alignItems="center">
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <Typography variant="h4" color={"#4A4647"}>
               Role management 
             </Typography>
@@ -29,7 +29,7 @@ export default function AddRolePage() {
         </Grid>
       </Box>
       <Grid container item xs={12} padding={'15px'}>
-        <Grid item xs={6}>
+        <Grid item xs={12} sm={6}>
           <AddRole />
         </Grid>
       </Grid>

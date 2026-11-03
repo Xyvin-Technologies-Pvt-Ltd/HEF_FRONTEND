@@ -203,7 +203,7 @@ const AddActivity = () => {
                 Business Giver <span style={{ color: "red" }}>*</span>
               </Typography>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6}>
               <Controller
                 name="state"
                 control={control}
@@ -223,7 +223,7 @@ const AddActivity = () => {
                 )}
               />
             </Grid>{" "}
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6}>
               <Controller
                 name="zone"
                 control={control}
@@ -243,7 +243,7 @@ const AddActivity = () => {
                 )}
               />
             </Grid>{" "}
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6}>
               <Controller
                 name="district"
                 control={control}
@@ -263,7 +263,7 @@ const AddActivity = () => {
                 )}
               />
             </Grid>{" "}
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6}>
               <Controller
                 name="chapter"
                 control={control}
@@ -283,7 +283,7 @@ const AddActivity = () => {
                 )}
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6}>
               <Controller
                 name="sender"
                 control={control}
@@ -305,13 +305,13 @@ const AddActivity = () => {
                 )}
               />
             </Grid>{" "}
-            <Grid item xs={6}></Grid>
+            <Grid item xs={12} sm={6}></Grid>
             <Grid item xs={12}>
               <Typography variant="h6" color="textSecondary">
                 Business Receiver <span style={{ color: "red" }}>*</span>
               </Typography>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6}>
               <Controller
                 name="receiverstate"
                 control={control}
@@ -331,7 +331,7 @@ const AddActivity = () => {
                 )}
               />
             </Grid>{" "}
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6}>
               <Controller
                 name="recieverzone"
                 control={control}
@@ -351,7 +351,7 @@ const AddActivity = () => {
                 )}
               />
             </Grid>{" "}
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6}>
               <Controller
                 name="recieverdistrict"
                 control={control}
@@ -371,7 +371,7 @@ const AddActivity = () => {
                 )}
               />
             </Grid>{" "}
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6}>
               <Controller
                 name="recieverchapter"
                 control={control}
@@ -391,7 +391,7 @@ const AddActivity = () => {
                 )}
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6}>
               <Controller
                 name="member"
                 control={control}
@@ -413,7 +413,7 @@ const AddActivity = () => {
                 )}
               />
             </Grid>{" "}
-            <Grid item xs={6}></Grid>
+            <Grid item xs={12} sm={6}></Grid>
             <Grid item xs={12}>
               <Typography
                 sx={{ marginBottom: 1 }}
@@ -487,7 +487,7 @@ const AddActivity = () => {
             </Grid>
             {businessType?.value === "One v One Meeting" && (
               <>
-                <Grid item xs={6}>
+                <Grid item xs={12} sm={6}>
                   <Typography
                     sx={{ marginBottom: 1 }}
                     variant="h6"
@@ -515,7 +515,7 @@ const AddActivity = () => {
                   />
                 </Grid>
                 {type === "offline" && (
-                  <Grid item xs={6}>
+                  <Grid item xs={12} sm={6}>
                     <Typography
                       sx={{ marginBottom: 1 }}
                       variant="h6"
@@ -539,7 +539,7 @@ const AddActivity = () => {
                   </Grid>
                 )}
                 {type === "online" && (
-                  <Grid item xs={6}>
+                  <Grid item xs={12} sm={6}>
                     <Typography
                       sx={{ marginBottom: 1 }}
                       variant="h6"
@@ -562,7 +562,7 @@ const AddActivity = () => {
                     />
                   </Grid>
                 )}
-                <Grid item xs={6}>
+                <Grid item xs={12} sm={6}>
                   <Typography
                     sx={{ marginBottom: 1 }}
                     variant="h6"
@@ -581,7 +581,7 @@ const AddActivity = () => {
                     )}
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={12} sm={6}>
                   <Typography
                     sx={{ marginBottom: 1 }}
                     variant="h6"
@@ -609,7 +609,7 @@ const AddActivity = () => {
                     Referral Details
                   </Typography>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={12} sm={6}>
                   <Typography
                     sx={{ marginBottom: 1 }}
                     variant="h6"
@@ -628,7 +628,7 @@ const AddActivity = () => {
                     )}
                   />
                 </Grid>{" "}
-                <Grid item xs={6}>
+                <Grid item xs={12} sm={6}>
                   <Typography
                     sx={{ marginBottom: 1 }}
                     variant="h6"
@@ -647,7 +647,7 @@ const AddActivity = () => {
                     )}
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={12} sm={6}>
                   <Typography
                     sx={{ marginBottom: 1 }}
                     variant="h6"
@@ -666,7 +666,7 @@ const AddActivity = () => {
                     )}
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={12} sm={6}>
                   <Typography
                     sx={{ marginBottom: 1 }}
                     variant="h6"
@@ -688,7 +688,7 @@ const AddActivity = () => {
                     )}
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={12} sm={6}>
                   <Typography
                     sx={{ marginBottom: 1 }}
                     variant="h6"
@@ -712,7 +712,7 @@ const AddActivity = () => {
                 </Grid>
               </>
             )}
-            <Grid item xs={6}></Grid>
+            <Grid item xs={12} sm={6}></Grid>
             <Grid item xs={12}>
               <Stack direction={"row"} spacing={2} justifyContent={"flex-end"}>
                 <StyledButton

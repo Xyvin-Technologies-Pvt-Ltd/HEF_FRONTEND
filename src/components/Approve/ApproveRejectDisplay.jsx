@@ -43,7 +43,7 @@ const ApproveRejectDisplay = ({ open, onClose, data, onChange }) => {
           </Typography>
         </Box>
       </DialogTitle>
-      <DialogContent sx={{ height: "auto", width: "430px", padding: 0 }}>
+      <DialogContent sx={{ height: "auto", width: { xs: "100%", sm: "430px" }, maxWidth: "100%", padding: 0 }}>
         <Stack
           spacing={2}
           padding={2}

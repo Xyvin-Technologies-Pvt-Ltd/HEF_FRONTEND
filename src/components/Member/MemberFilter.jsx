@@ -178,12 +178,13 @@ const MemberFilter = ({ open, onClose, onApply }) => {
       onClose={onClose}
       PaperProps={{
         sx: {
-          borderRadius: "12px",
+          borderRadius: { xs: 0, sm: "12px" },
           position: "absolute",
           top: 0,
           right: 0,
           height: "100vh",
-          width: "430px",
+          width: { xs: "100%", sm: "430px" },
+          maxWidth: "100%",
         },
       }}
     >

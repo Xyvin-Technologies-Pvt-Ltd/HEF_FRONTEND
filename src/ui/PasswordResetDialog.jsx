@@ -18,6 +18,12 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialog-paper": {
     borderRadius: "16px",
     minWidth: "400px",
+    [theme.breakpoints.down("sm")]: {
+      minWidth: "auto",
+      width: "calc(100% - 32px)",
+      maxWidth: "440px",
+      margin: "16px",
+    },
   },
 }));
 

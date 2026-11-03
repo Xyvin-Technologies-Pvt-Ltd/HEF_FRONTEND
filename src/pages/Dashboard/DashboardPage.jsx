@@ -161,7 +161,7 @@ const DashboardPage = () => {
       <Box
         padding={"10px"}
         bgcolor={"#FFFFFF"}
-        height={"70px"}
+        sx={{ height: { xs: "auto", sm: "70px" }, minHeight: "70px" }}
         display={"flex"}
         alignItems={"center"}
       >
@@ -170,26 +170,22 @@ const DashboardPage = () => {
         </Typography>
       </Box>
       <Grid container padding={"15px"} paddingTop={3} spacing={4}>
-        <Grid item md={6}>
+        <Grid item xs={12} md={6}>
           <Stack direction={"row"} spacing={2}>
-            {" "}
             <Box width={"100%"}>
-              {" "}
               <DashboardCard
                 data={totalRevenue}
                 height={"185px"}
-                // isDate
-                // onDateChange={handleDateChange}
-                // selectedDate={selectedDate}
                 isMobile
               />
-            </Box>{" "}
+            </Box>
           </Stack>
         </Grid>
-        <Grid item md={6}>
-          {" "}
-          <Stack direction={"row"} spacing={2}>
-            {" "}
+        <Grid item xs={12} md={6}>
+          <Stack
+            direction={{ xs: "column", md: "row" }}
+            spacing={2}
+          >
             <Box
               width="100%"
               sx={{
@@ -207,13 +203,12 @@ const DashboardPage = () => {
                   : undefined
               }
             >
-              {" "}
               <DashboardCard
                 isMobile
                 data={activeMember}
                 height={"185px"}
-              />{" "}
-            </Box>{" "}
+              />
+            </Box>
             <Box
               width={"100%"}
               sx={{
@@ -231,12 +226,11 @@ const DashboardPage = () => {
                   : undefined
               }
             >
-              {" "}
               <DashboardCard
                 isMobile
                 data={premiumMember}
                 height={"185px"}
-              />{" "}
+              />
             </Box>
             <Box
               width={"100%"}
@@ -255,48 +249,40 @@ const DashboardPage = () => {
                   : undefined
               }
             >
-              {" "}
               <DashboardCard
                 isMobile
                 data={frozenMember}
                 height={"185px"}
-              />{" "}
+              />
             </Box>
           </Stack>
-        </Grid>{" "}
-        <Grid item md={8}>
+        </Grid>
+        <Grid item xs={12} md={8}>
           <ActivityCharts data={data?.graph} />
-        </Grid>{" "}
-        <Grid item md={4}>
+        </Grid>
+        <Grid item xs={12} md={4}>
           <TopMemberList userData={data?.topPerformers} />
         </Grid>
-        <Grid item md={6}>
+        <Grid item xs={12} md={6}>
           <Stack spacing={2}>
-            <Stack direction={"row"} spacing={2}>
-              {" "}
+            <Stack direction={{ xs: "column", md: "row" }} spacing={2}>
               <Box width={"100%"}>
-                {" "}
-                <DashboardCard data={states} height={"160px"} />{" "}
-              </Box>{" "}
+                <DashboardCard data={states} height={"160px"} />
+              </Box>
               <Box width={"100%"}>
-                {" "}
-                <DashboardCard data={zones} height={"160px"} />{" "}
+                <DashboardCard data={zones} height={"160px"} />
               </Box>
             </Stack>
 
-            <Stack direction={"row"} spacing={2}>
-              {" "}
+            <Stack direction={{ xs: "column", md: "row" }} spacing={2}>
               <Box width={"100%"}>
-                {" "}
-                <DashboardCard data={districts} height={"160px"} />{" "}
-              </Box>{" "}
+                <DashboardCard data={districts} height={"160px"} />
+              </Box>
               <Box width={"100%"}>
-                {" "}
-                <DashboardCard data={chapters} height={"160px"} />{" "}
+                <DashboardCard data={chapters} height={"160px"} />
               </Box>
             </Stack>
-            <Stack direction={"row"} spacing={2}>
-              {" "}
+            <Stack direction={{ xs: "column", md: "row" }} spacing={2}>
               <Box
                 width={"100%"}
                 sx={{
@@ -314,9 +300,8 @@ const DashboardPage = () => {
                     : undefined
                 }
               >
-                {" "}
-                <DashboardCard data={totalCount} height={"160px"} />{" "}
-              </Box>{" "}
+                <DashboardCard data={totalCount} height={"160px"} />
+              </Box>
               <Box
                 width={"100%"}
                 sx={{
@@ -328,15 +313,14 @@ const DashboardPage = () => {
                 }}
                 onClick={fetchInstalled}
               >
-                {" "}
-                <DashboardCard data={installedUsers} height={"160px"} />{" "}
+                <DashboardCard data={installedUsers} height={"160px"} />
               </Box>
             </Stack>
           </Stack>
         </Grid>
-        <Grid item md={6}>
+        <Grid item xs={12} md={6}>
           <Stack spacing={2}>
-            <Stack direction={"row"} spacing={2}>
+            <Stack direction={{ xs: "column", md: "row" }} spacing={2}>
               {" "}
               <Box
                 width={"100%"}
@@ -379,8 +363,7 @@ const DashboardPage = () => {
                 <DashboardCard data={news} height={"160px"} />{" "}
               </Box>
             </Stack>
-            <Stack direction={"row"} spacing={2}>
-              {" "}
+            <Stack direction={{ xs: "column", md: "row" }} spacing={2}>
               <Box
                 width={"100%"}
                 sx={{
@@ -398,9 +381,8 @@ const DashboardPage = () => {
                     : undefined
                 }
               >
-                {" "}
-                <DashboardCard data={notifications} height={"160px"} />{" "}
-              </Box>{" "}
+                <DashboardCard data={notifications} height={"160px"} />
+              </Box>
               <Box
                 width={"100%"}
                 sx={{
@@ -418,12 +400,10 @@ const DashboardPage = () => {
                     : undefined
                 }
               >
-                {" "}
-                <DashboardCard data={promotions} height={"160px"} />{" "}
+                <DashboardCard data={promotions} height={"160px"} />
               </Box>
             </Stack>
-            <Stack direction={"row"} spacing={2}>
-              {" "}
+            <Stack direction={{ xs: "column", md: "row" }} spacing={2}>
               <Box
                 width={"100%"}
                 sx={{
@@ -435,9 +415,8 @@ const DashboardPage = () => {
                 }}
                 onClick={() => fetchStatus("inactive")}
               >
-                {" "}
-                <DashboardCard data={inactiveUsers} height={"160px"} />{" "}
-              </Box>{" "}
+                <DashboardCard data={inactiveUsers} height={"160px"} />
+              </Box>
               <Box
                 width={"100%"}
                 sx={{
@@ -449,8 +428,7 @@ const DashboardPage = () => {
                 }}
                 onClick={() => fetchStatus("active")}
               >
-                {" "}
-                <DashboardCard data={activeUsers} height={"160px"} />{" "}
+                <DashboardCard data={activeUsers} height={"160px"} />
               </Box>
             </Stack>
           </Stack>

@@ -1,5 +1,6 @@
-import { Box, Grid, Stack, Tab, Tabs, Typography } from "@mui/material";
+import { Box, Grid, Stack, Tab, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
+import ResponsiveTabs from "../../ui/ResponsiveTabs";
 import EmailNotification from "../../components/Notification/EmailNotification";
 import InAppNotification from "../../components/Notification/InAppNotification";
 import NotificationLog from "./NotificationLog";
@@ -37,7 +38,7 @@ const Notificationpage = () => {
 
   return (
     <>
-      <Tabs
+      <ResponsiveTabs
         value={selectedTab}
         onChange={handleChange}
         aria-label="tabs"
@@ -68,7 +69,7 @@ const Notificationpage = () => {
         {tabs.map((label, index) => (
           <Tab key={index} label={label} />
         ))}
-      </Tabs>
+      </ResponsiveTabs>
       <Box padding="15px" marginBottom={4}>
         {canManageNotifications && selectedTab === 0 && (
           <Grid container>

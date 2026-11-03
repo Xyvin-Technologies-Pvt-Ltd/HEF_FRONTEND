@@ -115,7 +115,7 @@ const AddAdmin = () => {
               )}
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <Typography
               sx={{ marginBottom: 1 }}
               variant="h6"
@@ -142,7 +142,7 @@ const AddAdmin = () => {
               )}
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <Typography
               sx={{ marginBottom: 1 }}
               variant="h6"
@@ -165,7 +165,7 @@ const AddAdmin = () => {
               )}
             />
           </Grid>{" "}
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <Typography
               sx={{ marginBottom: 1 }}
               variant="h6"
@@ -188,7 +188,7 @@ const AddAdmin = () => {
               )}
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <Typography
               sx={{ marginBottom: 1 }}
               variant="h6"

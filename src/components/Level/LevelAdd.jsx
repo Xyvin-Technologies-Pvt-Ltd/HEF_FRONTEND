@@ -554,7 +554,7 @@ export default function LevelAdd() {
           >
             <DialogContent style={{ padding: "20px", paddingBottom: "40px" }}>
               <Grid container spacing={2}>
-                <Grid item xs={6}>
+                <Grid item xs={12} sm={6}>
                   <Typography
                     sx={{ marginBottom: 1 }}
                     variant="h6"
@@ -575,7 +575,7 @@ export default function LevelAdd() {
                     )}
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={12} sm={6}>
                   <Typography
                     sx={{ marginBottom: 1 }}
                     variant="h6"
@@ -600,7 +600,7 @@ export default function LevelAdd() {
                     )}
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={12} sm={6}>
                   <Typography
                     sx={{ marginBottom: 1 }}
                     variant="h6"
@@ -625,7 +625,7 @@ export default function LevelAdd() {
                     )}
                   />
                 </Grid>{" "}
-                <Grid item xs={6}>
+                <Grid item xs={12} sm={6}>
                   <Typography
                     sx={{ marginBottom: 1 }}
                     variant="h6"
@@ -650,7 +650,7 @@ export default function LevelAdd() {
                     )}
                   />
                 </Grid>{" "}
-                <Grid item xs={6}>
+                <Grid item xs={12} sm={6}>
                   <Typography
                     sx={{ marginBottom: 1 }}
                     variant="h6"
@@ -675,7 +675,7 @@ export default function LevelAdd() {
                     )}
                   />
                 </Grid>
-                <Grid item xs={6} mb={16}>
+                <Grid item xs={12} sm={6} mb={16}>
                   <Typography
                     sx={{ marginBottom: 1 }}
                     variant="h6"

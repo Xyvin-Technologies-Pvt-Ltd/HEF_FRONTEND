@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
+import ResponsiveTabs from "../../ui/ResponsiveTabs";
 import {
   Box,
   Divider,
   Grid,
   Stack,
   Tab,
-  Tabs,
   Typography,
 } from "@mui/material";
 import FeedList from "./FeedList";
@@ -25,7 +25,7 @@ const ApprovalPage = () => {
       <Box
         padding={"10px"}
         bgcolor={"#FFFFFF"}
-        height={"70px"}
+        sx={{ height: { xs: "auto", sm: "70px" }, minHeight: "70px" }}
         display={"flex"}
         alignItems={"center"}
       >
@@ -33,7 +33,7 @@ const ApprovalPage = () => {
           Approval
         </Typography>
       </Box>
-      <Tabs
+      <ResponsiveTabs
         value={selectedTab}
         onChange={handleChange}
         aria-label="tabs"
@@ -62,7 +62,7 @@ const ApprovalPage = () => {
       >
         <Tab label="Requirements" />
         <Tab label="Business Posts" />
-      </Tabs>
+      </ResponsiveTabs>
       <Divider />{" "}
       <Box padding={"15px"}>
         {selectedTab === 0 && (

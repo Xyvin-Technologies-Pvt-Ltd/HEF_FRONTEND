@@ -14,7 +14,7 @@ import {
         open={open}
         onClose={onClose}
         PaperProps={{
-          sx: { borderRadius: "12px", width: "400px", padding: "16px" },
+          sx: { borderRadius: "12px", width: { xs: "100%", sm: "400px" }, maxWidth: "100%", padding: "16px" },
         }}
       >
         <DialogTitle sx={{ fontWeight: "bold", fontSize: "16px" }}>

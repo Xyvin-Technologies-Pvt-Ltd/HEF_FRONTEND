@@ -297,15 +297,24 @@ const MemberList = () => {
           justifyContent={"end"}
           paddingBottom={"15px"}
           alignItems={"center"}
+          sx={{
+            flexWrap: { xs: "wrap", sm: "nowrap" },
+            rowGap: { xs: 1, sm: 0 },
+          }}
         >
-          <Stack direction={"row"} spacing={2}>
+          <Stack
+            direction={"row"}
+            spacing={2}
+            alignItems={"center"}
+            sx={{ width: { xs: "100%", sm: "auto" }, minWidth: 0 }}
+          >
             <StyledSearchbar
               placeholder={"Search"}
               onchange={(e) => {
                 setSearch(e.target.value);
                 setPageNo(1);
               }}
-            />{" "}
+            />
             <StyledButton
               variant={"primary"}
               name={"Download"}
@@ -327,6 +336,7 @@ const MemberList = () => {
                 )
               }
               sx={{
+                flexShrink: 0,
                 "& .MuiBadge-dot": {
                   width: "12px",
                   height: "12px",
@@ -379,7 +389,6 @@ const MemberList = () => {
                       : "rgba(0, 0, 0, 0.12)",
                 }}
               >
-                {" "}
                 <FilterIcon />
               </Box>
             </Badge>

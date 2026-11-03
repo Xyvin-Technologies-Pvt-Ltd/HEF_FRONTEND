@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Box, Divider, Grid, Tab, Tabs, Typography } from "@mui/material";
+import ResponsiveTabs from "../../ui/ResponsiveTabs";
+import { Box, Divider, Grid, Tab, Typography } from "@mui/material";
 
 import AddAdmin from "../../components/Setting/AddAdmin";
 import BulkAddForm from "../../components/Setting/BulkAddForm";
@@ -16,12 +17,12 @@ const AddAdminPage = () => {
       <Box
         padding={"10px"}
         bgcolor={"#FFFFFF"}
-        height={"70px"}
+        sx={{ height: { xs: "auto", sm: "70px" }, minHeight: "70px" }}
         display={"flex"}
         alignItems={"center"}
       >
         <Grid container alignItems="center">
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <Typography variant="h4" color={"textSecondary"}>
               Admin Management
             </Typography>
@@ -29,7 +30,7 @@ const AddAdminPage = () => {
         </Grid>
       </Box>
       <>
-        <Tabs
+        <ResponsiveTabs
           value={selectedTab}
           onChange={handleChange}
           aria-label="tabs"
@@ -58,7 +59,7 @@ const AddAdminPage = () => {
         >
           <Tab label="Single Add" />
           <Tab label="Bulk Add" />
-        </Tabs>
+        </ResponsiveTabs>
         <Divider />
         <Box padding="15px" marginBottom={4}>
           {selectedTab === 0 && (

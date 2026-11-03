@@ -143,7 +143,7 @@ const AddProduct = () => {
               )}
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <Typography
               sx={{ marginBottom: 1 }}
               variant="h6"
@@ -178,7 +178,7 @@ const AddProduct = () => {
               )}
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <Typography
               sx={{ marginBottom: 1 }}
               variant="h6"
@@ -205,7 +205,7 @@ const AddProduct = () => {
               )}
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <Typography
               sx={{ marginBottom: 1 }}
               variant="h6"
@@ -231,7 +231,7 @@ const AddProduct = () => {
               )}
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={6}>
             <Typography
               sx={{ marginBottom: 1 }}
               variant="h6"
@@ -334,8 +334,8 @@ const AddProduct = () => {
             />
           </Grid>
 
-          <Grid item xs={6}></Grid>
-          <Grid item xs={6} display={"flex"} justifyContent={"end"}>
+          <Grid item xs={12} sm={6}></Grid>
+          <Grid item xs={12} sm={6} display={"flex"} justifyContent={"end"}>
             {" "}
             <Stack direction={"row"} spacing={2}>
               <StyledButton

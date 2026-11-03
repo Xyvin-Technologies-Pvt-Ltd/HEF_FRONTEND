@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import ResponsiveTabs from "../../ui/ResponsiveTabs";
 import StyledTable from "../../ui/StyledTable";
 import {
   Box,
@@ -10,7 +11,6 @@ import {
   Divider,
   Stack,
   Tab,
-  Tabs,
   Typography,
 } from "@mui/material";
 import StyledSearchbar from "../../ui/StyledSearchbar";
@@ -117,7 +117,7 @@ const MemberPage = () => {
         direction={"row"}
         padding={"10px"}
         bgcolor={"#fff"}
-        height={"70px"}
+        sx={{ height: { xs: "auto", sm: "70px" }, minHeight: "70px" }}
         alignItems={"center"}
         justifyContent={"space-between"}
       >
@@ -140,7 +140,7 @@ const MemberPage = () => {
           </Stack>
         )}
       </Stack>
-      <Tabs
+      <ResponsiveTabs
         value={selectedTab}
         onChange={handleTabChange}
         aria-label="tabs"
@@ -171,7 +171,7 @@ const MemberPage = () => {
         <Tab label="Active Payments" />
         <Tab label="Pending Payments" />
         <Tab label="Parent Subscription" />
-      </Tabs>
+      </ResponsiveTabs>
       <Divider />
       {(selectedTab === 0 || selectedTab === 1 || selectedTab === 2) && (
         <Box padding={"15px"}>
