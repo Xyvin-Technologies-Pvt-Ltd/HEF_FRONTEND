@@ -378,7 +378,7 @@ const LevelPage = () => {
             >
               <Box>
                 <Typography variant="h6" fontWeight={600} color="primary">
-                  PST Members
+                  Level Admins
                 </Typography>
                 <Typography variant="subtitle2" color="textSecondary">
                   {selectedLevelForPst?.name} ({selectedLevelForPst?.category ? selectedLevelForPst.category.charAt(0).toUpperCase() + selectedLevelForPst.category.slice(1) : "Level"})
@@ -416,10 +416,18 @@ const LevelPage = () => {
                               px: 1,
                               py: 0.25,
                               borderRadius: "4px",
-                              textTransform: "capitalize",
+                              textTransform: "none",
                             }}
                           >
-                            {admin?.role}
+                            {admin?.role === "president"
+                              ? "President"
+                              : admin?.role === "secretary"
+                              ? "Secretary"
+                              : admin?.role === "treasurer"
+                              ? "Treasurer"
+                              : admin?.role === "b2b_coordinator"
+                              ? "B2B Coordinator"
+                              : admin?.role}
                           </Typography>
                           <Typography
                             variant="subtitle1"
@@ -452,7 +460,7 @@ const LevelPage = () => {
                   color="textSecondary"
                   sx={{ py: 3, textAlign: "center" }}
                 >
-                  No PST members assigned to this level yet.
+                  No admins assigned to this level yet.
                 </Typography>
               )}
             </DialogContent>
