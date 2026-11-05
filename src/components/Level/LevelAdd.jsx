@@ -53,6 +53,7 @@ export default function LevelAdd() {
     { value: "president", label: "President" },
     { value: "secretary", label: "Secretary" },
     { value: "treasurer", label: "Treasurer" },
+    { value: "b2b_coordinator", label: "B2B Coordinator" },
   ];
   const availableRoleOptions = roleOptions?.filter(
     (role) => !admins?.some((admin) => admin.role === role.value)
@@ -101,7 +102,9 @@ export default function LevelAdd() {
       }));
       const initialViewAdmins = (level.admins || []).map((a) => ({
         role: a.role,
-        roleLabel: a.role ? a.role.charAt(0).toUpperCase() + a.role.slice(1) : "",
+        roleLabel:
+          roleOptions.find((option) => option.value === a.role)?.label ||
+          (a.role ? a.role.charAt(0).toUpperCase() + a.role.slice(1) : ""),
         user: typeof a.user === "object" ? a.user?._id : a.user,
         userName: typeof a.user === "object" ? a.user?.name : a.user,
       }));
