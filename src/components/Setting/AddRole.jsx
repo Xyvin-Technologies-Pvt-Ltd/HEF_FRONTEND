@@ -47,6 +47,7 @@ const permissionsList = [
   { id: "newsManagement", name: "News Management" },
   { id: "promotionManagement", name: "Promotion Management" },
   { id: "reportManagement", name: "Reports Management" },
+  { id: "pstUploadManagement", name: "PST Upload Management" },
   { id: "notificationManagement", name: "Notification Management" },
   { id: "roleManagement", name: "Role Management" },
   { id: "adminManagement", name: "Admin Management" },

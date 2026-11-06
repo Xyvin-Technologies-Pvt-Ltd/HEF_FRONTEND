@@ -8,6 +8,7 @@ import { getAdmin, getAdminActivity } from "../api/adminapi";
 import { getNews } from "../api/newsapi";
 import { getMember } from "../api/memberapi";
 import { getReport } from "../api/reportapi";
+import { getLevelRoleUploads } from "../api/levelRoleUploadapi";
 import { getAllLevel } from "../api/hierarchyapi";
 import { getCategory } from "../api/categoryapi";
 import { getActivities } from "../api/activityapi";
@@ -153,6 +154,13 @@ const useListStore = create((set, get) => ({
   fetchReport: async (filter) => {
     set({ loading: true });
     const allData = await getReport(filter);
+    set({ lists: allData?.data || [] });
+    set({ totalCount: allData?.totalCount || 0 });
+    set({ loading: false });
+  },
+  fetchLevelRoleUploads: async (filter) => {
+    set({ loading: true });
+    const allData = await getLevelRoleUploads(filter);
     set({ lists: allData?.data || [] });
     set({ totalCount: allData?.totalCount || 0 });
     set({ loading: false });

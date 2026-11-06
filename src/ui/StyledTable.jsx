@@ -82,6 +82,7 @@ const StyledTable = ({
   college,
   rowPerSize,
   setRowPerSize,
+  onFileDownload,
 }) => {
   const [selectedIds, setSelectedIds] = useState([]);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -321,7 +322,9 @@ const StyledTable = ({
                       onClick={() => onView && handleRowClick(row._id)}
                       $isEmail={
                         column.field === "email" ||
-                        column.field === "apiEndpoint"
+                        column.field === "apiEndpoint" ||
+                        column.field === "fileUrl" ||
+                        column.field === "roleLabel"
                       }
                     >
                       {[
@@ -408,6 +411,28 @@ const StyledTable = ({
                             None
                           </Typography>
                         )
+                      ) : column.field === "fileUrl" && row.fileUrl ? (
+                        <Typography
+                          component="a"
+                          href={onFileDownload ? undefined : row.fileUrl}
+                          target={onFileDownload ? undefined : "_blank"}
+                          rel="noreferrer"
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            if (onFileDownload) {
+                              event.preventDefault();
+                              onFileDownload(row);
+                            }
+                          }}
+                          sx={{
+                            color: "#F58220",
+                            fontWeight: 600,
+                            textDecoration: "none",
+                            cursor: "pointer",
+                          }}
+                        >
+                          Download
+                        </Typography>
                       ) : typeof row[column.field] === "string" &&
                         row[column.field].length > 30 ? (
                         `${row[column.field].slice(0, 30)}...`
