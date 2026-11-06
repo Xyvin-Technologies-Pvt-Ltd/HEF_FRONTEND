@@ -1,0 +1,537 @@
+import React, { useEffect, useState } from "react";
+import {
+  Badge,
+  Box,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  Grid,
+  Stack,
+  Tab,
+  Typography,
+} from "@mui/material";
+import { ReactComponent as CloseIcon } from "../../assets/icons/CloseIcon.svg";
+import { ReactComponent as FilterIcon } from "../../assets/icons/FilterIcon.svg";
+import ResponsiveTabs from "../../ui/ResponsiveTabs";
+import StyledTable from "../../ui/StyledTable";
+import StyledSearchbar from "../../ui/StyledSearchbar";
+import { StyledButton } from "../../ui/StyledButton";
+import StyledSelectField from "../../ui/StyledSelectField";
+import { levelRoleUploadColumns } from "../../assets/json/TableData";
+import { useListStore } from "../../store/listStore";
+import { useAdminStore } from "../../store/adminStore";
+import {
+  deleteLevelRoleUpload,
+  downloadLevelRoleUploadFile,
+  getLevelRoleUploadById,
+  getLevelRoleUploads,
+} from "../../api/levelRoleUploadapi";
+import DownloadPopup from "../../components/Member/DownloadPopup";
+import { generateExcel } from "../../utils/generateExcel";
+import { generatePDF } from "../../utils/generatePDF";
+import { saveAs } from "file-saver";
+import { toast } from "react-toastify";
+import moment from "moment";
+
+const downloadColumns = [
+  { header: "Title", key: "title" },
+  { header: "Uploaded by", key: "uploadedByName" },
+  { header: "Role", key: "roleLabel" },
+  { header: "Level", key: "level" },
+  { header: "Date", key: "createdAt" },
+  { header: "File", key: "fileName" },
+];
+
+const roleOptions = [
+  { value: "president", label: "President" },
+  { value: "secretary", label: "Secretary" },
+  { value: "treasurer", label: "Treasurer" },
+];
+
+const tabSx = {
+  bgcolor: "white",
+  paddingTop: "24px",
+  "& .MuiTabs-indicator": {
+    backgroundColor: "#F58220",
+  },
+  "& .MuiTab-root": {
+    textTransform: "none",
+    fontSize: "16px",
+    fontWeight: 600,
+    color: "#686465",
+  },
+  "& .MuiTab-root.Mui-selected": {
+    color: "#F58220",
+  },
+};
+
+const DetailField = ({ label, value }) => (
+  <Grid item xs={12} sm={6}>
+    <Typography variant="subtitle1" color="textSecondary" fontWeight="bold">
+      {label}
+    </Typography>
+    <Typography variant="h6" color="textPrimary">
+      {value || "-"}
+    </Typography>
+  </Grid>
+);
+
+const PstUploadPage = () => {
+  const { fetchLevelRoleUploads } = useListStore();
+  const { singleAdmin } = useAdminStore();
+  const [tab, setTab] = useState(0);
+  const [pageNo, setPageNo] = useState(1);
+  const [row, setRow] = useState(10);
+  const [search, setSearch] = useState("");
+  const [role, setRole] = useState("");
+  const [draftRole, setDraftRole] = useState(null);
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [selected, setSelected] = useState(null);
+  const [open, setOpen] = useState(false);
+  const [refresh, setRefresh] = useState(false);
+  const [downloadPopupOpen, setDownloadPopupOpen] = useState(false);
+  const [downloadLoading, setDownloadLoading] = useState(false);
+  const [downloadRows, setDownloadRows] = useState([]);
+  const [selectedKeys, setSelectedKeys] = useState(
+    downloadColumns.map((column) => column.key)
+  );
+
+  const canModify = singleAdmin?.role?.permissions?.includes(
+    "pstUploadManagement_modify"
+  );
+  const uploadType = tab === 0 ? "document" : "report";
+
+  useEffect(() => {
+    const filter = {
+      pageNo,
+      limit: row,
+      type: uploadType,
+    };
+    if (search) filter.search = search;
+    if (role) filter.role = role;
+    fetchLevelRoleUploads(filter);
+  }, [pageNo, row, search, role, uploadType, refresh]);
+
+  const handleView = async (id) => {
+    const response = await getLevelRoleUploadById(id);
+    setSelected(response?.data || null);
+    setOpen(true);
+  };
+
+  const handleDelete = async () => {
+    if (!selected?._id) return;
+    try {
+      await deleteLevelRoleUpload(selected._id);
+      toast.success("Upload deleted");
+      setOpen(false);
+      setSelected(null);
+      setRefresh((value) => !value);
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Delete failed");
+    }
+  };
+
+  const handleFileDownload = async (item) => {
+    const id = item?._id || selected?._id;
+    const fileName = item?.fileName || selected?.fileName || "report";
+    if (!id) return;
+    try {
+      const response = await downloadLevelRoleUploadFile(id);
+      saveAs(new Blob([response.data]), fileName);
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Download failed");
+    }
+  };
+
+  const loadDownloadRows = async () => {
+    const response = await getLevelRoleUploads({
+      pageNo: 1,
+      limit: 10000,
+      type: uploadType,
+      ...(search ? { search } : {}),
+      ...(role ? { role } : {}),
+    });
+    const rows = (response?.data || []).map((item) => ({
+      ...item,
+      createdAt: item.createdAt
+        ? moment(item.createdAt).format("DD-MM-YYYY")
+        : "",
+    }));
+    setDownloadRows(rows);
+    return rows;
+  };
+
+  const handleOpenDownloadPopup = async () => {
+    setDownloadPopupOpen(true);
+    setSelectedKeys(downloadColumns.map((column) => column.key));
+    try {
+      await loadDownloadRows();
+    } catch (error) {
+      toast.error("Failed to prepare download");
+    }
+  };
+
+  const buildDownloadPayload = (rows) => {
+    const headers = downloadColumns.filter((column) =>
+      selectedKeys.includes(column.key)
+    );
+    const body = rows.map((row) =>
+      selectedKeys.reduce((acc, key) => {
+        acc[key] = row?.[key] ?? "";
+        return acc;
+      }, {})
+    );
+    return { headers, body };
+  };
+
+  const handleDownloadExcel = async () => {
+    setDownloadLoading(true);
+    try {
+      const rows = downloadRows.length ? downloadRows : await loadDownloadRows();
+      const { headers, body } = buildDownloadPayload(rows);
+      if (!headers.length || !body.length) {
+        toast.error("No data to download");
+        return;
+      }
+      generateExcel(
+        headers,
+        body,
+        uploadType === "report" ? "PST_Reports" : "PST_Documents"
+      );
+      toast.success("Excel downloaded successfully");
+    } catch (error) {
+      toast.error("Failed to download Excel");
+    } finally {
+      setDownloadLoading(false);
+      setDownloadPopupOpen(false);
+    }
+  };
+
+  const handleDownloadPDF = async () => {
+    setDownloadLoading(true);
+    try {
+      const rows = downloadRows.length ? downloadRows : await loadDownloadRows();
+      const { headers, body } = buildDownloadPayload(rows);
+      if (!headers.length || !body.length) {
+        toast.error("No data to download");
+        return;
+      }
+      generatePDF(
+        headers,
+        body,
+        uploadType === "report" ? "PST_Reports" : "PST_Documents"
+      );
+      toast.success("PDF downloaded successfully");
+    } catch (error) {
+      toast.error("Failed to download PDF");
+    } finally {
+      setDownloadLoading(false);
+      setDownloadPopupOpen(false);
+    }
+  };
+
+  const handleApplyFilter = () => {
+    setRole(draftRole?.value || "");
+    setPageNo(1);
+    setFilterOpen(false);
+  };
+
+  const handleResetFilter = (event) => {
+    event?.preventDefault?.();
+    setDraftRole(null);
+    setRole("");
+    setPageNo(1);
+    setFilterOpen(false);
+  };
+
+  return (
+    <>
+      <Box
+        padding={"10px"}
+        bgcolor={"#FFFFFF"}
+        sx={{ height: { xs: "auto", sm: "70px" }, minHeight: "70px" }}
+        display={"flex"}
+        alignItems={"center"}
+      >
+        <Typography variant="h4" color={"textSecondary"}>
+          PST Uploads
+        </Typography>
+      </Box>
+      <ResponsiveTabs
+        value={tab}
+        onChange={(_, value) => {
+          setTab(value);
+          setPageNo(1);
+        }}
+        aria-label="tabs"
+        TabIndicatorProps={{
+          style: {
+            backgroundColor: "#F58220",
+            height: 4,
+            borderRadius: "4px",
+          },
+        }}
+        sx={tabSx}
+      >
+        <Tab label="Documents" />
+        <Tab label="Reports" />
+      </ResponsiveTabs>
+      <Divider />
+      <Box padding={"15px"}>
+        <Stack
+          direction={"row"}
+          justifyContent={"end"}
+          paddingBottom={"15px"}
+          alignItems={"center"}
+          sx={{
+            flexWrap: { xs: "wrap", sm: "nowrap" },
+            rowGap: { xs: 1, sm: 0 },
+          }}
+        >
+          <Stack
+            direction={"row"}
+            spacing={2}
+            alignItems={"center"}
+            sx={{ width: { xs: "100%", sm: "auto" }, minWidth: 0 }}
+          >
+            <StyledSearchbar
+              placeholder={"Search"}
+              onchange={(event) => {
+                setSearch(event.target.value);
+                setPageNo(1);
+              }}
+            />
+            <StyledButton
+              variant={"primary"}
+              name={"Download"}
+              onClick={handleOpenDownloadPopup}
+            />
+            <Badge
+              color="error"
+              variant="dot"
+              invisible={!role}
+              sx={{
+                flexShrink: 0,
+                "& .MuiBadge-dot": {
+                  width: "12px",
+                  height: "12px",
+                  borderRadius: "50%",
+                  backgroundColor: "#F58220",
+                  right: 8,
+                  top: 8,
+                },
+              }}
+              overlap="circular"
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+            >
+              <Box
+                bgcolor={"#FFFFFF"}
+                borderRadius={"50%"}
+                width={"48px"}
+                height={"48px"}
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                border="1px solid rgba(0, 0, 0, 0.12)"
+                onClick={() => {
+                  setDraftRole(
+                    roleOptions.find((option) => option.value === role) || null
+                  );
+                  setFilterOpen(true);
+                }}
+                style={{
+                  cursor: "pointer",
+                  boxShadow: role ? "0 0 8px rgba(245, 130, 32, 0.6)" : "none",
+                  borderColor: role ? "#F58220" : "rgba(0, 0, 0, 0.12)",
+                }}
+              >
+                <FilterIcon />
+              </Box>
+            </Badge>
+          </Stack>
+        </Stack>
+        <Box
+          borderRadius={"16px"}
+          bgcolor={"white"}
+          p={1}
+          border={"1px solid rgba(0, 0, 0, 0.12)"}
+        >
+          <StyledTable
+            columns={levelRoleUploadColumns}
+            menu
+            onView={handleView}
+            onFileDownload={handleFileDownload}
+            pageNo={pageNo}
+            setPageNo={setPageNo}
+            rowPerSize={row}
+            setRowPerSize={setRow}
+          />
+        </Box>
+      </Box>
+
+      <Dialog
+        open={filterOpen}
+        onClose={() => setFilterOpen(false)}
+        PaperProps={{
+          sx: {
+            borderRadius: { xs: 0, sm: "12px" },
+            position: "absolute",
+            top: 0,
+            right: 0,
+            height: "100vh",
+            width: { xs: "100%", sm: "430px" },
+            maxWidth: "100%",
+          },
+        }}
+      >
+        <DialogTitle sx={{ height: "auto", padding: 3 }}>
+          <Box display="flex" justifyContent="space-between" alignItems="center">
+            <Typography variant="h3" color={"#4F4F4F"}>
+              Filter
+            </Typography>
+            <Typography
+              onClick={handleResetFilter}
+              color="#E71D36"
+              style={{ cursor: "pointer" }}
+            >
+              <CloseIcon />
+            </Typography>
+          </Box>
+        </DialogTitle>
+        <DialogContent sx={{ padding: 0 }}>
+          <Stack spacing={2} padding={2}>
+            <Typography>Role</Typography>
+            <StyledSelectField
+              placeholder="Select role"
+              options={roleOptions}
+              value={draftRole}
+              onChange={(selectedOption) => setDraftRole(selectedOption)}
+            />
+          </Stack>
+        </DialogContent>
+        <Stack direction={"row"} spacing={2} padding={2} justifyContent={"end"}>
+          <StyledButton
+            variant="secondary"
+            name="Reset"
+            onClick={handleResetFilter}
+          />
+          <StyledButton
+            variant="primary"
+            name="Apply"
+            onClick={handleApplyFilter}
+          />
+        </Stack>
+      </Dialog>
+
+      <Dialog
+        open={open}
+        onClose={() => setOpen(false)}
+        maxWidth="md"
+        PaperProps={{
+          sx: { borderRadius: "12px" },
+        }}
+      >
+        <DialogTitle
+          sx={{
+            height: "auto",
+            padding: 3,
+            bgcolor: "#f4f5f7",
+            borderRadius: "12px",
+          }}
+        >
+          <Box display="flex" justifyContent="space-between" alignItems="center">
+            <Typography variant="h6" color="textPrimary" fontWeight="bold">
+              {selected?.title || "Upload Details"}
+            </Typography>
+            <Box onClick={() => setOpen(false)} style={{ cursor: "pointer" }}>
+              <CloseIcon />
+            </Box>
+          </Box>
+        </DialogTitle>
+        <Divider />
+        <DialogContent sx={{ height: "auto", padding: 3 }}>
+          <Grid container spacing={3}>
+            <DetailField label="Type" value={selected?.type} />
+            <DetailField label="Uploaded by" value={selected?.uploadedByName} />
+            <DetailField label="Role" value={selected?.roleLabel} />
+            <DetailField label="Level" value={selected?.level} />
+            <DetailField
+              label="Date"
+              value={
+                selected?.createdAt
+                  ? moment(selected.createdAt).format("DD-MM-YYYY")
+                  : ""
+              }
+            />
+            <DetailField label="Note" value={selected?.description} />
+            {selected?.fileUrl ? (
+              <Grid item xs={12}>
+                <Typography
+                  variant="subtitle1"
+                  color="textSecondary"
+                  fontWeight="bold"
+                >
+                  File
+                </Typography>
+                <Typography
+                  component="button"
+                  type="button"
+                  onClick={() => handleFileDownload(selected)}
+                  variant="h6"
+                  sx={{
+                    color: "#F58220",
+                    textDecoration: "none",
+                    background: "none",
+                    border: "none",
+                    padding: 0,
+                    cursor: "pointer",
+                    font: "inherit",
+                  }}
+                >
+                  {selected.fileName || "Download file"}
+                </Typography>
+              </Grid>
+            ) : null}
+          </Grid>
+          <Stack
+            direction="row"
+            justifyContent="flex-end"
+            spacing={2}
+            paddingTop={3}
+          >
+            {selected?.fileUrl ? (
+              <StyledButton
+                name="Download"
+                variant="primary"
+                onClick={() => handleFileDownload(selected)}
+              />
+            ) : null}
+            {canModify && selected?._id ? (
+              <StyledButton
+                name="Delete"
+                variant="secondary"
+                onClick={handleDelete}
+              />
+            ) : null}
+          </Stack>
+        </DialogContent>
+      </Dialog>
+      <DownloadPopup
+        open={downloadPopupOpen}
+        onClose={() => setDownloadPopupOpen(false)}
+        onDownloadExcel={handleDownloadExcel}
+        onDownloadPDF={handleDownloadPDF}
+        loading={downloadLoading}
+        columns={downloadColumns}
+        selectedKeys={selectedKeys}
+        onSelectionChange={setSelectedKeys}
+      />
+    </>
+  );
+};
+
+export default PstUploadPage;

@@ -39,6 +39,7 @@ import {
   GridView,
   GroupsOutlined,
   LogoutOutlined,
+  DescriptionOutlined,
   OutlinedFlag,
 } from "@mui/icons-material";
 import CategoryOutlinedIcon from "@mui/icons-material/CategoryOutlined";
@@ -119,6 +120,12 @@ const navigationItems = [
     to: "/reports",
     icon: <OutlinedFlag />,
     permissions: ["reportManagement_view", "reportManagement_modify"],
+  },
+  {
+    name: "PST Uploads",
+    to: "/pst-uploads",
+    icon: <DescriptionOutlined />,
+    permissions: ["pstUploadManagement_view", "pstUploadManagement_modify"],
   },
   {
     name: "Notifications",

@@ -23,6 +23,7 @@ import PaymentPage from "../pages/payments/PaymentPage";
 import QRPage from "../pages/QRPage";
 import { PrivateRoute } from "./PrivateRouter";
 import ReportPage from "../pages/Reports/ReportPage";
+import PstUploadPage from "../pages/PstUploads/PstUploadPage";
 import CreateNews from "../pages/News/CreateNews";
 import BusinessPage from "../pages/Activity/BusinessPage";
 import LevelPage from "../pages/Level/LevelPage";
@@ -200,6 +201,16 @@ const router = createBrowserRouter([
       <PrivateRoute>
         <Layout>
           <ReportPage />
+        </Layout>
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/pst-uploads",
+    element: (
+      <PrivateRoute>
+        <Layout>
+          <PstUploadPage />
         </Layout>
       </PrivateRoute>
     ),

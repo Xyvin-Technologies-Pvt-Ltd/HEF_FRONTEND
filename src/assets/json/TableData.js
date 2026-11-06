@@ -66,6 +66,14 @@ export const reportColumns = [
   { title: "Report Type", field: "reportType" },
   { title: "Content", field: "content" },
 ];
+export const levelRoleUploadColumns = [
+  { title: "Title", field: "title", padding: "none" },
+  { title: "Uploaded by", field: "uploadedByName" },
+  { title: "Role", field: "roleLabel" },
+  { title: "Level", field: "level" },
+  { title: "Date", field: "createdAt" },
+  { title: "File", field: "fileUrl" },
+];
 export const member = [
   { title: "Name", field: "fullName", padding: "none" },
   { title: "Phone Number", field: "phone" },
