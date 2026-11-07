@@ -68,7 +68,7 @@ const navigationItems = [
     permissions: ["activityManagement_view", "activityManagement_modify"],
   },
   {
-    name: "Approvals",
+    name: "Approval",
     to: "/approvals",
     icon: <ApprovalIcon />,
     permissions: ["businessManagement_view", "businessManagement_modify"],
