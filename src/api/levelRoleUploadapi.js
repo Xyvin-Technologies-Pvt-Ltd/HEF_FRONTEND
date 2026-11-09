@@ -12,12 +12,8 @@ export const getLevelRoleUploads = async (filter) => {
 };
 
 export const getLevelRoleUploadById = async (id) => {
-  try {
-    const response = await axiosInstance.get(`/level-role-upload/admin/${id}`);
-    return response.data;
-  } catch (error) {
-    return null;
-  }
+  const response = await axiosInstance.get(`/level-role-upload/admin/${id}`);
+  return response.data;
 };
 
 export const downloadLevelRoleUploadFile = async (id) => {
