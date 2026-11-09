@@ -8,12 +8,10 @@ import {
   Divider,
   Grid,
   Stack,
-  Tab,
   Typography,
 } from "@mui/material";
 import { ReactComponent as CloseIcon } from "../../assets/icons/CloseIcon.svg";
 import { ReactComponent as FilterIcon } from "../../assets/icons/FilterIcon.svg";
-import ResponsiveTabs from "../../ui/ResponsiveTabs";
 import StyledTable from "../../ui/StyledTable";
 import StyledSearchbar from "../../ui/StyledSearchbar";
 import { StyledButton } from "../../ui/StyledButton";
@@ -49,23 +47,6 @@ const roleOptions = [
   { value: "treasurer", label: "Treasurer" },
 ];
 
-const tabSx = {
-  bgcolor: "white",
-  paddingTop: "24px",
-  "& .MuiTabs-indicator": {
-    backgroundColor: "#F58220",
-  },
-  "& .MuiTab-root": {
-    textTransform: "none",
-    fontSize: "16px",
-    fontWeight: 600,
-    color: "#686465",
-  },
-  "& .MuiTab-root.Mui-selected": {
-    color: "#F58220",
-  },
-};
-
 const DetailField = ({ label, value }) => (
   <Grid item xs={12} sm={6}>
     <Typography variant="subtitle1" color="textSecondary" fontWeight="bold">
@@ -80,7 +61,6 @@ const DetailField = ({ label, value }) => (
 const PstUploadPage = () => {
   const { fetchLevelRoleUploads } = useListStore();
   const { singleAdmin } = useAdminStore();
-  const [tab, setTab] = useState(0);
   const [pageNo, setPageNo] = useState(1);
   const [row, setRow] = useState(10);
   const [search, setSearch] = useState("");
@@ -100,18 +80,17 @@ const PstUploadPage = () => {
   const canModify = singleAdmin?.role?.permissions?.includes(
     "pstUploadManagement_modify"
   );
-  const uploadType = tab === 0 ? "document" : "report";
 
   useEffect(() => {
     const filter = {
       pageNo,
       limit: row,
-      type: uploadType,
+      type: "report",
     };
     if (search) filter.search = search;
     if (role) filter.role = role;
     fetchLevelRoleUploads(filter);
-  }, [pageNo, row, search, role, uploadType, refresh]);
+  }, [pageNo, row, search, role, refresh]);
 
   const handleView = async (id) => {
     const response = await getLevelRoleUploadById(id);
@@ -148,7 +127,7 @@ const PstUploadPage = () => {
     const response = await getLevelRoleUploads({
       pageNo: 1,
       limit: 10000,
-      type: uploadType,
+      type: "report",
       ...(search ? { search } : {}),
       ...(role ? { role } : {}),
     });
@@ -194,11 +173,7 @@ const PstUploadPage = () => {
         toast.error("No data to download");
         return;
       }
-      generateExcel(
-        headers,
-        body,
-        uploadType === "report" ? "PST_Reports" : "PST_Documents"
-      );
+      generateExcel(headers, body, "PST_Reports");
       toast.success("Excel downloaded successfully");
     } catch (error) {
       toast.error("Failed to download Excel");
@@ -217,11 +192,7 @@ const PstUploadPage = () => {
         toast.error("No data to download");
         return;
       }
-      generatePDF(
-        headers,
-        body,
-        uploadType === "report" ? "PST_Reports" : "PST_Documents"
-      );
+      generatePDF(headers, body, "PST_Reports");
       toast.success("PDF downloaded successfully");
     } catch (error) {
       toast.error("Failed to download PDF");
@@ -258,25 +229,6 @@ const PstUploadPage = () => {
           PST Uploads
         </Typography>
       </Box>
-      <ResponsiveTabs
-        value={tab}
-        onChange={(_, value) => {
-          setTab(value);
-          setPageNo(1);
-        }}
-        aria-label="tabs"
-        TabIndicatorProps={{
-          style: {
-            backgroundColor: "#F58220",
-            height: 4,
-            borderRadius: "4px",
-          },
-        }}
-        sx={tabSx}
-      >
-        <Tab label="Documents" />
-        <Tab label="Reports" />
-      </ResponsiveTabs>
       <Divider />
       <Box padding={"15px"}>
         <Stack
