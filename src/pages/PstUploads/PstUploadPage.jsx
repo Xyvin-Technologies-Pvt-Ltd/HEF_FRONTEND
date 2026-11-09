@@ -52,14 +52,43 @@ const DetailField = ({ label, value }) => (
     <Typography variant="subtitle1" color="textSecondary" fontWeight="bold">
       {label}
     </Typography>
-    <Typography variant="h6" color="textPrimary">
-      {value || "-"}
+    <Typography variant="h6" color="textPrimary" sx={{ wordBreak: "break-word" }}>
+      {value !== undefined && value !== null && String(value).trim() !== ""
+        ? String(value)
+        : "-"}
     </Typography>
   </Grid>
 );
 
+const getUploadDisplay = (item) => {
+  if (!item) return null;
+  const uploadedByName =
+    item.uploadedByName ||
+    item.uploadedBy?.name ||
+    (typeof item.uploadedBy === "string" ? item.uploadedBy : "") ||
+    "";
+  const roleLabel =
+    item.roleLabel ||
+    (item.role
+      ? item.role.charAt(0).toUpperCase() + item.role.slice(1)
+      : "");
+  const level =
+    item.level ||
+    [item.levelName, item.levelType].filter(Boolean).join(" ") ||
+    "";
+  return {
+    ...item,
+    uploadedByName,
+    roleLabel,
+    level,
+    type: item.type || "",
+    title: item.title || "",
+    description: item.description || "",
+  };
+};
+
 const PstUploadPage = () => {
-  const { fetchLevelRoleUploads } = useListStore();
+  const { fetchLevelRoleUploads, lists } = useListStore();
   const { singleAdmin } = useAdminStore();
   const [pageNo, setPageNo] = useState(1);
   const [row, setRow] = useState(10);
@@ -93,9 +122,32 @@ const PstUploadPage = () => {
   }, [pageNo, row, search, role, refresh]);
 
   const handleView = async (id) => {
-    const response = await getLevelRoleUploadById(id);
-    setSelected(response?.data || null);
-    setOpen(true);
+    const fromList = lists?.find((item) => String(item?._id) === String(id));
+    const initial = getUploadDisplay(fromList);
+
+    // Open with list row first so details never stay blank
+    if (initial) {
+      setSelected(initial);
+      setOpen(true);
+    } else {
+      setOpen(true);
+    }
+
+    try {
+      const response = await getLevelRoleUploadById(id);
+      const detail = getUploadDisplay(response?.data);
+      if (detail?._id || detail?.title || detail?.type) {
+        setSelected(getUploadDisplay({ ...initial, ...detail }));
+      } else if (!initial) {
+        toast.error(response?.message || "Failed to load upload details");
+      }
+    } catch (error) {
+      if (!initial) {
+        toast.error(
+          error?.response?.data?.message || "Failed to load upload details"
+        );
+      }
+    }
   };
 
   const handleDelete = async () => {
